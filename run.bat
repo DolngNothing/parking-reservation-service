@@ -5,4 +5,4 @@ if not "%pid%" == "" (
   rem echo Server is not running.
 )
 
-start /b java -jar d:\deploy\parking-reservation-service-0.0.1-SNAPSHOT.jar
+java -jar d:\deploy\parking-reservation-service-0.0.1-SNAPSHOT.jar
