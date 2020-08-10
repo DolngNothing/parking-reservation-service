@@ -1,26 +1,31 @@
 package com.oocl.parkingreservationservice.service;
 
 
-import com.oocl.parkingreservationservice.constants.MessageConstants;
-import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
-import com.oocl.parkingreservationservice.exception.OrderNotExistException;
-import com.oocl.parkingreservationservice.exception.ParkingOrderException;
-
-import com.oocl.parkingreservationservice.exception.IllegalParameterException;
-
-import com.oocl.parkingreservationservice.model.ParkingOrder;
-import com.oocl.parkingreservationservice.utils.RegexUtils;
 import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
+import com.oocl.parkingreservationservice.exception.IllegalParameterException;
+import com.oocl.parkingreservationservice.exception.ParkingOrderException;
 import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
+import com.oocl.parkingreservationservice.model.ParkingOrder;
+import com.oocl.parkingreservationservice.model.User;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
+import com.oocl.parkingreservationservice.repository.UserRepository;
+import com.oocl.parkingreservationservice.utils.RegexUtils;
 import org.springframework.stereotype.Service;
-
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
+import com.oocl.parkingreservationservice.constants.MessageConstants;
+import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
+import com.oocl.parkingreservationservice.exception.OrderNotExistException;
+
+import com.oocl.parkingreservationservice.constants.StatusContants;
+import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
+import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
+import org.springframework.stereotype.Service;
+
 
 import static com.oocl.parkingreservationservice.constants.StatusContants.*;
 
@@ -30,9 +35,12 @@ public class ParkingOrderService {
     private static final String NONE_EXISTENT_MESSAGE = "订单不存在";
     private static final String ALREADY_CANCEL_MESSAGE = "订单已取消，请勿重复操作";
     private final ParkingOrderRepository parkingOrderRepository;
+    private final UserRepository userRepository;
 
-    public ParkingOrderService(ParkingOrderRepository parkingOrderRepository) {
-        this.parkingOrderRepository =parkingOrderRepository;
+    public ParkingOrderService(ParkingOrderRepository parkingOrderRepository,UserRepository userRepository) {
+        this.parkingOrderRepository = parkingOrderRepository;
+        this.userRepository=userRepository;
+
     }
 
 
@@ -82,13 +90,26 @@ public class ParkingOrderService {
 
     }
     public ParkingOrder addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException {
-        if(!RegexUtils.validateMobilePhone(phone))
+        if (!RegexUtils.validateMobilePhone(phone))
             throw new IllegalParameterException();
-        if(!RegexUtils.checkPlateNumberFormat(parkingOrder.getCarNumber()))
+        if (!RegexUtils.checkPlateNumberFormat(parkingOrder.getCarNumber()))
             throw new IllegalParameterException();
-        if(!RegexUtils.validateEmail(email))
+        if (!RegexUtils.validateEmail(email))
             throw new IllegalParameterException();
-        return null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date startTime = format.parse(parkingOrder.getParkingStartTime());
+            Date endTime = format.parse(parkingOrder.getParkingEndTime());
+            if(startTime.after(endTime)) throw new IllegalParameterException();
+            if(startTime.before(new Date()))throw new IllegalParameterException();
+            if(endTime.before(new Date())) throw new IllegalParameterException();
+        } catch (ParseException | IllegalParameterException e) {
+            e.printStackTrace();
+            throw new IllegalParameterException();
+        }
+        User user=userRepository.findFirst1ByEmail(email).get(0);
+        parkingOrder.setUserId(user.getId());
+        return parkingOrderRepository.save(parkingOrder);
     }
 
 }
