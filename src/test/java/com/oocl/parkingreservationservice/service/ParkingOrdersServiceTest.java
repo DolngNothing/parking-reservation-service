@@ -5,6 +5,7 @@ import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
+import com.oocl.parkingreservationservice.exception.OrderNotExistException;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 import com.oocl.parkingreservationservice.repository.UserRepository;
@@ -31,7 +32,7 @@ public class ParkingOrdersServiceTest {
     }
 
     @Test
-    void should_return_confirm_parking_order_when_confirm_order_given_order_id() throws IllegalOrderOperationException {
+    void should_return_confirm_parking_order_when_confirm_order_given_order_id() throws IllegalOrderOperationException, OrderNotExistException {
 //        given
         Integer orderId = 1;
 
@@ -76,7 +77,18 @@ public class ParkingOrdersServiceTest {
 //        then
         assertEquals(MessageConstants.ODER_CONFIRMED, exception.getMessage());
     }
-
+    @Test
+    void should_throw_order_not_exist_excption_when_confirm_order_given_not_exist_order_id() {
+//        given
+        Integer orderId = 1;
+        ParkingOrderRepository parkingOrderRepository = mock(ParkingOrderRepository.class);
+        given(parkingOrderRepository.findById(orderId)).willReturn(null);
+        ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+//        when
+        Exception exception = assertThrows(OrderNotExistException.class, () -> parkingOrderService.confirmParkingOrder(orderId));
+//        then
+        assertEquals(MessageConstants.ODER_NOT_EXIST, exception.getMessage());
+    }
     @Test
     void should_return_success_message_when_cancel_order_given_uncertain_order_id() {
         //given
