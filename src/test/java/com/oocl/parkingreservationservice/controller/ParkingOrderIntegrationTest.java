@@ -40,7 +40,7 @@ public class ParkingOrderIntegrationTest {
     void should_return_confirm_order_when_confirm_a_order_given_order_id() throws Exception {
 //        given
         Integer orderId = 1;
-        ParkingOrder parkingOrder = new ParkingOrder(orderId, 1, "2020-8-10 12:25:30",
+        ParkingOrder parkingOrder = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrder savedParkingOrder = parkingOrderRepository.save(parkingOrder);
 //        when then
@@ -54,7 +54,7 @@ public class ParkingOrderIntegrationTest {
     void should_return_illegal_message_when_confirm_a_confirmed_order_given_order_id() throws Exception {
 //        given
         Integer orderId = 1;
-        ParkingOrder parkingOrder = new ParkingOrder(orderId, 1, "2020-8-10 12:25:30",
+        ParkingOrder parkingOrder = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.ALREADY_SURE, "1234", 10.0);
         ParkingOrder savedParkingOrder = parkingOrderRepository.save(parkingOrder);
 //        when then
@@ -69,7 +69,7 @@ public class ParkingOrderIntegrationTest {
     void should_return_illegal_message_when_confirm_a_canceled_order_given_order_id() throws Exception {
 //        given
         Integer orderId = 1;
-        ParkingOrder parkingOrder = new ParkingOrder(orderId, 1, "2020-8-10 12:25:30",
+        ParkingOrder parkingOrder = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.DELETED, "1234", 10.0);
         ParkingOrder savedParkingOrder = parkingOrderRepository.save(parkingOrder);
 //        when then

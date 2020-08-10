@@ -11,6 +11,7 @@ import com.oocl.parkingreservationservice.exception.ParkingOrderException;
 import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.model.User;
+import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 import com.oocl.parkingreservationservice.repository.UserRepository;
 import com.oocl.parkingreservationservice.utils.RegexUtils;
@@ -29,9 +30,13 @@ public class ParkingOrderService {
     private static final String ALREADY_CANCEL_MESSAGE = "订单已取消，请勿重复操作";
     private final ParkingOrderRepository parkingOrderRepository;
     private final UserRepository userRepository;
-    public ParkingOrderService(ParkingOrderRepository parkingOrderRepository,UserRepository userRepository) {
+    private final ParkingLotRepository parkingLotRepository;
+    public ParkingOrderService(ParkingOrderRepository parkingOrderRepository,UserRepository userRepository,
+                               ParkingLotRepository parkingLotRepository) {
         this.parkingOrderRepository = parkingOrderRepository;
         this.userRepository=userRepository;
+        this.parkingLotRepository=parkingLotRepository;
+
     }
 
     public ParkingOrder getOrderById(Integer orderId) throws ParkingOrderException {
@@ -87,18 +92,25 @@ public class ParkingOrderService {
         if (!RegexUtils.validateEmail(email))
             throw new IllegalParameterException("预约失败，邮箱格式不正确");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        double price;
+        double pricePerHour=parkingLotRepository.findPriceById(parkingOrder.getParkingLotId());
         try {
             Date startTime = format.parse(parkingOrder.getParkingStartTime());
             Date endTime = format.parse(parkingOrder.getParkingEndTime());
             if(startTime.after(endTime)) throw new IllegalParameterException("预约失败，时间段已过期");
             if(startTime.before(new Date()))throw new IllegalParameterException("预约失败，时间段已过期");
             if(endTime.before(new Date())) throw new IllegalParameterException("预约失败，时间段已过期");
+            price=(endTime.getTime()-startTime.getTime())/3600*pricePerHour;
         } catch (ParseException | IllegalParameterException e) {
             e.printStackTrace();
             throw new IllegalParameterException("预约失败，时间段已过期");
         }
         User user=userRepository.findFirst1ByEmail(email).get(0);
+
         parkingOrder.setUserId(user.getId());
+        parkingOrder.setFetchNumber(new Date().getTime());
+        parkingOrder.setPrice(price);
+        parkingOrder.setStatus(WAIT_FOR_SURE);
         return parkingOrderRepository.save(parkingOrder);
     }
 

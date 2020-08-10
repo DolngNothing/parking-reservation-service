@@ -3,7 +3,11 @@ package com.oocl.parkingreservationservice.controller;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
 import com.oocl.parkingreservationservice.exception.OrderNotExistException;
+import com.oocl.parkingreservationservice.dto.ParkingOrderRequest;
+import com.oocl.parkingreservationservice.exception.IllegalParameterException;
 import com.oocl.parkingreservationservice.exception.ParkingOrderException;
+import com.oocl.parkingreservationservice.model.ParkingOrder;
+import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.service.ParkingOrderService;
 import org.springframework.data.repository.query.Param;
@@ -31,4 +35,10 @@ public class ParkingOrderController {
     public ParkingOrder updateParkingOrder(@PathVariable Integer parkingOrderId) throws ParkingOrderException, ParseException {
         return parkingOrderService.cancelOrder(parkingOrderId);
     }
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public  addParkingOrder(@RequestBody ParkingOrderRequest parkingOrderRequest) throws IllegalParameterException {
+//        ParkingOrder parkingOrder= ParkingOrderMapper.convertToParkingOrder(parkingOrderRequest);
+//        return parkingOrderService.addParkingOrder(parkingOrder,parkingOrderRequest.getPhone(),parkingOrderRequest.getEmail());
+//    }
 }
