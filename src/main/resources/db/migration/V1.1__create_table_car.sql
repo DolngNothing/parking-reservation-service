@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `car`;
 CREATE TABLE `car`(
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
