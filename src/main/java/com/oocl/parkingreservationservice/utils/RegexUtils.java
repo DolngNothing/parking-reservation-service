@@ -14,5 +14,10 @@ public class RegexUtils {
                 "|([VKHBSLJNGCE]{1}[A-DJ-PR-TVY]{1}[0-9]{5})";
         return Pattern.matches(pattern, content);
     }
+    public static boolean validateEmail(String email) {
+        String pattern =  "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+
+        return Pattern.matches(pattern, email);
+    }
 
 }

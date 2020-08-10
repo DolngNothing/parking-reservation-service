@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -66,4 +68,5 @@ public class ParkingOrdersServiceTest {
         //then
         assertEquals(IllegalParameterException.class, exception.getClass());
     }
+
 }

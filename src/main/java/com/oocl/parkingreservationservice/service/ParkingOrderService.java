@@ -10,6 +10,8 @@ public class ParkingOrderService {
             throw new IllegalParameterException();
         if(!RegexUtils.checkPlateNumberFormat(parkingOrder.getCar_number()))
             throw new IllegalParameterException();
+        if(!RegexUtils.validateEmail(email))
+            throw new IllegalParameterException();
         return null;
     }
 }
