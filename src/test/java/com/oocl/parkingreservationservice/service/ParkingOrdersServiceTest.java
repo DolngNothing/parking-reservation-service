@@ -188,6 +188,22 @@ public class ParkingOrdersServiceTest {
 
 
     @Test
+    void should_throw_illegal_parameter_exception_when_book_parking_lot_given_end_time_before_now() {
+        //given
+        String email="1214852999@qq.com";
+        String phone="15920138477";
+        String parkingStartTime="2020-08-08";
+        String parkingEndTime="2020-08-09";
+        ParkingOrder parkingOrder=new ParkingOrder(null,1,parkingStartTime,parkingEndTime,null,1,null, StatusContants.WAIT_FOR_SURE,"浙A1063警",10.0);
+
+        //when
+        Exception exception = assertThrows(IllegalParameterException.class, () -> parkingOrderService.addParkingOrder(parkingOrder,phone,email));
+
+        //then
+        assertEquals(IllegalParameterException.class, exception.getClass());
+    }
+
+    @Test
     void should_add_new_book_order_when_book_parking_lot_given_new_book_order() throws IllegalParameterException {
         //given
         String email="1214852999@qq.com";
