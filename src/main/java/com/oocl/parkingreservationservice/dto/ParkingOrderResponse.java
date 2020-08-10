@@ -1,11 +1,7 @@
-package com.oocl.parkingreservationservice.model;
+package com.oocl.parkingreservationservice.dto;
 
-import javax.persistence.*;
 
-@Entity
-public class ParkingOrder {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ParkingOrderResponse {
     private Integer id;
     private Integer userId;
     private Integer parkingLotId;
@@ -17,10 +13,10 @@ public class ParkingOrder {
     private String createTime;
 
 
-    public ParkingOrder() {
+    public ParkingOrderResponse() {
     }
 
-    public ParkingOrder(Integer id, Integer userId, Integer parkingLotId, String parkingStartTime, String parkingEndTime, Integer status, String carNumber) {
+    public ParkingOrderResponse(Integer id, Integer userId, Integer parkingLotId, String parkingStartTime, String parkingEndTime, Integer status, String carNumber) {
         this.id = id;
         this.userId = userId;
         this.parkingLotId = parkingLotId;
@@ -101,5 +97,4 @@ public class ParkingOrder {
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
-
 }
