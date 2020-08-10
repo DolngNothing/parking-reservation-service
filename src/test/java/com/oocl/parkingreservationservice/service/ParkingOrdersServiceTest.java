@@ -1,8 +1,11 @@
 package com.oocl.parkingreservationservice.service;
 
+import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
+import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
+import com.oocl.parkingreservationservice.exception.OrderNotExistException;
 import com.oocl.parkingreservationservice.exception.ParkingOrderException;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.model.User;
@@ -12,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+
 public class ParkingOrdersServiceTest {
     private ParkingOrderService parkingOrderService;
     private ParkingOrderRepository parkingOrderRepository;
@@ -95,7 +99,7 @@ public class ParkingOrdersServiceTest {
         ParkingOrder order = new ParkingOrder(orderId,1,"2020-8-10 12:25:30",
                 "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE,"1234",10.0);
         parkingOrderRepository = mock(ParkingOrderRepository.class);
-        parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        parkingOrderService = new ParkingOrderService(parkingOrderRepository,null);
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
         given(parkingOrderRepository.save(order)).willReturn(order);
@@ -111,7 +115,7 @@ public class ParkingOrdersServiceTest {
         ParkingOrder order = new ParkingOrder(orderId,1,"2021-8-10 12:25:30",
                 "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.ALREADY_SURE,"1234",10.0);
         parkingOrderRepository = mock(ParkingOrderRepository.class);
-        parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        parkingOrderService = new ParkingOrderService(parkingOrderRepository,null);
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
         given(parkingOrderRepository.save(order)).willReturn(order);
@@ -137,7 +141,7 @@ public class ParkingOrdersServiceTest {
         ParkingOrder order = new ParkingOrder(orderId,1,"2020-8-10 12:25:30",
                 "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.DELETED,"1234",10.0);
         parkingOrderRepository = mock(ParkingOrderRepository.class);
-        parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        parkingOrderService = new ParkingOrderService(parkingOrderRepository,null);
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
         given(parkingOrderRepository.save(order)).willReturn(order);
@@ -154,7 +158,7 @@ public class ParkingOrdersServiceTest {
         ParkingOrder order = new ParkingOrder(orderId,1,"2020-8-10 12:25:30",
                 "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.ALREADY_SURE,"1234",10.0);
         parkingOrderRepository = mock(ParkingOrderRepository.class);
-        parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        parkingOrderService = new ParkingOrderService(parkingOrderRepository,null);
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
         given(parkingOrderRepository.save(order)).willReturn(order);
