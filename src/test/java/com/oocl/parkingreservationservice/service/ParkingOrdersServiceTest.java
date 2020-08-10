@@ -32,7 +32,7 @@ public class ParkingOrdersServiceTest {
 //        given
         Integer orderId = 1;
         ParkingOrder parkingOrder = new ParkingOrder(orderId,1,"2020-8-10 12:25:30",
-                "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE,"1234");
+                "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE,"1234",10.0);
         ParkingOrderResponse parkingOrderResponse;
         ParkingOrderRepository parkingOrderRepository = mock(ParkingOrderRepository.class);
         given(parkingOrderRepository.findById(orderId)).willReturn(java.util.Optional.of(parkingOrder));
@@ -47,7 +47,7 @@ public class ParkingOrdersServiceTest {
         //given
         int orderId = 1;
         ParkingOrder order = new ParkingOrder(orderId,1,"2020-8-10 12:25:30",
-                "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE,"1234");
+                "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE,"1234",10.0);
         ParkingOrderRepository parkingOrderRepository = mock(ParkingOrderRepository.class);
         ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository);
         //when
@@ -61,7 +61,7 @@ public class ParkingOrdersServiceTest {
         //given
         String illegalPhone="123";
         String email="1214852999@qq.com";
-        ParkingOrder parkingOrder=new ParkingOrder(null,1,"2020-08-10","2020-8-11",null,1,null, StatusContants.WAIT_FOR_SURE,"浙A1063警");
+        ParkingOrder parkingOrder=new ParkingOrder(null,1,"2020-08-10","2020-8-11",null,1,null, StatusContants.WAIT_FOR_SURE,"浙A1063警",10.0);
 
         //when
         Exception exception = assertThrows(IllegalParameterException.class, () -> parkingOrderService.addParkingOrder(parkingOrder,illegalPhone, email));
@@ -76,7 +76,7 @@ public class ParkingOrdersServiceTest {
         String illegal_car_number="123";
         String phone="15920138477";
         String email="1214852999@qq.com";
-        ParkingOrder parkingOrder=new ParkingOrder(null,1,"2020-08-10","2020-8-11",null,1,null, StatusContants.WAIT_FOR_SURE,illegal_car_number);
+        ParkingOrder parkingOrder=new ParkingOrder(null,1,"2020-08-10","2020-8-11",null,1,null, StatusContants.WAIT_FOR_SURE,illegal_car_number,10.0);
 
         //when
         Exception exception = assertThrows(IllegalParameterException.class, () -> parkingOrderService.addParkingOrder(parkingOrder,phone, email));
@@ -89,7 +89,7 @@ public class ParkingOrdersServiceTest {
         //given
         String illegalEmail="123";
         String phone="15920138477";
-        ParkingOrder parkingOrder=new ParkingOrder(null,1,"2020-08-10","2020-8-11",null,1,null, StatusContants.WAIT_FOR_SURE,"浙A1063警");
+        ParkingOrder parkingOrder=new ParkingOrder(null,1,"2020-08-10","2020-8-11",null,1,null, StatusContants.WAIT_FOR_SURE,"浙A1063警",10.0);
 
         //when
         Exception exception = assertThrows(IllegalParameterException.class, () -> parkingOrderService.addParkingOrder(parkingOrder,phone,illegalEmail));

@@ -17,7 +17,7 @@ public class ParkingOrderController {
 
     @PatchMapping("/{parkingOrderId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateParkingOrder(@PathVariable Integer OrderID) throws ParkingOrderException {
-        parkingOrderService.cancelOrder(OrderID);
+    public void updateParkingOrder(@PathVariable Integer parkingOrderId) throws ParkingOrderException {
+        parkingOrderService.cancelOrder(parkingOrderId);
     }
 }
