@@ -1,4 +1,4 @@
 package com.oocl.parkingreservationservice.service;
 
-public class OrderService {
+public class ParkingOrderService {
 }
