@@ -52,10 +52,8 @@ jacoco {
 
 ext {
     excludeFile = [
-            '**',
             '**/repository/**',
-            '**/controller/**',
-            '**/model/**']
+            '**/model/**','**/dto/**']
 }
 
 jacocoTestCoverageVerification {
@@ -85,7 +83,7 @@ jacocoTestCoverageVerification {
         rule {
             enabled = true
             element = 'CLASS'
-            includes = ['com.XXX.XXXXX.*']
+            includes = ['com.oocl.parkingreservationservice.*']
         }
     }
 }
