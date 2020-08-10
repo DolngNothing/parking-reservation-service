@@ -1,13 +1,14 @@
 package com.oocl.parkingreservationservice.service;
 
 import com.oocl.parkingreservationservice.model.ParkingOrder;
+import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class ParkingOrdersServiceTest {
-    private OrderService orderService;
-    private OrderRepository orderRepository;
+    private ParkingOrderService parkingOrderService;
+    private ParkingOrderRepository parkingOrderRepository;
 
     @BeforeEach
     public void init() {
