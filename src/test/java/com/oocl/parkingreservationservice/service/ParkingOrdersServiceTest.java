@@ -3,6 +3,7 @@ package com.oocl.parkingreservationservice.service;
 import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
+import com.oocl.parkingreservationservice.exception.ParkingOrderException;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 import com.oocl.parkingreservationservice.repository.UserRepository;
@@ -10,11 +11,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+
+import java.text.ParseException;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ParkingOrdersServiceTest {
     private ParkingOrderService parkingOrderService;
@@ -43,17 +47,79 @@ public class ParkingOrdersServiceTest {
         assertEquals(StatusContants.ALREADY_SURE,parkingOrderResponse.getStatus());
     }
     @Test
-    void should_return_success_message_when_cancel_order_given_uncertain_order_id() {
+    void should_return_updated_order_when_cancel_order_given_uncertain_order_id() throws ParkingOrderException, ParseException {
         //given
         int orderId = 1;
         ParkingOrder order = new ParkingOrder(orderId,1,"2020-8-10 12:25:30",
                 "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE,"1234",10.0);
-        ParkingOrderRepository parkingOrderRepository = mock(ParkingOrderRepository.class);
-        ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        parkingOrderRepository = mock(ParkingOrderRepository.class);
+        parkingOrderService = new ParkingOrderService(parkingOrderRepository);
         //when
-        parkingOrderRepository.updateStatus(StatusContants.WAIT_FOR_SURE,orderId);
+        given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
+        given(parkingOrderRepository.save(order)).willReturn(order);
+        ParkingOrder updateOrder = parkingOrderService.cancelOrder(orderId);
         //then
-        Mockito.verify(parkingOrderRepository).updateStatus(StatusContants.WAIT_FOR_SURE,orderId);
+        assertEquals(order,updateOrder);
+    }
+
+    @Test
+    void should_return_updated_order_when_cancel_order_given_certain_order_id() throws ParkingOrderException, ParseException {
+        //given
+        int orderId = 1;
+        ParkingOrder order = new ParkingOrder(orderId,1,"2021-8-10 12:25:30",
+                "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.ALREADY_SURE,"1234",10.0);
+        parkingOrderRepository = mock(ParkingOrderRepository.class);
+        parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        //when
+        given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
+        given(parkingOrderRepository.save(order)).willReturn(order);
+        ParkingOrder updateOrder = parkingOrderService.cancelOrder(orderId);
+        //then
+        assertEquals(order,updateOrder);
+    }
+
+    @Test
+    void should_throw_none_existent_exception_when_cancel_order_given_none_existent_order_id() {
+        //given
+        int orderId = 1;
+        //when
+        Exception parkingOrderException = assertThrows(ParkingOrderException.class, () -> parkingOrderService.cancelOrder(orderId));
+        //then
+        assertEquals(ParkingOrderException.class, parkingOrderException.getClass());
+    }
+
+    @Test
+    void should_throw_already_cancel_exception_when_cancel_order_given_already_cancel_order_id() {
+        //given
+        int orderId = 1;
+        ParkingOrder order = new ParkingOrder(orderId,1,"2020-8-10 12:25:30",
+                "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.DELETED,"1234",10.0);
+        parkingOrderRepository = mock(ParkingOrderRepository.class);
+        parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        //when
+        given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
+        given(parkingOrderRepository.save(order)).willReturn(order);
+        Exception parkingOrderException = assertThrows(ParkingOrderException.class, () -> parkingOrderService.cancelOrder(orderId));
+        //then
+        assertEquals("订单已取消，请勿重复操作",parkingOrderException.getMessage());
+        assertEquals(ParkingOrderException.class, parkingOrderException.getClass());
+    }
+
+    @Test
+    void should_throw_outdate_exception_when_cancel_order_given_outdate_order_id() {
+        //given
+        int orderId = 1;
+        ParkingOrder order = new ParkingOrder(orderId,1,"2020-8-10 12:25:30",
+                "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.ALREADY_SURE,"1234",10.0);
+        parkingOrderRepository = mock(ParkingOrderRepository.class);
+        parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        //when
+        given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
+        given(parkingOrderRepository.save(order)).willReturn(order);
+        Exception parkingOrderException = assertThrows(ParkingOrderException.class, () -> parkingOrderService.cancelOrder(orderId));
+        //then
+        assertEquals("时间段已过期，无法取消",parkingOrderException.getMessage());
+        assertEquals(ParkingOrderException.class, parkingOrderException.getClass());
     }
 
     @Test

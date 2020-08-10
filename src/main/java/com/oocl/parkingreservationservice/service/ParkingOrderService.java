@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Optional;
 
 import static com.oocl.parkingreservationservice.constants.StatusContants.*;
 
@@ -33,33 +32,36 @@ public class ParkingOrderService {
         this.parkingOrderRepository =parkingOrderRepository;
     }
 
-
-    public void cancelOrder(Integer orderId) throws ParkingOrderException {
-        Optional<ParkingOrder> order = parkingOrderRepository.findById(orderId);
-        if (order.isPresent()) {
-            ParkingOrder oldOrder = order.get();
-            if (oldOrder.getStatus() == WAIT_FOR_SURE) {
-                parkingOrderRepository.updateStatus(DELETED, orderId);
-            } else if (oldOrder.getStatus() == ALREADY_SURE) {
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                try {
-                    Date date = new Date();
-                    Date date1 = format.parse(oldOrder.getParkingStartTime());
-                    if (date.compareTo(date1) <= 0) {
-                        parkingOrderRepository.updateStatus(DELETED, orderId);
-                    } else {
-                        throw new ParkingOrderException(OVERDUE_MESSAGE);
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            } else if (oldOrder.getStatus() == DELETED) {
-                throw new ParkingOrderException(ALREADY_CANCEL_MESSAGE);
-            }
-        } else {
+    public ParkingOrder getOrderById(Integer orderId) throws ParkingOrderException {
+        ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
+        if(parkingOrder == null){
             throw new ParkingOrderException(NONE_EXISTENT_MESSAGE);
         }
+        return parkingOrder;
     }
+
+    public ParkingOrder cancelOrder(Integer orderId) throws ParkingOrderException, ParseException {
+        ParkingOrder order = getOrderById(orderId);
+        switch (order.getStatus()) {
+            case WAIT_FOR_SURE:
+                order.setStatus(DELETED);
+                return parkingOrderRepository.save(order);
+            case ALREADY_SURE:
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date = new Date();
+                Date date1 = format.parse(order.getParkingStartTime());
+                if (date.compareTo(date1) <= 0) {
+                    order.setStatus(DELETED);
+                    return parkingOrderRepository.save(order);
+                } else {
+                    throw new ParkingOrderException(OVERDUE_MESSAGE);
+                }
+            case DELETED:
+                throw new ParkingOrderException(ALREADY_CANCEL_MESSAGE);
+        }
+        return order;
+    }
+
     public ParkingOrderResponse confirmParkingOrder(Integer orderId) {
         ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
         assert parkingOrder != null;
@@ -68,6 +70,7 @@ public class ParkingOrderService {
         return  ParkingOrderMapper.converToParkingOrderResponse(parkingOrder);
 
     }
+
     public ParkingOrder addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException {
         if(!RegexUtils.validateMobilePhone(phone))
             throw new IllegalParameterException();

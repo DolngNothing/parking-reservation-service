@@ -16,6 +16,9 @@ public class ParkingOrder {
     private String carNumber;
     private Double price;
 
+    public ParkingOrder() {
+    }
+
     public ParkingOrder(Integer id, Integer fetchNumber, String parkingStartTime, String parkingEndTime, Integer userId, Integer parkingLotId, String createTime, String status, String carNumber, Double price) {
         this.id = id;
         this.fetchNumber = fetchNumber;
