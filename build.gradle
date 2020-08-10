@@ -57,7 +57,8 @@ ext {
             '**/dto/**',
             '**/constants/**',
             '**/controller/GlobalExceptionHandler.java',
-            '*/ParkingReservationServiceApplication.java']
+            '*/ParkingReservationServiceApplication.java',
+            '**/config/**']
 }
 
 jacocoTestCoverageVerification {
