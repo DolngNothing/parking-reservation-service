@@ -1,5 +1,8 @@
 package com.oocl.parkingreservationservice.model;
 
+import javax.persistence.Entity;
+
+@Entity
 public class ParkingOrder {
     private Integer id;
     private Integer userId;
@@ -10,8 +13,6 @@ public class ParkingOrder {
     private String status;
     private String carNumber;
     private String createTime;
-
-
     public ParkingOrder() {
 
     }
