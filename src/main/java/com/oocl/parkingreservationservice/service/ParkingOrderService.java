@@ -1,6 +1,7 @@
 package com.oocl.parkingreservationservice.service;
 
 
+import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
 import com.oocl.parkingreservationservice.exception.ParkingOrderException;
 
@@ -63,8 +64,10 @@ public class ParkingOrderService {
     public ParkingOrderResponse confirmParkingOrder(Integer orderId) throws IllegalOrderOperationException {
         ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
         assert parkingOrder != null;
-        if (parkingOrder.getStatus().equals(ALREADY_SURE)){
-            throw new IllegalOrderOperationException();
+        if (parkingOrder.getStatus().equals(StatusContants.ALREADY_SURE)){
+            throw new IllegalOrderOperationException(MessageConstants.ODER_CONFIRMED);
+        }else if (parkingOrder.getStatus().equals(DELETED)){
+            throw new IllegalOrderOperationException(MessageConstants.ODER_CANCELED);
         }
         parkingOrder.setStatus(StatusContants.ALREADY_SURE);
         parkingOrderRepository.save(parkingOrder);
