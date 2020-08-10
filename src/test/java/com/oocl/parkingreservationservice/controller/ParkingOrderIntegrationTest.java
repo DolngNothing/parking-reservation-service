@@ -79,4 +79,15 @@ public class ParkingOrderIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(MessageConstants.ODER_CANCELED));
     }
+    @Test
+    void should_return_not_exist_message_when_confirm_a_not_exist_order_given_order_id() throws Exception {
+//        given
+        Integer orderId = Integer.MAX_VALUE;
+//        when then
+        mockMvc.perform(patch("/parkingOrders/"+orderId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("type","comfirm"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value(MessageConstants.ODER_NOT_EXIST));
+    }
 }

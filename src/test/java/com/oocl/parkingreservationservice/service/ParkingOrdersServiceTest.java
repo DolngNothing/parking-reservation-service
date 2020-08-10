@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 
 import org.mockito.Mockito;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
@@ -82,7 +84,7 @@ public class ParkingOrdersServiceTest {
 //        given
         Integer orderId = 1;
         ParkingOrderRepository parkingOrderRepository = mock(ParkingOrderRepository.class);
-        given(parkingOrderRepository.findById(orderId)).willReturn(null);
+        given(parkingOrderRepository.findById(orderId)).willReturn(Optional.empty());
         ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository);
 //        when
         Exception exception = assertThrows(OrderNotExistException.class, () -> parkingOrderService.confirmParkingOrder(orderId));

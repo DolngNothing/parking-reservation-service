@@ -63,14 +63,10 @@ public class ParkingOrderService {
         }
     }
     public ParkingOrderResponse confirmParkingOrder(Integer orderId) throws IllegalOrderOperationException, OrderNotExistException {
-
-        Optional<ParkingOrder> parkingOrderOptional = parkingOrderRepository.findById(orderId);
-
-        if (parkingOrderOptional == null){
+        ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
+        if (parkingOrder == null){
             throw new OrderNotExistException();
         }
-        ParkingOrder parkingOrder = parkingOrderOptional.orElse(null);
-        assert parkingOrder != null;
         if (parkingOrder.getStatus().equals(StatusContants.ALREADY_SURE)){
             throw new IllegalOrderOperationException(MessageConstants.ODER_CONFIRMED);
         }else if (parkingOrder.getStatus().equals(StatusContants.DELETED)){
