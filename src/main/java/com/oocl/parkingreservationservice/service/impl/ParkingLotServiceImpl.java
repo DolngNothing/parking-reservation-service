@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,9 +33,9 @@ public class ParkingLotServiceImpl implements ParkingLotService {
         List<ParkingLot> parkingLots = getParkingLots();
         return parkingLots.stream()
                 .filter(parkingLot -> parkingLot.getLatitude() != null && parkingLot.getLongitude() != null)
-                .sorted(Comparator.comparing(parkingLot -> getDistance(
+                .filter(parkingLot -> getDistance(
                         Double.parseDouble(parkingLot.getLongitude()), Double.parseDouble(parkingLot.getLatitude()),
-                        longitude, latitude))).limit(5).collect(Collectors.toList());
+                        longitude, latitude) <= 2000).collect(Collectors.toList());
     }
 
     public List<ParkingLot> getParkingLots() {
