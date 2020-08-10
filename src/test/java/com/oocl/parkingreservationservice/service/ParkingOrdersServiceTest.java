@@ -1,7 +1,9 @@
 package com.oocl.parkingreservationservice.service;
 
+import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
+import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
@@ -28,7 +30,7 @@ public class ParkingOrdersServiceTest {
     }
 
     @Test
-    void should_return_confirm_parking_order_when_confirm_order_given_order_id() {
+    void should_return_confirm_parking_order_when_confirm_order_given_order_id() throws IllegalOrderOperationException {
 //        given
         Integer orderId = 1;
 
@@ -43,6 +45,22 @@ public class ParkingOrdersServiceTest {
 //        then
         assertEquals(StatusContants.ALREADY_SURE, parkingOrderResponse.getStatus());
     }
+
+    @Test
+    void should_throw_wrong_message_when_confirm_order_given_order_id() {
+//        given
+        Integer orderId = 1;
+        ParkingOrder parkingOrder = new ParkingOrder(orderId,1,"2020-8-10 12:25:30",
+                "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.ALREADY_SURE,"1234",10.0);
+        ParkingOrderRepository parkingOrderRepository = mock(ParkingOrderRepository.class);
+        given(parkingOrderRepository.findById(orderId)).willReturn(java.util.Optional.of(parkingOrder));
+        ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+//        when
+        Exception exception = assertThrows(IllegalOrderOperationException.class, () -> parkingOrderService.confirmParkingOrder(orderId));
+//        then
+        assertEquals(MessageConstants.ODER_CONFIRMED,exception.getMessage());
+    }
+    //Illegal order operation exception
 
     @Test
     void should_return_success_message_when_cancel_order_given_uncertain_order_id() {

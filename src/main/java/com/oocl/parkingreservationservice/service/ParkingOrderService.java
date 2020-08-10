@@ -1,6 +1,7 @@
 package com.oocl.parkingreservationservice.service;
 
 
+import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
 import com.oocl.parkingreservationservice.exception.ParkingOrderException;
 
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
@@ -10,7 +11,6 @@ import com.oocl.parkingreservationservice.utils.RegexUtils;
 import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
-;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -60,9 +60,12 @@ public class ParkingOrderService {
             throw new ParkingOrderException(NONE_EXISTENT_MESSAGE);
         }
     }
-    public ParkingOrderResponse confirmParkingOrder(Integer orderId) {
+    public ParkingOrderResponse confirmParkingOrder(Integer orderId) throws IllegalOrderOperationException {
         ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
         assert parkingOrder != null;
+        if (parkingOrder.getStatus().equals(ALREADY_SURE)){
+            throw new IllegalOrderOperationException();
+        }
         parkingOrder.setStatus(StatusContants.ALREADY_SURE);
         parkingOrderRepository.save(parkingOrder);
         return  ParkingOrderMapper.converToParkingOrderResponse(parkingOrder);
