@@ -6,17 +6,19 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class ParkingOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private int fetchNumber;
+    private Integer id;
+    private Integer fetchNumber;
     private String startTime;
     private String endTime;
-    private int userId;
-    private int parkingLotId;
+    private Integer userId;
+    private Integer parkingLotId;
     private String createTime;
+    private Integer status;
+    private String car_number;
 
 }
