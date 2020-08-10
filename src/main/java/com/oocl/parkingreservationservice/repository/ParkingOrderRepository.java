@@ -12,5 +12,5 @@ public interface ParkingOrderRepository extends JpaRepository<ParkingOrder, Inte
     @Modifying
     @Transactional
     @Query(value = "update parkingOrder set status = ?1 where id = ?2",nativeQuery = true)
-    void updateStatus(int status, int orderId);
+    void updateStatus(String status, int orderId);
 }
