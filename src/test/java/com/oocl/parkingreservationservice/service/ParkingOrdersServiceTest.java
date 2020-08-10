@@ -1,6 +1,6 @@
 package com.oocl.parkingreservationservice.service;
 
-import com.oocl.parkingreservationservice.contants.StatusContants;
+import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
@@ -27,16 +27,5 @@ public class ParkingOrdersServiceTest {
         parkingOrderResponse =  parkingOrderService.confirmParkingOrder(orderId);
 //        then
         assertEquals(StatusContants.ALREADY_SURE,parkingOrderResponse.getStatus());
-    }
-    @Test
-    void should_return_success_message_when_cancel_order_given_uncertain_order_id() {
-        //given
-        int orderId = 1;
-        ParkingOrder order = new ParkingOrder(1,123,"2020-08-10","2020-8-11",1,1,"2020-08-10",0,"A123");
-        //when
-        when(parkingOrderRepository.findById(orderId)).thenReturn(Optional.of(order));
-        ParkingOrder updateOrder = parkingOrderService.cancelOrder(orderId).orElse(null);
-        //then
-        assertEquals(order, updateOrder);
     }
 }
