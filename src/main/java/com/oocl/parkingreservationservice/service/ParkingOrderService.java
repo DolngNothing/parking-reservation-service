@@ -29,13 +29,10 @@ public class ParkingOrderService {
     private static final String ALREADY_CANCEL_MESSAGE = "订单已取消，请勿重复操作";
     private final ParkingOrderRepository parkingOrderRepository;
     private final UserRepository userRepository;
-
     public ParkingOrderService(ParkingOrderRepository parkingOrderRepository,UserRepository userRepository) {
         this.parkingOrderRepository = parkingOrderRepository;
         this.userRepository=userRepository;
-
     }
-
 
     public ParkingOrder getOrderById(Integer orderId) throws ParkingOrderException {
         ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);

@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +46,7 @@ public class ParkingOrdersServiceTest {
         ParkingOrderResponse parkingOrderResponse;
         ParkingOrderRepository parkingOrderRepository = mock(ParkingOrderRepository.class);
         given(parkingOrderRepository.findById(orderId)).willReturn(java.util.Optional.of(parkingOrder));
-        ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository,null);
 //        when
         parkingOrderResponse = parkingOrderService.confirmParkingOrder(orderId);
 //        then
@@ -60,7 +61,7 @@ public class ParkingOrdersServiceTest {
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.DELETED, "1234", 10.0);
         ParkingOrderRepository parkingOrderRepository = mock(ParkingOrderRepository.class);
         given(parkingOrderRepository.findById(orderId)).willReturn(java.util.Optional.of(parkingOrder));
-        ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository,null);
 //        when
         Exception exception = assertThrows(IllegalOrderOperationException.class, () -> parkingOrderService.confirmParkingOrder(orderId));
 //        then
@@ -75,7 +76,7 @@ public class ParkingOrdersServiceTest {
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.ALREADY_SURE, "1234", 10.0);
         ParkingOrderRepository parkingOrderRepository = mock(ParkingOrderRepository.class);
         given(parkingOrderRepository.findById(orderId)).willReturn(java.util.Optional.of(parkingOrder));
-        ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository,null);
 //        when
         Exception exception = assertThrows(IllegalOrderOperationException.class, () -> parkingOrderService.confirmParkingOrder(orderId));
 //        then
@@ -87,7 +88,7 @@ public class ParkingOrdersServiceTest {
         Integer orderId = 1;
         ParkingOrderRepository parkingOrderRepository = mock(ParkingOrderRepository.class);
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.empty());
-        ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository,null);
 //        when
         Exception exception = assertThrows(OrderNotExistException.class, () -> parkingOrderService.confirmParkingOrder(orderId));
 //        then
@@ -100,7 +101,7 @@ public class ParkingOrdersServiceTest {
         ParkingOrder order = new ParkingOrder(orderId,1,"2020-8-10 12:25:30",
                 "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE,"1234",10.0);
         parkingOrderRepository = mock(ParkingOrderRepository.class);
-        parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        parkingOrderService = new ParkingOrderService(parkingOrderRepository,null);
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
         given(parkingOrderRepository.save(order)).willReturn(order);
@@ -116,7 +117,7 @@ public class ParkingOrdersServiceTest {
         ParkingOrder order = new ParkingOrder(orderId,1,"2021-8-10 12:25:30",
                 "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.ALREADY_SURE,"1234",10.0);
         parkingOrderRepository = mock(ParkingOrderRepository.class);
-        parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        parkingOrderService = new ParkingOrderService(parkingOrderRepository,null);
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
         given(parkingOrderRepository.save(order)).willReturn(order);
@@ -142,7 +143,7 @@ public class ParkingOrdersServiceTest {
         ParkingOrder order = new ParkingOrder(orderId,1,"2020-8-10 12:25:30",
                 "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.DELETED,"1234",10.0);
         parkingOrderRepository = mock(ParkingOrderRepository.class);
-        parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        parkingOrderService = new ParkingOrderService(parkingOrderRepository,null);
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
         given(parkingOrderRepository.save(order)).willReturn(order);
@@ -159,7 +160,7 @@ public class ParkingOrdersServiceTest {
         ParkingOrder order = new ParkingOrder(orderId,1,"2020-8-10 12:25:30",
                 "2020-8-10 14:25:30",1,1,"2020-8-10 14:25:30", StatusContants.ALREADY_SURE,"1234",10.0);
         parkingOrderRepository = mock(ParkingOrderRepository.class);
-        parkingOrderService = new ParkingOrderService(parkingOrderRepository);
+        parkingOrderService = new ParkingOrderService(parkingOrderRepository,null);
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
         given(parkingOrderRepository.save(order)).willReturn(order);
