@@ -6,9 +6,12 @@ import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ParkingOrdersServiceTest {
     @Test
@@ -24,5 +27,16 @@ public class ParkingOrdersServiceTest {
         parkingOrderResponse =  parkingOrderService.confirmParkingOrder(orderId);
 //        then
         assertEquals(StatusContants.ALREADY_SURE,parkingOrderResponse.getStatus());
+    }
+    @Test
+    void should_return_success_message_when_cancel_order_given_uncertain_order_id() {
+        //given
+        int orderId = 1;
+        ParkingOrder order = new ParkingOrder(1,123,"2020-08-10","2020-8-11",1,1,"2020-08-10",0,"A123");
+        //when
+        when(parkingOrderRepository.findById(orderId)).thenReturn(Optional.of(order));
+        ParkingOrder updateOrder = parkingOrderService.cancelOrder(orderId).orElse(null);
+        //then
+        assertEquals(order, updateOrder);
     }
 }
