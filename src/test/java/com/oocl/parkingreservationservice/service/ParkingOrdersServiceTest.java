@@ -1,6 +1,7 @@
 package com.oocl.parkingreservationservice.service;
 
 import com.oocl.parkingreservationservice.constants.StatusContants;
+import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ParkingOrdersServiceTest {
     private ParkingOrderService parkingOrderService;
@@ -22,7 +24,7 @@ public class ParkingOrdersServiceTest {
     public void init() {
         parkingOrderRepository = Mockito.mock(ParkingOrderRepository.class);
         userRepository=Mockito.mock(UserRepository.class);
-        parkingOrderService=new ParkingOrderService();
+        parkingOrderService=new ParkingOrderService(parkingOrderRepository);
     }
 
     @Test
@@ -44,20 +46,12 @@ public class ParkingOrdersServiceTest {
         //given
         int orderId = 1;
         ParkingOrder order = new ParkingOrder(1,123,"2020-08-10","2020-8-11",1,1,"2020-08-10");
+        order.set
         //when
-        when(orderRepository.cancelOrder(orderId)).thenReturn();
+        when(parkingOrderRepository.cancelOrder(orderId)).thenReturn();
         //then
     }
 
-    @Test
-    void should_throw_illegal_parameter_exception_when_book_parking_lot_given_illegal_phone_number_123() {
-        //given
-        String illegalPhone="123";
-        ParkingOrder parkingOrder=new ParkingOrder(null,1,1)
-        //when
-
-        //then
-    }
     @Test
     void should_throw_illegal_parameter_exception_when_book_parking_lot_given_illegal_phone_number_123() {
         //given
