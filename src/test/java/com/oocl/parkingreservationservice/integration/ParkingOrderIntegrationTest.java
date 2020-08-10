@@ -9,9 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,5 +50,38 @@ public class ParkingOrderIntegrationTest {
                 .andExpect(jsonPath("$.parkingLotId").value(parkLotId))
                 .andExpect(jsonPath("$.parkingStartTime").value("2020-08-10 12:25:30"))
                 .andExpect(jsonPath("$.status").value(StatusContants.DELETED));
+    }
+
+    @Test
+    void should_return_parking_order_response_when_hit_add_order_endpoint_given_info() throws Exception {
+        String orderInfo = "{\n" +
+                "    \"email\":\"1214852999@qq.com\",\n" +
+                "    \"parkingStartTime\":\"2020-08-16 00:00:00\",\n" +
+                "    \"parkingEndTime\":\"2020-08-17 00:00:00\",\n" +
+                "    \"parkingLotId\":1,\n" +
+                "    \"carNumber\":\"浙A1063警\",\n" +
+                "}";
+        //when
+        mockMvc.perform(post(("/parkingOrders")).contentType(MediaType.APPLICATION_JSON).content(orderInfo))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.userId").isNumber())
+                .andExpect(jsonPath("$.parkingLotId").isNumber());
+        //then
+    }
+
+    @Test
+    void should_return_bad_request_when_hit_add_order_endpoint_given_illegal_info() throws Exception {
+        String orderInfo = "{\n" +
+                "    \"email\":\"1214852999@q.com\",\n" +
+                "    \"parkingStartTime\":\"2020-08-08 00:00:00\",\n" +
+                "    \"parkingEndTime\":\"2020-08-07 00:00:00\",\n" +
+                "    \"parkingLotId\":1,\n" +
+                "    \"carNumber\":\"浙A1063\",\n" +
+                "}";
+        //when
+        mockMvc.perform(post(("/parkingOrders")).contentType(MediaType.APPLICATION_JSON).content(orderInfo))
+                .andExpect(status().isBadRequest());
+        //then
     }
 }

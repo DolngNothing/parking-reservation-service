@@ -3,6 +3,7 @@ package com.oocl.parkingreservationservice.service;
 
 import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
+import com.oocl.parkingreservationservice.dto.BookOrderResponse;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
@@ -74,17 +75,18 @@ public class ParkingOrderService {
         if (parkingOrder == null){
             throw new OrderNotExistException();
         }
-        if (parkingOrder.getStatus().equals(StatusContants.ALREADY_SURE)){
+        if (parkingOrder.getStatus().equals(StatusContants.ALREADY_SURE)) {
             throw new IllegalOrderOperationException(MessageConstants.ODER_CONFIRMED);
-        }else if (parkingOrder.getStatus().equals(StatusContants.DELETED)){
+        } else if (parkingOrder.getStatus().equals(StatusContants.DELETED)) {
             throw new IllegalOrderOperationException(MessageConstants.ODER_CANCELED);
         }
         parkingOrder.setStatus(StatusContants.ALREADY_SURE);
         parkingOrderRepository.save(parkingOrder);
-        return  ParkingOrderMapper.converToParkingOrderResponse(parkingOrder);
+        return ParkingOrderMapper.converToParkingOrderResponse(parkingOrder);
 
     }
-    public ParkingOrder addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException {
+
+    public BookOrderResponse addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException {
         if (!RegexUtils.validateMobilePhone(phone))
             throw new IllegalParameterException("预约失败，手机格式不正确");
         if (!RegexUtils.checkPlateNumberFormat(parkingOrder.getCarNumber()))
@@ -93,7 +95,7 @@ public class ParkingOrderService {
             throw new IllegalParameterException("预约失败，邮箱格式不正确");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         double price;
-        double pricePerHour=parkingLotRepository.findPriceById(parkingOrder.getParkingLotId());
+        double pricePerHour = parkingLotRepository.findPriceById(parkingOrder.getParkingLotId());
         try {
             Date startTime = format.parse(parkingOrder.getParkingStartTime());
             Date endTime = format.parse(parkingOrder.getParkingEndTime());
@@ -105,13 +107,18 @@ public class ParkingOrderService {
             e.printStackTrace();
             throw new IllegalParameterException("预约失败，时间段已过期");
         }
-        User user=userRepository.findFirst1ByEmail(email).get(0);
+        User user = userRepository.findFirst1ByEmail(email).get(0);
 
         parkingOrder.setUserId(user.getId());
-        parkingOrder.setFetchNumber(new Date().getTime());
+//        parkingOrder.setFetchNumber(new Date().getTime());
         parkingOrder.setPrice(price);
         parkingOrder.setStatus(WAIT_FOR_SURE);
-        return parkingOrderRepository.save(parkingOrder);
+        ParkingOrder returnParkingOrder = parkingOrderRepository.save(parkingOrder);
+        BookOrderResponse bookOrderResponse = ParkingOrderMapper.convertParkingOrderToBookOrderResponse(returnParkingOrder);
+        //TODO:加字段：停车场位置,取车码由确认订单的负责生成，创建时间要不要？
+        bookOrderResponse.setParkingLotName(parkingLotRepository.findNameById(returnParkingOrder.getParkingLotId()));
+        bookOrderResponse.setLocation(parkingLotRepository.findLocationById(returnParkingOrder.getParkingLotId()));
+        return bookOrderResponse;
     }
 
 }

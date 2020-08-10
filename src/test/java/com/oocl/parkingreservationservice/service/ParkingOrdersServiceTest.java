@@ -2,6 +2,7 @@ package com.oocl.parkingreservationservice.service;
 
 import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
+import com.oocl.parkingreservationservice.dto.BookOrderResponse;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
@@ -18,9 +19,9 @@ import org.mockito.Mockito;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
@@ -260,20 +261,21 @@ public class ParkingOrdersServiceTest {
     void should_add_new_book_order_when_book_parking_lot_given_new_book_order() throws IllegalParameterException {
         //given
         String email="1214852999@qq.com";
-        String phone="15920138477";
-        String parkingStartTime="2020-08-16 00:00:00";
-        String parkingEndTime="2020-08-17 00:00:00";
-        ParkingOrder parkingOrder=new ParkingOrder(null,1L,parkingStartTime,parkingEndTime,null,1,null, null,"浙A1063警",10.0);
-        List<User> users=new ArrayList<>();
-        users.add(new User(1,null,email,"Jamea","9999"));
+        String phone = "15920138477";
+        String parkingStartTime = "2020-08-16 00:00:00";
+        String parkingEndTime = "2020-08-17 00:00:00";
+        ParkingOrder parkingOrder = new ParkingOrder(null, 1L, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", 10.0);
+        List<User> users = new ArrayList<>();
+        users.add(new User(1, null, email, "Jamea", "9999"));
         given(userRepository.findFirst1ByEmail(email)).willReturn(users);
-        ParkingOrder mockedParkingOrder=new ParkingOrder(null,null,parkingStartTime,parkingEndTime,null,1,null,null,"浙A1063警",null);
+        ParkingOrder mockedParkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
         given(parkingOrderRepository.save(parkingOrder)).willReturn(mockedParkingOrder);
         //when
-        ParkingOrder returnParkingOrder=parkingOrderService.addParkingOrder(parkingOrder,phone,email);
+        BookOrderResponse returnParkingOrder = parkingOrderService.addParkingOrder(parkingOrder, phone, email);
+
 
         //then
-        assertEquals(userRepository.findFirst1ByEmail(email).get(0).getId(),returnParkingOrder.getUserId());
+        assertEquals(userRepository.findFirst1ByEmail(email).get(0).getId(), returnParkingOrder.getUserId());
     }
 
 }
