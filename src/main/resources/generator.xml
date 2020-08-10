@@ -15,9 +15,9 @@
 
         <!--数据库基本信息-->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/takin_write"
-                        userId="murasakiseifu"
-                        password="123456">
+                        connectionURL="jdbc:mysql://10.222.29.209:3306/parking_reservation_service"
+                        userId="root"
+                        password="83aeb88a">
         </jdbcConnection>
 
         <!--生成实体类的位置以及包的名字-->
