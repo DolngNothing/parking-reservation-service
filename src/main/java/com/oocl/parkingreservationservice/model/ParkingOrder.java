@@ -1,4 +1,4 @@
 package com.oocl.parkingreservationservice.model;
 
-public class Order {
+public class ParkingOrder {
 }
