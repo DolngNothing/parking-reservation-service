@@ -53,7 +53,10 @@ jacoco {
 ext {
     excludeFile = [
             '**/repository/**',
-            '**/model/**','**/dto/**']
+            '**/model/**',
+            '**/dto/**',
+            '**/constants/**',
+            '**/controller/GlobalExceptionHandler']
 }
 
 jacocoTestCoverageVerification {
