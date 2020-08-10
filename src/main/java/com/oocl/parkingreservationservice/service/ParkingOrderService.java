@@ -91,21 +91,21 @@ public class ParkingOrderService {
     }
     public ParkingOrder addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException {
         if (!RegexUtils.validateMobilePhone(phone))
-            throw new IllegalParameterException();
+            throw new IllegalParameterException("预约失败，手机格式不正确");
         if (!RegexUtils.checkPlateNumberFormat(parkingOrder.getCarNumber()))
-            throw new IllegalParameterException();
+            throw new IllegalParameterException("预约失败，车牌格式不正确");
         if (!RegexUtils.validateEmail(email))
-            throw new IllegalParameterException();
+            throw new IllegalParameterException("预约失败，邮箱格式不正确");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Date startTime = format.parse(parkingOrder.getParkingStartTime());
             Date endTime = format.parse(parkingOrder.getParkingEndTime());
-            if(startTime.after(endTime)) throw new IllegalParameterException();
-            if(startTime.before(new Date()))throw new IllegalParameterException();
-            if(endTime.before(new Date())) throw new IllegalParameterException();
+            if(startTime.after(endTime)) throw new IllegalParameterException("预约失败，时间段已过期");
+            if(startTime.before(new Date()))throw new IllegalParameterException("预约失败，时间段已过期");
+            if(endTime.before(new Date())) throw new IllegalParameterException("预约失败，时间段已过期");
         } catch (ParseException | IllegalParameterException e) {
             e.printStackTrace();
-            throw new IllegalParameterException();
+            throw new IllegalParameterException("预约失败，时间段已过期");
         }
         User user=userRepository.findFirst1ByEmail(email).get(0);
         parkingOrder.setUserId(user.getId());
