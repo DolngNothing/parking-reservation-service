@@ -43,4 +43,19 @@ public class ParkingOrdersServiceTest {
         //then
         assertEquals(IllegalParameterException.class, exception.getClass());
     }
+
+    @Test
+    void should_throw_illegal_parameter_exception_when_book_parking_lot_given_illegal_car_number_123() {
+        //given
+        String illegal_car_number="123";
+        String phone="15920138477";
+        ParkingOrder parkingOrder=new ParkingOrder(null,1,"2020-08-10","2020-8-11",null,1,null, StatusContants.WAIT_FOR_SURE,illegal_car_number);
+
+        //when
+        Exception exception = assertThrows(IllegalParameterException.class, () -> parkingOrderService.addParkingOrder(parkingOrder,phone));
+
+        //then
+        assertEquals(IllegalParameterException.class, exception.getClass());
+    }
+
 }

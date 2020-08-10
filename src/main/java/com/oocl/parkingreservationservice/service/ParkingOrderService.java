@@ -8,6 +8,8 @@ public class ParkingOrderService {
     public ParkingOrder addParkingOrder(ParkingOrder parkingOrder, String phone) throws IllegalParameterException {
         if(!RegexUtils.validateMobilePhone(phone))
             throw new IllegalParameterException();
+        if(!RegexUtils.checkPlateNumberFormat(parkingOrder.getCar_number()))
+            throw new IllegalParameterException();
         return null;
     }
 }
