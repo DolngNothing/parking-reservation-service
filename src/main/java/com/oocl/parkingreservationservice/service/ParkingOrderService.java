@@ -1,6 +1,9 @@
 package com.oocl.parkingreservationservice.service;
 
+import com.oocl.parkingreservationservice.contants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
+import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
+import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 
 public class ParkingOrderService {
@@ -12,6 +15,10 @@ public class ParkingOrderService {
     }
 
     public ParkingOrderResponse confirmParkingOrder(Integer orderId) {
-        return null;
+        ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
+        assert parkingOrder != null;
+        parkingOrder.setStatus(StatusContants.ALREADY_SURE);
+        parkingOrderRepository.save(parkingOrder);
+        return ParkingOrderMapper.converToParkingOrderResponse(parkingOrder);
     }
 }

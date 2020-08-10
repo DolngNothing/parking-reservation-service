@@ -8,15 +8,16 @@ public class ParkingOrderResponse {
     private String  parkingStartTime;
     private String parkingEndTime;
     private Integer fetchNumber;
-    private Integer status;
+    private String status;
     private String carNumber;
     private String createTime;
 
 
     public ParkingOrderResponse() {
+
     }
 
-    public ParkingOrderResponse(Integer id, Integer userId, Integer parkingLotId, String parkingStartTime, String parkingEndTime, Integer status, String carNumber) {
+    public ParkingOrderResponse(Integer id, Integer userId, Integer parkingLotId, String parkingStartTime, String parkingEndTime, String status, String carNumber) {
         this.id = id;
         this.userId = userId;
         this.parkingLotId = parkingLotId;
@@ -74,11 +75,11 @@ public class ParkingOrderResponse {
         this.fetchNumber = fetchNumber;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

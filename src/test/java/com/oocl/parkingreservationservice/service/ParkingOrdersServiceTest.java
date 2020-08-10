@@ -1,5 +1,6 @@
 package com.oocl.parkingreservationservice.service;
 
+import com.oocl.parkingreservationservice.contants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
@@ -14,15 +15,14 @@ public class ParkingOrdersServiceTest {
     void should_return_confirm_parking_order_when_confirm_order_given_order_id() {
 //        given
         Integer orderId = 1;
-        Integer ODER_CONFIRMED = 1;
-        ParkingOrder parkingOrder = new ParkingOrder(orderId,1,1,"2020-8-10 12:25:30","2020-8-10 14:25:30",0,"1234");
+        ParkingOrder parkingOrder = new ParkingOrder(orderId,1,1,"2020-8-10 12:25:30","2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE,"1234");
         ParkingOrderResponse parkingOrderResponse;
         ParkingOrderRepository parkingOrderRepository = mock(ParkingOrderRepository.class);
-        given(parkingOrderRepository.findById(orderId).orElse(null)).willReturn(parkingOrder);
+        given(parkingOrderRepository.findById(orderId)).willReturn(java.util.Optional.of(parkingOrder));
         ParkingOrderService parkingOrderService = new ParkingOrderService(parkingOrderRepository);
 //        when
         parkingOrderResponse =  parkingOrderService.confirmParkingOrder(orderId);
 //        then
-        assertEquals(ODER_CONFIRMED,parkingOrderResponse.getStatus());
+        assertEquals(StatusContants.ALREADY_SURE,parkingOrderResponse.getStatus());
     }
 }
