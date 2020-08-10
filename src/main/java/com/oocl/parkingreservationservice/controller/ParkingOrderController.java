@@ -4,10 +4,13 @@ import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
 import com.oocl.parkingreservationservice.exception.OrderNotExistException;
 import com.oocl.parkingreservationservice.exception.ParkingOrderException;
+import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.service.ParkingOrderService;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
 
 @RestController
 @RequestMapping("/parkingOrders")
@@ -25,7 +28,7 @@ public class ParkingOrderController {
     }
     @PatchMapping("/{parkingOrderId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateParkingOrder(@PathVariable Integer parkingOrderId) throws ParkingOrderException {
-        parkingOrderService.cancelOrder(parkingOrderId);
+    public ParkingOrder updateParkingOrder(@PathVariable Integer parkingOrderId) throws ParkingOrderException, ParseException {
+        return parkingOrderService.cancelOrder(parkingOrderId);
     }
 }
