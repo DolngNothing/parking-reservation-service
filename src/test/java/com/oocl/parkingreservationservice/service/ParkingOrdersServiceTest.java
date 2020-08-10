@@ -6,13 +6,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+
 public class ParkingOrdersServiceTest {
     private ParkingOrderService parkingOrderService;
     private ParkingOrderRepository parkingOrderRepository;
 
     @BeforeEach
     public void init() {
-        orderRepository = Mockito.mock(OrderRepository.class);
+        parkingOrderRepository = Mockito.mock(ParkingOrderRepository.class);
+        parkingOrderService = new ParkingOrderService(parkingOrderRepository);
     }
 
 
@@ -20,19 +26,21 @@ public class ParkingOrdersServiceTest {
     void should_return_success_message_when_cancel_order_given_uncertain_order_id() {
         //given
         int orderId = 1;
-        ParkingOrder order = new ParkingOrder(1,123,"2020-08-10","2020-8-11",1,1,"2020-08-10");
+        ParkingOrder order = new ParkingOrder(1,123,"2020-08-10","2020-8-11",1,1,"2020-08-10",0,"A123");
         //when
-        when(orderRepository.cancelOrder(orderId)).thenReturn();
+        when(parkingOrderRepository.findById(orderId)).thenReturn(Optional.of(order));
+        ParkingOrder updateOrder = parkingOrderService.cancelOrder(orderId).orElse(null);
         //then
+        assertEquals(order, updateOrder);
     }
 
-    @Test
-    void should_throw_illegal_parameter_exception_when_book_parking_lot_given_illegal_phone_number_123() {
-        //given
-        String illegalPhone="123";
-        ParkingOrder parkingOrder=new ParkingOrder(null,1,1,)
-        //when
-
-        //then
-    }
+//    @Test
+//    void should_throw_illegal_parameter_exception_when_book_parking_lot_given_illegal_phone_number_123() {
+//        //given
+//        String illegalPhone="123";
+//        ParkingOrder parkingOrder=new ParkingOrder(null,1,1,)
+//        //when
+//
+//        //then
+//    }
 }

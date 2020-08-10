@@ -18,5 +18,7 @@ public class ParkingOrder {
     private int userId;
     private int parkingLotId;
     private String createTime;
+    private int status;
+    private String carNumber;
 
 }
