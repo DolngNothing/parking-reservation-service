@@ -34,7 +34,7 @@ public class ParkingOrderService {
     }
 
 
-    public void cancelOrder(int orderId) throws ParkingOrderException {
+    public void cancelOrder(Integer orderId) throws ParkingOrderException {
         Optional<ParkingOrder> order = parkingOrderRepository.findById(orderId);
         if (order.isPresent()) {
             ParkingOrder oldOrder = order.get();
@@ -44,7 +44,7 @@ public class ParkingOrderService {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 try {
                     Date date = new Date();
-                    Date date1 = format.parse(oldOrder.getStartTime());
+                    Date date1 = format.parse(oldOrder.getParkingStartTime());
                     if (date.compareTo(date1) <= 0) {
                         parkingOrderRepository.updateStatus(DELETED, orderId);
                     } else {
