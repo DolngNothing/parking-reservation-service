@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String IllegalParameterException(IllegalParameterException e) {
-        return e.getMessage();
+    public ExceptionBean IllegalParameterException(IllegalParameterException e) {
+        return new ExceptionBean(e.getMessage());
     }
 }

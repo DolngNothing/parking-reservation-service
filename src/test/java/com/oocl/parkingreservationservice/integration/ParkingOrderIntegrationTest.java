@@ -16,6 +16,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Date;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -69,11 +73,13 @@ public class ParkingOrderIntegrationTest {
         parkingLot = parkingLotRepository.save(parkingLot);
         User user = new User(null, "15920138471", "1214852999@qq.com", "James", "null");
         userRepository.save(user);
+        String parkingStartTime = Long.toString(new Date().getTime() + 1000);
+        String parkingEndTime = Long.toString(new Date().getTime() + 2000);
         String orderInfo = "{\n" +
                 "    \"email\":\"1214852999@qq.com\",\n" +
                 "    \"phone\":\"15920138471\",\n" +
-                "    \"parkingStartTime\":\"2020-08-16 00:00:00\",\n" +
-                "    \"parkingEndTime\":\"2020-08-17 00:00:00\",\n" +
+                "    \"parkingStartTime\":" + parkingStartTime + ",\n" +
+                "    \"parkingEndTime\":" + parkingEndTime + ",\n" +
                 "    \"parkingLotId\":" + parkingLot.getId() + ",\n" +
                 "    \"carNumber\":\"浙A1063警\"\n" +
                 "}";
@@ -92,11 +98,13 @@ public class ParkingOrderIntegrationTest {
         parkingLot = parkingLotRepository.save(parkingLot);
         User user = new User(null, "15920138471", "1214852999@qq.com", "James", "null");
         userRepository.save(user);
+        String parkingStartTime = Long.toString(new Date().getTime() + 1000);
+        String parkingEndTime = Long.toString(new Date().getTime() + 2000);
         String orderInfo = "{\n" +
                 "    \"email\":\"1214852999@q.com\",\n" +
                 "    \"phone\":\"15920138471\",\n" +
-                "    \"parkingStartTime\":\"2020-08-08 00:00:00\",\n" +
-                "    \"parkingEndTime\":\"2020-08-07 00:00:00\",\n" +
+                "    \"parkingStartTime\":" + parkingStartTime + ",\n" +
+                "    \"parkingEndTime\":" + parkingEndTime + ",\n" +
                 "    \"parkingLotId\":" + parkingLot.getId() + ",\n" +
                 "    \"carNumber\":\"浙A1063\"\n" +
                 "}";

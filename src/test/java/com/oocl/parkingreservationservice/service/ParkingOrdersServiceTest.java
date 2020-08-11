@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,7 +48,6 @@ public class ParkingOrdersServiceTest {
     void should_return_confirm_parking_order_when_confirm_order_given_order_id() throws IllegalOrderOperationException, OrderNotExistException {
         //given
         Integer orderId = 1;
-
         ParkingOrder parkingOrder = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrderResponse parkingOrderResponse;
@@ -171,7 +171,9 @@ public class ParkingOrdersServiceTest {
         //given
         String illegalPhone = "123";
         String email = "1214852999@qq.com";
-        ParkingOrder parkingOrder = new ParkingOrder(null, null, "2020-08-10", "2020-8-11", null, 1, null, null, "浙A1063警", null);
+        String parkingStartTime = Long.toString(new Date().getTime() + 10000);
+        String parkingEndTime = Long.toString(new Date().getTime() + 20000);
+        ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
 
         //when
         Exception exception = assertThrows(IllegalParameterException.class, () -> parkingOrderService.addParkingOrder(parkingOrder, illegalPhone, email));
@@ -186,7 +188,9 @@ public class ParkingOrdersServiceTest {
         String illegal_car_number = "123";
         String phone = "15920138477";
         String email = "1214852999@qq.com";
-        ParkingOrder parkingOrder = new ParkingOrder(null, null, "2020-08-10", "2020-8-11", null, 1, null, null, illegal_car_number, null);
+        String parkingStartTime = Long.toString(new Date().getTime() + 1000);
+        String parkingEndTime = Long.toString(new Date().getTime() + 2000);
+        ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, illegal_car_number, null);
 
         //when
         Exception exception = assertThrows(IllegalParameterException.class, () -> parkingOrderService.addParkingOrder(parkingOrder, phone, email));
@@ -200,7 +204,9 @@ public class ParkingOrdersServiceTest {
         //given
         String illegalEmail = "123";
         String phone = "15920138477";
-        ParkingOrder parkingOrder = new ParkingOrder(null, null, "2020-08-10", "2020-8-11", null, 1, null, null, "浙A1063警", null);
+        String parkingStartTime = Long.toString(new Date().getTime() + 1000);
+        String parkingEndTime = Long.toString(new Date().getTime() + 2000);
+        ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
 
         //when
         Exception exception = assertThrows(IllegalParameterException.class, () -> parkingOrderService.addParkingOrder(parkingOrder, phone, illegalEmail));
@@ -214,8 +220,8 @@ public class ParkingOrdersServiceTest {
         //given
         String email = "1214852999@qq.com";
         String phone = "15920138477";
-        String parkingStartTime = "2020-08-12";
-        String parkingEndTime = "2020-08-11";
+        String parkingStartTime = Long.toString(new Date().getTime() + 1000);
+        String parkingEndTime = Long.toString(new Date().getTime() + 500);
         ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
 
         //when
@@ -231,8 +237,8 @@ public class ParkingOrdersServiceTest {
         //given
         String email = "1214852999@qq.com";
         String phone = "15920138477";
-        String parkingStartTime = "2020-08-09";
-        String parkingEndTime = "2020-08-11";
+        String parkingStartTime = Long.toString(new Date().getTime() - 1000);
+        String parkingEndTime = Long.toString(new Date().getTime() + 2000);
         ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
 
         //when
@@ -248,8 +254,8 @@ public class ParkingOrdersServiceTest {
         //given
         String email = "1214852999@qq.com";
         String phone = "15920138477";
-        String parkingStartTime = "2020-08-08";
-        String parkingEndTime = "2020-08-09";
+        String parkingStartTime = Long.toString(new Date().getTime() - 10000);
+        String parkingEndTime = Long.toString(new Date().getTime() - 2000);
         ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
 
         //when
@@ -264,8 +270,8 @@ public class ParkingOrdersServiceTest {
         //given
         String email = "1214852999@qq.com";
         String phone = "15920138477";
-        String parkingStartTime = "2020-08-08";
-        String parkingEndTime = "2020-08-09";
+        String parkingStartTime = Long.toString(new Date().getTime() + 1000);
+        String parkingEndTime = Long.toString(new Date().getTime() + 2000);
         ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
 
         //when
@@ -280,8 +286,8 @@ public class ParkingOrdersServiceTest {
         //given
         String email = "1214852999@qq.com";
         String phone = "15920138477";
-        String parkingStartTime = "2020-08-16 00:00:00";
-        String parkingEndTime = "2020-08-17 00:00:00";
+        String parkingStartTime = Long.toString(new Date().getTime() + 1000);
+        String parkingEndTime = Long.toString(new Date().getTime() + 2000);
         ParkingOrder parkingOrder = new ParkingOrder(null, 1L, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", 10.0);
 
         given(userRepository.findFirstByEmail(email)).willReturn(new User(1, null, email, "Jamea", "9999"));
