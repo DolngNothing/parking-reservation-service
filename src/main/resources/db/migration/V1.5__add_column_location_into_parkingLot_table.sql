@@ -1,0 +1,1 @@
+alter table parking_lot add location varchar(255);
