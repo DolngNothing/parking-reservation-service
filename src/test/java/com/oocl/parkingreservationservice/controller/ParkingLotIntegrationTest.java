@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +21,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 public class ParkingLotIntegrationTest {
+    public static final String PARKING_LOTS = "parkingLots";
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ParkingLotRepository parkingLotRepository;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @BeforeEach
     public void before() {
@@ -37,11 +41,15 @@ public class ParkingLotIntegrationTest {
         parkingLot.setLatitude("1.0");
         parkingLot.setLongitude("1.0");
         parkingLotRepository.save(parkingLot);
+        if (stringRedisTemplate.hasKey(PARKING_LOTS)) {
+            stringRedisTemplate.delete(PARKING_LOTS);
+        }
     }
 
     @AfterEach
     public void after() {
         parkingLotRepository.deleteAll();
+        stringRedisTemplate.delete(PARKING_LOTS);
         assert parkingLotRepository.findAll().isEmpty();
     }
 
