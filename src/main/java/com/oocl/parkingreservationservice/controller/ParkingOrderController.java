@@ -27,13 +27,12 @@ public class ParkingOrderController {
     @PatchMapping(value = "/{parkingOrderId}", params = {"type"})
     @ResponseStatus(HttpStatus.OK)
     public ParkingOrderResponse confirmParkingOrder(@PathVariable Integer parkingOrderId, String type) throws OrderNotExistException, IllegalOrderOperationException {
-
         return parkingOrderService.confirmParkingOrder(parkingOrderId);
     }
 
     @PatchMapping("/{parkingOrderId}")
     @ResponseStatus(HttpStatus.OK)
-    public ParkingOrderResponse updateParkingOrder(@PathVariable Integer parkingOrderId) throws ParkingOrderException, ParseException {
+    public ParkingOrderResponse updateParkingOrder(@PathVariable Integer parkingOrderId) throws ParkingOrderException, ParseException, OrderNotExistException {
         return parkingOrderService.cancelOrder(parkingOrderId);
     }
 
@@ -45,7 +44,7 @@ public class ParkingOrderController {
     }
 
     @GetMapping("/{id}")
-    public ParkingOrder getOrderById(@PathVariable Integer id) throws ParkingOrderException {
+    public ParkingOrderResponse getOrderById(@PathVariable Integer id) throws ParkingOrderException {
         return parkingOrderService.getOrderById(id);
     }
 }

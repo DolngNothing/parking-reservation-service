@@ -43,16 +43,20 @@ public class ParkingOrderService {
 
     }
 
-    public ParkingOrder getOrderById(Integer orderId) throws ParkingOrderException {
+    public ParkingOrderResponse getOrderById(Integer orderId) throws ParkingOrderException {
         ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
+        ParkingOrderResponse parkingOrderResponse = ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder);
         if (parkingOrder == null) {
             throw new ParkingOrderException(NONE_EXISTENT_MESSAGE);
         }
-        return parkingOrder;
+        return parkingOrderResponse;
     }
 
-    public ParkingOrderResponse cancelOrder(Integer orderId) throws ParkingOrderException, ParseException {
-        ParkingOrder order = getOrderById(orderId);
+    public ParkingOrderResponse cancelOrder(Integer orderId) throws ParkingOrderException, ParseException, OrderNotExistException {
+        ParkingOrder order = parkingOrderRepository.findById(orderId).orElse(null);
+        if (order == null) {
+            throw new ParkingOrderException(NONE_EXISTENT_MESSAGE);
+        }
         switch (order.getStatus()) {
             case WAIT_FOR_SURE:
                 order.setStatus(DELETED);
@@ -88,7 +92,6 @@ public class ParkingOrderService {
         parkingOrder.setStatus(StatusContants.ALREADY_SURE);
         parkingOrderRepository.save(parkingOrder);
         return ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder);
-
     }
 
     public ParkingOrderResponse addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException {

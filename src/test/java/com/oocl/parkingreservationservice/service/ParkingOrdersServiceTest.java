@@ -96,7 +96,7 @@ public class ParkingOrdersServiceTest {
     }
 
     @Test
-    void should_return_updated_order_when_cancel_order_given_uncertain_order_id() throws ParkingOrderException, ParseException {
+    void should_return_updated_order_when_cancel_order_given_uncertain_order_id() throws ParkingOrderException, ParseException, OrderNotExistException {
         //given
         int orderId = 1;
         ParkingOrder order = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
@@ -111,7 +111,7 @@ public class ParkingOrdersServiceTest {
     }
 
     @Test
-    void should_return_updated_order_when_cancel_order_given_certain_order_id() throws ParkingOrderException, ParseException {
+    void should_return_updated_order_when_cancel_order_given_certain_order_id() throws ParkingOrderException, ParseException, OrderNotExistException {
         //given
         int orderId = 1;
         ParkingOrderRequest order = new ParkingOrderRequest("2021-8-10 12:25:30",
@@ -306,7 +306,7 @@ public class ParkingOrdersServiceTest {
 
         //when
         when(parkingOrderRepository.findById(1)).thenReturn(Optional.of(parkingOrder));
-        ParkingOrderResponse parkingOrderResponse = ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrderService.getOrderById(orderId));
+        ParkingOrderResponse parkingOrderResponse = parkingOrderService.getOrderById(orderId);
 
         //then
         assertEquals(ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder),parkingOrderResponse);
