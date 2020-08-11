@@ -41,20 +41,29 @@ public class ParkingLotIntegrationTest {
         parkingLot.setLatitude("1.0");
         parkingLot.setLongitude("1.0");
         parkingLotRepository.save(parkingLot);
-        if (stringRedisTemplate.hasKey(PARKING_LOTS)) {
-            stringRedisTemplate.delete(PARKING_LOTS);
-        }
     }
 
     @AfterEach
     public void after() {
         parkingLotRepository.deleteAll();
-        stringRedisTemplate.delete(PARKING_LOTS);
         assert parkingLotRepository.findAll().isEmpty();
     }
 
     @Test
     public void should_return_parking_lot_when_get_parking_lot_given_lng_and_lat() throws Exception {
+        stringRedisTemplate.delete(PARKING_LOTS);
+        //when then
+        mockMvc.perform(get("/parkingLots").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("lng", "1.0")
+                .param("lat", "1.0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("ali"))
+                .andExpect(jsonPath("$[1].name").value("ali"));
+    }
+
+    @Test
+    public void should_return_parking_lot_when_get_parking_lot_from_redis_given_lng_and_lat() throws Exception {
+        stringRedisTemplate.opsForValue().set(PARKING_LOTS, "[{\"id\":3,\"latitude\":\"1.0\",\"longitude\":\"1.0\",\"name\":\"ali\"},{\"id\":4,\"latitude\":\"1.0\",\"longitude\":\"1.0\",\"name\":\"ali\"}]");
         //when then
         mockMvc.perform(get("/parkingLots").contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("lng", "1.0")
