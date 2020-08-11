@@ -20,8 +20,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.text.ParseException;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -316,6 +316,46 @@ public class ParkingOrdersServiceTest {
 
         //then
         assertEquals(ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder),parkingOrderResponse);
+    }
+
+    @Test
+    void should_return_all_orders_when_get_all_orders_given_right_email() throws IllegalParameterException, OrderNotExistException, ParkingOrderException {
+        //given
+
+        String email = "545759585@qq.com";
+        User user = new User(1,"15626155019",email,"karen","123");
+
+        List<ParkingOrder> parkingOrders = Arrays.asList(
+                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
+        );
+        given(userRepository.findByEmail(email)).willReturn(user);
+        given(parkingOrderRepository.findAllByUserId(1)).willReturn(parkingOrders);
+
+        //when
+        List<ParkingOrderResponse> parkingOrderByEmail = parkingOrderService.getAllOrdersByEmail(email);
+
+        //then
+        assertEquals(parkingOrders.stream().map(ParkingOrderMapper::convertParkingOrderToParkingOrderResponse).collect(Collectors.toList()), parkingOrderByEmail);
+
+    }
+
+    @Test
+    void should_throw_illegal_parameter_exception_when_get_all_orders_given_illegal_email_123() {
+        //given
+        String illegalEmail = "123";
+        String phone = "15920138477";
+        String parkingStartTime = Long.toString(new Date().getTime() + 1000);
+        String parkingEndTime = Long.toString(new Date().getTime() + 2000);
+        ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
+
+        //when
+        Exception exception = assertThrows(IllegalParameterException.class, () -> parkingOrderService.getAllOrdersByEmail(illegalEmail));
+
+        //then
+        assertEquals(IllegalParameterException.class, exception.getClass());
     }
 
 }

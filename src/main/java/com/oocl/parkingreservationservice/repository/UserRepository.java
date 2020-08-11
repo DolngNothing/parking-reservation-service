@@ -1,5 +1,6 @@
 package com.oocl.parkingreservationservice.repository;
 
+import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.model.User;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query(value = "select * from user where phone_number=?1", nativeQuery = true)
     User findByPhone(String phone);
+
+    User findByEmail(String email);
+
 }

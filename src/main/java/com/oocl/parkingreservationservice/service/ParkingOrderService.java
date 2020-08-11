@@ -16,12 +16,16 @@ import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 import com.oocl.parkingreservationservice.repository.UserRepository;
 import com.oocl.parkingreservationservice.utils.RegexUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.oocl.parkingreservationservice.constants.StatusContants.*;
 
@@ -34,6 +38,11 @@ public class ParkingOrderService {
     private final ParkingOrderRepository parkingOrderRepository;
     private final UserRepository userRepository;
     private final ParkingLotRepository parkingLotRepository;
+
+    @Autowired
+    private UserService userService;
+
+
 
     public ParkingOrderService(ParkingOrderRepository parkingOrderRepository, UserRepository userRepository,
                                ParkingLotRepository parkingLotRepository) {
@@ -140,6 +149,18 @@ public class ParkingOrderService {
         parkingOrderResponse.setParkingLotName(parkingOrderOptional.get().getName());
         parkingOrderResponse.setLocation(parkingOrderOptional.get().getLocation());
         return parkingOrderResponse;
+    }
+
+    public List<ParkingOrderResponse> getAllOrdersByEmail(String email) throws IllegalParameterException, OrderNotExistException{
+        User userByEmail = userRepository.findByEmail(email);
+        if (!RegexUtils.validateEmail(email)) {
+            throw new IllegalParameterException("指定email不存在，请输入正确的email");
+        }
+        List<ParkingOrder> parkingOrders = parkingOrderRepository.findAllByUserId(userByEmail.getId());
+        if (parkingOrders == null) {
+            throw new OrderNotExistException();
+        }
+        return parkingOrders.stream().map(ParkingOrderMapper::convertParkingOrderToParkingOrderResponse).collect(Collectors.toList());
     }
 
 }

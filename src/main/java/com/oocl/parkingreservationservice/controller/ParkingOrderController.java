@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/parkingOrders")
@@ -47,4 +48,10 @@ public class ParkingOrderController {
     public ParkingOrderResponse getOrderById(@PathVariable Integer id) throws ParkingOrderException {
         return parkingOrderService.getOrderById(id);
     }
+
+    @GetMapping(params = {"email"})
+    public List<ParkingOrderResponse> getAllOrderByEmail(@RequestParam(name = "email") String email) throws ParkingOrderException, IllegalParameterException, OrderNotExistException {
+        return parkingOrderService.getAllOrdersByEmail(email);
+    }
+
 }
