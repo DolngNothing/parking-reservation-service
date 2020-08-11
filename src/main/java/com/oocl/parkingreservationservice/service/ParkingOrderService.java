@@ -43,16 +43,20 @@ public class ParkingOrderService {
 
     }
 
-    public ParkingOrder getOrderById(Integer orderId) throws ParkingOrderException {
+    public ParkingOrderResponse getOrderById(Integer orderId) throws ParkingOrderException {
         ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
+        ParkingOrderResponse parkingOrderResponse = ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder);
         if (parkingOrder == null) {
             throw new ParkingOrderException(NONE_EXISTENT_MESSAGE);
         }
-        return parkingOrder;
+        return parkingOrderResponse;
     }
 
-    public ParkingOrderResponse cancelOrder(Integer orderId) throws ParkingOrderException, ParseException {
-        ParkingOrder order = getOrderById(orderId);
+    public ParkingOrderResponse cancelOrder(Integer orderId) throws ParkingOrderException, ParseException, OrderNotExistException {
+        ParkingOrder order = parkingOrderRepository.findById(orderId).orElse(null);
+        if (order == null) {
+            throw new ParkingOrderException(NONE_EXISTENT_MESSAGE);
+        }
         switch (order.getStatus()) {
             case WAIT_FOR_SURE:
                 order.setStatus(DELETED);
@@ -88,7 +92,6 @@ public class ParkingOrderService {
         parkingOrder.setStatus(StatusContants.ALREADY_SURE);
         parkingOrderRepository.save(parkingOrder);
         return ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder);
-
     }
 
     public ParkingOrderResponse addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException {
@@ -101,7 +104,7 @@ public class ParkingOrderService {
         if (!RegexUtils.validateEmail(email)) {
             throw new IllegalParameterException("预约失败，邮箱格式不正确");
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         double price;
         Optional<ParkingLot> parkingOrderOptional = parkingLotRepository.findById(parkingOrder.getParkingLotId());
         if (!parkingOrderOptional.isPresent()) {
@@ -109,8 +112,11 @@ public class ParkingOrderService {
         }
         double pricePerHour = parkingOrderOptional.get().getPrice();
         try {
-            Date startTime = format.parse(parkingOrder.getParkingStartTime());
-            Date endTime = format.parse(parkingOrder.getParkingEndTime());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date startTime = new Date(Long.parseLong(parkingOrder.getParkingStartTime()));
+            Date endTime = new Date(Long.parseLong(parkingOrder.getParkingEndTime()));
+            parkingOrder.setParkingStartTime(format.format(startTime));
+            parkingOrder.setParkingEndTime(format.format(endTime));
             if (startTime.after(endTime)) {
                 throw new IllegalParameterException("预约失败，时间段已过期");
             }
@@ -121,11 +127,11 @@ public class ParkingOrderService {
                 throw new IllegalParameterException("预约失败，时间段已过期");
             }
             price = (endTime.getTime() - startTime.getTime()) / MILLISECONDSPERHOUR * pricePerHour;
-        } catch (ParseException | IllegalParameterException e) {
+        } catch (IllegalParameterException e) {
             throw new IllegalParameterException("预约失败，时间段已过期");
         }
         User user = userRepository.findFirstByEmail(email);
-
+///ToDo:加空用户判断
         parkingOrder.setUserId(user.getId());
         parkingOrder.setPrice(price);
         parkingOrder.setStatus(WAIT_FOR_SURE);
