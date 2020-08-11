@@ -32,17 +32,18 @@ public class ParkingOrderService {
     private final ParkingOrderRepository parkingOrderRepository;
     private final UserRepository userRepository;
     private final ParkingLotRepository parkingLotRepository;
-    public ParkingOrderService(ParkingOrderRepository parkingOrderRepository,UserRepository userRepository,
+
+    public ParkingOrderService(ParkingOrderRepository parkingOrderRepository, UserRepository userRepository,
                                ParkingLotRepository parkingLotRepository) {
         this.parkingOrderRepository = parkingOrderRepository;
-        this.userRepository=userRepository;
-        this.parkingLotRepository=parkingLotRepository;
+        this.userRepository = userRepository;
+        this.parkingLotRepository = parkingLotRepository;
 
     }
 
     public ParkingOrder getOrderById(Integer orderId) throws ParkingOrderException {
         ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
-        if(parkingOrder == null){
+        if (parkingOrder == null) {
             throw new ParkingOrderException(NONE_EXISTENT_MESSAGE);
         }
         return parkingOrder;
@@ -72,7 +73,7 @@ public class ParkingOrderService {
 
     public ParkingOrderResponse confirmParkingOrder(Integer orderId) throws IllegalOrderOperationException, OrderNotExistException {
         ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
-        if (parkingOrder == null){
+        if (parkingOrder == null) {
             throw new OrderNotExistException();
         }
         if (parkingOrder.getStatus().equals(StatusContants.ALREADY_SURE)) {
@@ -99,18 +100,16 @@ public class ParkingOrderService {
         try {
             Date startTime = format.parse(parkingOrder.getParkingStartTime());
             Date endTime = format.parse(parkingOrder.getParkingEndTime());
-            if(startTime.after(endTime)) throw new IllegalParameterException("预约失败，时间段已过期");
-            if(startTime.before(new Date()))throw new IllegalParameterException("预约失败，时间段已过期");
-            if(endTime.before(new Date())) throw new IllegalParameterException("预约失败，时间段已过期");
-            price=(endTime.getTime()-startTime.getTime())/3600*pricePerHour;
+            if (startTime.after(endTime)) throw new IllegalParameterException("预约失败，时间段已过期");
+            if (startTime.before(new Date())) throw new IllegalParameterException("预约失败，时间段已过期");
+            if (endTime.before(new Date())) throw new IllegalParameterException("预约失败，时间段已过期");
+            price = (endTime.getTime() - startTime.getTime()) / 3600 * pricePerHour;
         } catch (ParseException | IllegalParameterException e) {
-            e.printStackTrace();
             throw new IllegalParameterException("预约失败，时间段已过期");
         }
         User user = userRepository.findFirst1ByEmail(email).get(0);
 
         parkingOrder.setUserId(user.getId());
-//        parkingOrder.setFetchNumber(new Date().getTime());
         parkingOrder.setPrice(price);
         parkingOrder.setStatus(WAIT_FOR_SURE);
         ParkingOrder returnParkingOrder = parkingOrderRepository.save(parkingOrder);
