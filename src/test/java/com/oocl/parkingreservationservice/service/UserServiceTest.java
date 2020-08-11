@@ -1,6 +1,5 @@
 package com.oocl.parkingreservationservice.service;
 
-import com.oocl.parkingreservationservice.dto.UserLoginResponse;
 import com.oocl.parkingreservationservice.model.User;
 import com.oocl.parkingreservationservice.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;

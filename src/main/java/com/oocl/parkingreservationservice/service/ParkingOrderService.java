@@ -92,23 +92,34 @@ public class ParkingOrderService {
     }
 
     public ParkingOrderResponse addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException {
-        if (!RegexUtils.validateMobilePhone(phone))
+        if (!RegexUtils.validateMobilePhone(phone)) {
             throw new IllegalParameterException("预约失败，手机格式不正确");
-        if (!RegexUtils.checkPlateNumberFormat(parkingOrder.getCarNumber()))
+        }
+        if (!RegexUtils.checkPlateNumberFormat(parkingOrder.getCarNumber())) {
             throw new IllegalParameterException("预约失败，车牌格式不正确");
-        if (!RegexUtils.validateEmail(email))
+        }
+        if (!RegexUtils.validateEmail(email)) {
             throw new IllegalParameterException("预约失败，邮箱格式不正确");
+        }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         double price;
         Optional<ParkingLot> parkingOrderOptional = parkingLotRepository.findById(parkingOrder.getParkingLotId());
-        if (!parkingOrderOptional.isPresent()) throw new IllegalParameterException("不存在该停车场");
+        if (!parkingOrderOptional.isPresent()) {
+            throw new IllegalParameterException("不存在该停车场");
+        }
         double pricePerHour = parkingOrderOptional.get().getPrice();
         try {
             Date startTime = format.parse(parkingOrder.getParkingStartTime());
             Date endTime = format.parse(parkingOrder.getParkingEndTime());
-            if (startTime.after(endTime)) throw new IllegalParameterException("预约失败，时间段已过期");
-            if (startTime.before(new Date())) throw new IllegalParameterException("预约失败，时间段已过期");
-            if (endTime.before(new Date())) throw new IllegalParameterException("预约失败，时间段已过期");
+            if (startTime.after(endTime)) {
+                throw new IllegalParameterException("预约失败，时间段已过期");
+            }
+            if (startTime.before(new Date())) {
+                throw new IllegalParameterException("预约失败，时间段已过期");
+            }
+            if (endTime.before(new Date())) {
+                throw new IllegalParameterException("预约失败，时间段已过期");
+            }
             price = (endTime.getTime() - startTime.getTime()) / MILLISECONDSPERHOUR * pricePerHour;
         } catch (ParseException | IllegalParameterException e) {
             throw new IllegalParameterException("预约失败，时间段已过期");
