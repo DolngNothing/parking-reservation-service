@@ -1,7 +1,7 @@
 package com.oocl.parkingreservationservice.dto;
 
-import lombok.Data;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * @author XUAL7

@@ -27,6 +27,7 @@ public class ParkingLot {
     private Double price;
     private String description;
     private String imageUrl;
+    private String location;
 
 
 }
