@@ -75,4 +75,18 @@ public class UserIntegrationTest {
                 .andExpect(jsonPath("$.message").value(MessageConstants.WRONG_PASSWORD));
     }
 
+    @Test
+    void should_return_not_exist_user_message_when_login_given_not_exist_phone_and_wrong_password() throws Exception {
+        //given
+        User user = userList.get(0);
+        String userLoginInfo = "{\n" +
+                "    \"phoneNumber\":\"13427560249\",\n" +
+                "    \"password\":\"123\"\n" +
+                "}";
+
+        //when
+        mockMvc.perform(post("/user/login").contentType(MediaType.APPLICATION_JSON).content(userLoginInfo))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(MessageConstants.USER_NOT_EXIST));
+    }
 }
