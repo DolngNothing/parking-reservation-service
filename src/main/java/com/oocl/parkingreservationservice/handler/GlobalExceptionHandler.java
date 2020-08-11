@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String IllegalParameterException(ParkingOrderException e) {
+    public String IllegalParameterException(IllegalParameterException e) {
         return e.getMessage();
     }
 }

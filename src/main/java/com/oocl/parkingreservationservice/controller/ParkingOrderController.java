@@ -40,9 +40,7 @@ public class ParkingOrderController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ParkingOrderResponse addParkingOrder(@RequestBody ParkingOrderRequest parkingOrderRequest) throws IllegalParameterException {
-        System.out.println(parkingOrderRequest);
         ParkingOrder parkingOrder = ParkingOrderMapper.convertToParkingOrder(parkingOrderRequest);
-
         return parkingOrderService.addParkingOrder(parkingOrder, parkingOrderRequest.getPhone(), parkingOrderRequest.getEmail());
 
     }
