@@ -5,10 +5,12 @@ import com.oocl.parkingreservationservice.exception.IllegalParameterException;
 import com.oocl.parkingreservationservice.exception.UserNotExistException;
 import com.oocl.parkingreservationservice.model.User;
 import com.oocl.parkingreservationservice.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+    @Autowired
     UserRepository userRepository;
 
     public UserService() {
