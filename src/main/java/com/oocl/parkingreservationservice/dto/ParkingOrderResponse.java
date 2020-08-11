@@ -1,15 +1,13 @@
 package com.oocl.parkingreservationservice.dto;
 
 
-import com.oocl.parkingreservationservice.model.ParkingOrder;
-
 import java.util.Objects;
 
 public class ParkingOrderResponse {
     private Integer id;
     private Integer userId;
     private Integer parkingLotId;
-    private String  parkingStartTime;
+    private String parkingStartTime;
     private String parkingEndTime;
     private Integer fetchNumber;
     private String status;
@@ -105,8 +103,12 @@ public class ParkingOrderResponse {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ParkingOrderResponse that = (ParkingOrderResponse) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(userId, that.userId) &&

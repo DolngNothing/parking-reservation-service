@@ -30,8 +30,8 @@ public class ParkingOrderIntegrationTest {
 
     @BeforeEach
     void init() {
-        ParkingOrder firstOrder = new ParkingOrder(1,1L,"2020-08-10 12:25:30",
-                "2020-08-10 14:25:30",1,1,"2020-08-10 14:25:30", StatusContants.WAIT_FOR_SURE,"1234",10.0);
+        ParkingOrder firstOrder = new ParkingOrder(1, 1L, "2020-08-10 12:25:30",
+                "2020-08-10 14:25:30", 1, 1, "2020-08-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrder Order = parkingOrderRepository.save(firstOrder);
         OrderId = Order.getId();
         parkLotId = Order.getParkingLotId();

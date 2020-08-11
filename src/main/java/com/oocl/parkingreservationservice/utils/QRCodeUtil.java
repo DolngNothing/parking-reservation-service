@@ -32,8 +32,8 @@ import static com.google.zxing.client.j2se.MatrixToImageConfig.WHITE;
  */
 public class QRCodeUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(QRCodeUtil.class);
     public static final String IMAGE_TYPE = "jpg";
+    private static final Logger logger = LoggerFactory.getLogger(QRCodeUtil.class);
 
     private QRCodeUtil() {
         throw new IllegalStateException("QrcodeUtil class");
