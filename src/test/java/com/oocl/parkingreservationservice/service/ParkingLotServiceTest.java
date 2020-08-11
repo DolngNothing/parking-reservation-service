@@ -2,7 +2,6 @@ package com.oocl.parkingreservationservice.service;
 
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
-import com.oocl.parkingreservationservice.service.impl.ParkingLotServiceImpl;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class ParkingLotServiceTest {
         ParkingLotRepository parkingLotRepository = mock(ParkingLotRepository.class);
         List<ParkingLot> parkingLots = new ArrayList<>(Arrays.asList(new ParkingLot(), new ParkingLot()));
         given(parkingLotRepository.findAll()).willReturn(parkingLots);
-        ParkingLotService parkingLotService = new ParkingLotServiceImpl(parkingLotRepository);
+        ParkingLotService parkingLotService = new ParkingLotService(parkingLotRepository);
         //when
         List<ParkingLot> parkingLotsSaved = parkingLotService.getParkingLots(longitude, latitude);
         //then

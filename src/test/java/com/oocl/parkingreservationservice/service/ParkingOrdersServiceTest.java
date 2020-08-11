@@ -106,7 +106,7 @@ public class ParkingOrdersServiceTest {
         given(parkingOrderRepository.save(order)).willReturn(order);
         ParkingOrderResponse updateOrder = parkingOrderService.cancelOrder(orderId);
         //then
-        assertEquals(StatusContants.DELETED,updateOrder.getStatus());
+        assertEquals(StatusContants.DELETED, updateOrder.getStatus());
     }
 
     @Test
@@ -114,14 +114,14 @@ public class ParkingOrdersServiceTest {
         //given
         int orderId = 1;
         ParkingOrderRequest order = new ParkingOrderRequest("2021-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, "A123", null,null,StatusContants.ALREADY_SURE);
+                "2020-8-10 14:25:30", 1, "A123", null, null, StatusContants.ALREADY_SURE);
         //when
         ParkingOrder parkingOrder = ParkingOrderMapper.convertToParkingOrder(order);
         given(parkingOrderRepository.findById(anyInt())).willReturn(Optional.of(parkingOrder));
         given(parkingOrderRepository.save(any(ParkingOrder.class))).willReturn(parkingOrder);
         ParkingOrderResponse updateOrder = parkingOrderService.cancelOrder(orderId);
         //then
-        assertEquals(StatusContants.DELETED,updateOrder.getStatus());
+        assertEquals(StatusContants.DELETED, updateOrder.getStatus());
 
     }
 

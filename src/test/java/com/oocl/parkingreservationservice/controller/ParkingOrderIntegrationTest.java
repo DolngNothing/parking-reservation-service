@@ -44,12 +44,13 @@ public class ParkingOrderIntegrationTest {
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrder savedParkingOrder = parkingOrderRepository.save(parkingOrder);
 //        when then
-        mockMvc.perform(patch("/parkingOrders/"+savedParkingOrder.getId())
+        mockMvc.perform(patch("/parkingOrders/" + savedParkingOrder.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("type","comfirm"))
+                .param("type", "comfirm"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(StatusContants.ALREADY_SURE));
     }
+
     @Test
     void should_return_illegal_message_when_confirm_a_confirmed_order_given_order_id() throws Exception {
 //        given
@@ -58,9 +59,9 @@ public class ParkingOrderIntegrationTest {
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.ALREADY_SURE, "1234", 10.0);
         ParkingOrder savedParkingOrder = parkingOrderRepository.save(parkingOrder);
 //        when then
-        mockMvc.perform(patch("/parkingOrders/"+savedParkingOrder.getId())
+        mockMvc.perform(patch("/parkingOrders/" + savedParkingOrder.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("type","comfirm"))
+                .param("type", "comfirm"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(MessageConstants.ODER_CONFIRMED));
     }
@@ -73,20 +74,21 @@ public class ParkingOrderIntegrationTest {
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.DELETED, "1234", 10.0);
         ParkingOrder savedParkingOrder = parkingOrderRepository.save(parkingOrder);
 //        when then
-        mockMvc.perform(patch("/parkingOrders/"+savedParkingOrder.getId())
+        mockMvc.perform(patch("/parkingOrders/" + savedParkingOrder.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("type","comfirm"))
+                .param("type", "comfirm"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(MessageConstants.ODER_CANCELED));
     }
+
     @Test
     void should_return_not_exist_message_when_confirm_a_not_exist_order_given_order_id() throws Exception {
 //        given
-        Integer orderId = Integer.MAX_VALUE;
+        int orderId = Integer.MAX_VALUE;
 //        when then
-        mockMvc.perform(patch("/parkingOrders/"+orderId)
+        mockMvc.perform(patch("/parkingOrders/" + orderId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("type","comfirm"))
+                .param("type", "comfirm"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(MessageConstants.ODER_NOT_EXIST));
     }

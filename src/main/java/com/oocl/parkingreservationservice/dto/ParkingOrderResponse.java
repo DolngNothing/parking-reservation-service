@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import com.oocl.parkingreservationservice.model.ParkingOrder;
-
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -28,8 +26,12 @@ public class ParkingOrderResponse {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ParkingOrderResponse that = (ParkingOrderResponse) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(userId, that.userId) &&
