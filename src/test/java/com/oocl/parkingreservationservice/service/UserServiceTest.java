@@ -26,7 +26,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void should_return_useId_and_username_when_login_given_user() throws IllegalParameterException {
+    void should_return_useId_and_username_when_login_given_user() throws IllegalParameterException, UserNotExistException {
         //given
         String phone = "13427560238";
         String password = "123";
