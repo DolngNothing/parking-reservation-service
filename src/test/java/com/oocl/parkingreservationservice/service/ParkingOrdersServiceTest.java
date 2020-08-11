@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 public class ParkingOrdersServiceTest {
     private ParkingOrderService parkingOrderService;
@@ -294,6 +295,21 @@ public class ParkingOrdersServiceTest {
         //then
         assertEquals(1, returnParkingOrder.getUserId());
 
+    }
+
+    @Test
+    void should_return_certain_order_when_get_certain_order_given_order_id() throws ParkingOrderException {
+        //given
+        Integer orderId = 1;
+        ParkingOrder parkingOrder = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
+
+        //when
+        when(parkingOrderRepository.findById(1)).thenReturn(Optional.of(parkingOrder));
+        ParkingOrderResponse parkingOrderResponse = ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrderService.getOrderById(orderId));
+
+        //then
+        assertEquals(ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder),parkingOrderResponse);
     }
 
 }
