@@ -101,7 +101,7 @@ public class ParkingOrderService {
         if (!RegexUtils.validateEmail(email)) {
             throw new IllegalParameterException("预约失败，邮箱格式不正确");
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         double price;
         Optional<ParkingLot> parkingOrderOptional = parkingLotRepository.findById(parkingOrder.getParkingLotId());
         if (!parkingOrderOptional.isPresent()) {
@@ -109,8 +109,11 @@ public class ParkingOrderService {
         }
         double pricePerHour = parkingOrderOptional.get().getPrice();
         try {
-            Date startTime = format.parse(parkingOrder.getParkingStartTime());
-            Date endTime = format.parse(parkingOrder.getParkingEndTime());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date startTime = new Date(Long.parseLong(parkingOrder.getParkingEndTime()));
+            Date endTime = new Date(Long.parseLong(parkingOrder.getParkingEndTime()));
+            parkingOrder.setParkingStartTime(format.format(startTime));
+            parkingOrder.setParkingEndTime(format.format(endTime));
             if (startTime.after(endTime)) {
                 throw new IllegalParameterException("预约失败，时间段已过期");
             }
@@ -121,11 +124,11 @@ public class ParkingOrderService {
                 throw new IllegalParameterException("预约失败，时间段已过期");
             }
             price = (endTime.getTime() - startTime.getTime()) / MILLISECONDSPERHOUR * pricePerHour;
-        } catch (ParseException | IllegalParameterException e) {
+        } catch (IllegalParameterException e) {
             throw new IllegalParameterException("预约失败，时间段已过期");
         }
         User user = userRepository.findFirstByEmail(email);
-
+///ToDo:加空用户判断
         parkingOrder.setUserId(user.getId());
         parkingOrder.setPrice(price);
         parkingOrder.setStatus(WAIT_FOR_SURE);
