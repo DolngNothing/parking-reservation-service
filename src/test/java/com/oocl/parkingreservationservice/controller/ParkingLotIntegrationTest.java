@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +21,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 public class ParkingLotIntegrationTest {
+    public static final String PARKING_LOTS = "parkingLots";
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ParkingLotRepository parkingLotRepository;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @BeforeEach
     public void before() {
@@ -42,11 +46,24 @@ public class ParkingLotIntegrationTest {
     @AfterEach
     public void after() {
         parkingLotRepository.deleteAll();
+        stringRedisTemplate.delete(PARKING_LOTS);
         assert parkingLotRepository.findAll().isEmpty();
     }
 
     @Test
     public void should_return_parking_lot_when_get_parking_lot_given_lng_and_lat() throws Exception {
+        //when then
+        mockMvc.perform(get("/parkingLots").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("lng", "1.0")
+                .param("lat", "1.0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("ali"))
+                .andExpect(jsonPath("$[1].name").value("ali"));
+    }
+
+    @Test
+    public void should_return_parking_lot_when_get_parking_lot_from_redis_given_lng_and_lat() throws Exception {
+        stringRedisTemplate.opsForValue().set(PARKING_LOTS, "[{\"id\":3,\"latitude\":\"1.0\",\"longitude\":\"1.0\",\"name\":\"ali\"},{\"id\":4,\"latitude\":\"1.0\",\"longitude\":\"1.0\",\"name\":\"ali\"}]");
         //when then
         mockMvc.perform(get("/parkingLots").contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("lng", "1.0")
