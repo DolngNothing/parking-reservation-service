@@ -33,11 +33,13 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     testCompileOnly 'org.projectlombok:lombok:1.18.12'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
-    
+    compile "com.google.zxing:core:3.4.0"
+    compile "com.google.zxing:javase:3.4.0"
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
 }
 
 configurations {
@@ -56,8 +58,7 @@ ext {
             '**/model/**',
             '**/dto/**',
             '**/constants/**',
-            '**/controller/GlobalExceptionHandler.java',
-            '*/ParkingReservationServiceApplication.java',
+            '*/ParkingReservationServiceApplication.*',
             '**/config/**']
 }
 
