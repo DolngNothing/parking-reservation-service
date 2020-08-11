@@ -35,13 +35,10 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
     compile "com.google.zxing:core:3.4.0"
     compile "com.google.zxing:javase:3.4.0"
-    runtime group: 'com.h2database', name: 'h2', version: '1.4.200'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-
-
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
 }
 
