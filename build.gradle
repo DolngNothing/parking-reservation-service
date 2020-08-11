@@ -59,7 +59,8 @@ ext {
             '**/dto/**',
             '**/constants/**',
             '*/ParkingReservationServiceApplication.*',
-            '**/config/**']
+            '**/config/**',
+            '**/utils/**']
 }
 
 jacocoTestCoverageVerification {
