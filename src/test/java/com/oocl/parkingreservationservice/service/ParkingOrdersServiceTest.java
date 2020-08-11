@@ -20,7 +20,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -315,21 +318,21 @@ public class ParkingOrdersServiceTest {
         ParkingOrderResponse parkingOrderResponse = parkingOrderService.getOrderById(orderId);
 
         //then
-        assertEquals(ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder),parkingOrderResponse);
+        assertEquals(ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder), parkingOrderResponse);
     }
 
     @Test
-    void should_return_all_orders_when_get_all_orders_given_right_email() throws IllegalParameterException, OrderNotExistException, ParkingOrderException {
+    void should_return_all_orders_when_get_all_orders_given_right_email() throws IllegalParameterException, OrderNotExistException {
         //given
 
         String email = "545759585@qq.com";
-        User user = new User(1,"15626155019",email,"karen","123");
+        User user = new User(1, "15626155019", email, "karen", "123");
 
         List<ParkingOrder> parkingOrders = Arrays.asList(
                 new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
                 new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
         );
         given(userRepository.findByEmail(email)).willReturn(user);
         given(parkingOrderRepository.findAllByUserId(1)).willReturn(parkingOrders);
