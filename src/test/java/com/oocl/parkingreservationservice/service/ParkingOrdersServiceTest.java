@@ -108,7 +108,7 @@ public class ParkingOrdersServiceTest {
         given(parkingOrderRepository.save(order)).willReturn(order);
         ParkingOrderResponse updateOrder = parkingOrderService.cancelOrder(orderId);
         //then
-        assertEquals(order, updateOrder);
+        assertEquals(StatusContants.DELETED,updateOrder.getStatus());
     }
 
     @Test
@@ -121,11 +121,10 @@ public class ParkingOrdersServiceTest {
         ParkingOrder parkingOrder = ParkingOrderMapper.convertToParkingOrder(order);
         given(parkingOrderRepository.findById(anyInt())).willReturn(Optional.of(parkingOrder));
         given(parkingOrderRepository.save(any(ParkingOrder.class))).willReturn(parkingOrder);
-        ParkingOrderResponse parkingOrderResponse = ParkingOrderMapper.converToParkingOrderResponse(parkingOrder);
         ParkingOrderResponse updateOrder = parkingOrderService.cancelOrder(orderId);
-//        System.out.println(updateOrder);
         //then
-        assertEquals(parkingOrderResponse,updateOrder);
+        assertEquals(StatusContants.DELETED,updateOrder.getStatus());
+
     }
 
     @Test

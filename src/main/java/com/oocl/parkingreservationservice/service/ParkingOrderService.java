@@ -67,6 +67,8 @@ public class ParkingOrderService {
                 }
             case DELETED:
                 throw new ParkingOrderException(ALREADY_CANCEL_MESSAGE);
+            default:
+                break;
         }
         return ParkingOrderMapper.converToParkingOrderResponse(order);
     }
