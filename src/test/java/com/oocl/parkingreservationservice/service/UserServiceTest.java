@@ -1,7 +1,6 @@
 package com.oocl.parkingreservationservice.service;
 
 import com.oocl.parkingreservationservice.constants.MessageConstants;
-import com.oocl.parkingreservationservice.dto.UserLoginResponse;
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
 import com.oocl.parkingreservationservice.exception.UserNotExistException;
 import com.oocl.parkingreservationservice.model.User;
