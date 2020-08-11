@@ -46,12 +46,12 @@ public class ParkingLotIntegrationTest {
     @AfterEach
     public void after() {
         parkingLotRepository.deleteAll();
+        stringRedisTemplate.delete(PARKING_LOTS);
         assert parkingLotRepository.findAll().isEmpty();
     }
 
     @Test
     public void should_return_parking_lot_when_get_parking_lot_given_lng_and_lat() throws Exception {
-        stringRedisTemplate.delete(PARKING_LOTS);
         //when then
         mockMvc.perform(get("/parkingLots").contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("lng", "1.0")
