@@ -1,14 +1,19 @@
 package com.oocl.parkingreservationservice.model;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class ParkingOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,5 +28,19 @@ public class ParkingOrder {
     private String carNumber;
     private Double price;
 
-
+    @Override
+    public String toString() {
+        return "ParkingOrder{" +
+                "id=" + id +
+                ", fetchNumber=" + fetchNumber +
+                ", parkingStartTime='" + parkingStartTime + '\'' +
+                ", parkingEndTime='" + parkingEndTime + '\'' +
+                ", userId=" + userId +
+                ", parkingLotId=" + parkingLotId +
+                ", createTime='" + createTime + '\'' +
+                ", status='" + status + '\'' +
+                ", carNumber='" + carNumber + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }

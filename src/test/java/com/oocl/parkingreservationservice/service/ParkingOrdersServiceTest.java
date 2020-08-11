@@ -2,12 +2,12 @@ package com.oocl.parkingreservationservice.service;
 
 import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
-import com.oocl.parkingreservationservice.dto.BookOrderResponse;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
 import com.oocl.parkingreservationservice.exception.OrderNotExistException;
 import com.oocl.parkingreservationservice.exception.ParkingOrderException;
+import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.model.User;
 import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
@@ -18,8 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -255,6 +253,22 @@ public class ParkingOrdersServiceTest {
     }
 
     @Test
+    void should_throw_illegal_parameter_exception_when_book_parking_lot_given_not_exist_parking_lot() {
+        //given
+        String email = "1214852999@qq.com";
+        String phone = "15920138477";
+        String parkingStartTime = "2020-08-08";
+        String parkingEndTime = "2020-08-09";
+        ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
+
+        //when
+        Exception exception = assertThrows(IllegalParameterException.class, () -> parkingOrderService.addParkingOrder(parkingOrder, phone, email));
+
+        //then
+        assertEquals(IllegalParameterException.class, exception.getClass());
+    }
+
+    @Test
     void should_add_new_book_order_when_book_parking_lot_given_new_book_order() throws IllegalParameterException {
         //given
         String email = "1214852999@qq.com";
@@ -262,17 +276,18 @@ public class ParkingOrdersServiceTest {
         String parkingStartTime = "2020-08-16 00:00:00";
         String parkingEndTime = "2020-08-17 00:00:00";
         ParkingOrder parkingOrder = new ParkingOrder(null, 1L, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", 10.0);
-        List<User> users = new ArrayList<>();
-        users.add(new User(1, null, email, "Jamea", "9999"));
-        given(userRepository.findFirst1ByEmail(email)).willReturn(users);
-        ParkingOrder mockedParkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
+
+        given(userRepository.findFirstByEmail(email)).willReturn(new User(1, null, email, "Jamea", "9999"));
+        given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null)));
+        ParkingOrder mockedParkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, 1, 1, null, null, "浙A1063警", null);
         given(parkingOrderRepository.save(parkingOrder)).willReturn(mockedParkingOrder);
         //when
-        BookOrderResponse returnParkingOrder = parkingOrderService.addParkingOrder(parkingOrder, phone, email);
+        ParkingOrderResponse returnParkingOrder = parkingOrderService.addParkingOrder(parkingOrder, phone, email);
 
 
         //then
-        assertEquals(userRepository.findFirst1ByEmail(email).get(0).getId(), returnParkingOrder.getUserId());
+        assertEquals(1, returnParkingOrder.getUserId());
+
     }
 
 }
