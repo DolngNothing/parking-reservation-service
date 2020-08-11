@@ -113,7 +113,7 @@ public class ParkingOrderService {
         double pricePerHour = parkingOrderOptional.get().getPrice();
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date startTime = new Date(Long.parseLong(parkingOrder.getParkingEndTime()));
+            Date startTime = new Date(Long.parseLong(parkingOrder.getParkingStartTime()));
             Date endTime = new Date(Long.parseLong(parkingOrder.getParkingEndTime()));
             parkingOrder.setParkingStartTime(format.format(startTime));
             parkingOrder.setParkingEndTime(format.format(endTime));
