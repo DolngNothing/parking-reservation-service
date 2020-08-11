@@ -49,26 +49,26 @@ public class ParkingOrderService {
         return parkingOrder;
     }
 
-    public ParkingOrder cancelOrder(Integer orderId) throws ParkingOrderException, ParseException {
+    public ParkingOrderResponse cancelOrder(Integer orderId) throws ParkingOrderException, ParseException {
         ParkingOrder order = getOrderById(orderId);
         switch (order.getStatus()) {
             case WAIT_FOR_SURE:
                 order.setStatus(DELETED);
-                return parkingOrderRepository.save(order);
+                return ParkingOrderMapper.converToParkingOrderResponse(parkingOrderRepository.save(order));
             case ALREADY_SURE:
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date = new Date();
                 Date date1 = format.parse(order.getParkingStartTime());
                 if (date.compareTo(date1) <= 0) {
                     order.setStatus(DELETED);
-                    return parkingOrderRepository.save(order);
+                    return ParkingOrderMapper.converToParkingOrderResponse(parkingOrderRepository.save(order));
                 } else {
                     throw new ParkingOrderException(OVERDUE_MESSAGE);
                 }
             case DELETED:
                 throw new ParkingOrderException(ALREADY_CANCEL_MESSAGE);
         }
-        return order;
+        return ParkingOrderMapper.converToParkingOrderResponse(order);
     }
 
     public ParkingOrderResponse confirmParkingOrder(Integer orderId) throws IllegalOrderOperationException, OrderNotExistException {
