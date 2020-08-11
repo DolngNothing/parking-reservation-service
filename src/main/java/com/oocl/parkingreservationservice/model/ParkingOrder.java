@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -23,5 +24,6 @@ public class ParkingOrder {
     private String carNumber;
     private Double price;
 
-
 }
+
+

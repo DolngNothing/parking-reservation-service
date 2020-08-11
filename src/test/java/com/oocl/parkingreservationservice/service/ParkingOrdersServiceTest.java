@@ -3,11 +3,13 @@ package com.oocl.parkingreservationservice.service;
 import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.BookOrderResponse;
+import com.oocl.parkingreservationservice.dto.ParkingOrderRequest;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
 import com.oocl.parkingreservationservice.exception.OrderNotExistException;
 import com.oocl.parkingreservationservice.exception.ParkingOrderException;
+import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.model.User;
 import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
@@ -24,6 +26,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 
 public class ParkingOrdersServiceTest {
@@ -102,7 +106,7 @@ public class ParkingOrdersServiceTest {
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
         given(parkingOrderRepository.save(order)).willReturn(order);
-        ParkingOrder updateOrder = parkingOrderService.cancelOrder(orderId);
+        ParkingOrderResponse updateOrder = parkingOrderService.cancelOrder(orderId);
         //then
         assertEquals(order, updateOrder);
     }
@@ -111,14 +115,17 @@ public class ParkingOrdersServiceTest {
     void should_return_updated_order_when_cancel_order_given_certain_order_id() throws ParkingOrderException, ParseException {
         //given
         int orderId = 1;
-        ParkingOrder order = new ParkingOrder(orderId, 1L, "2021-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.ALREADY_SURE, "1234", 10.0);
+        ParkingOrderRequest order = new ParkingOrderRequest("2021-8-10 12:25:30",
+                "2020-8-10 14:25:30", 1, "A123", null,null,StatusContants.ALREADY_SURE);
         //when
-        given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
-        given(parkingOrderRepository.save(order)).willReturn(order);
-        ParkingOrder updateOrder = parkingOrderService.cancelOrder(orderId);
+        ParkingOrder parkingOrder = ParkingOrderMapper.convertToParkingOrder(order);
+        given(parkingOrderRepository.findById(anyInt())).willReturn(Optional.of(parkingOrder));
+        given(parkingOrderRepository.save(any(ParkingOrder.class))).willReturn(parkingOrder);
+        ParkingOrderResponse parkingOrderResponse = ParkingOrderMapper.converToParkingOrderResponse(parkingOrder);
+        ParkingOrderResponse updateOrder = parkingOrderService.cancelOrder(orderId);
+//        System.out.println(updateOrder);
         //then
-        assertEquals(order, updateOrder);
+        assertEquals(parkingOrderResponse,updateOrder);
     }
 
     @Test
