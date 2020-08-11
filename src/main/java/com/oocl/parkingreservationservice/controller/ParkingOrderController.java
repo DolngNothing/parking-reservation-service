@@ -33,7 +33,7 @@ public class ParkingOrderController {
 
     @PatchMapping("/{parkingOrderId}")
     @ResponseStatus(HttpStatus.OK)
-    public ParkingOrder updateParkingOrder(@PathVariable Integer parkingOrderId) throws ParkingOrderException, ParseException {
+    public ParkingOrderResponse updateParkingOrder(@PathVariable Integer parkingOrderId) throws ParkingOrderException, ParseException {
         return parkingOrderService.cancelOrder(parkingOrderId);
     }
 
