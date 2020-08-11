@@ -46,7 +46,7 @@ public class UserServiceTest {
 
 
     @Test
-    void should_throw_wrong_password_exception_and_return_wrong_password_when_login_given_right_phone_wrong_password() {
+    void should_throw_wrong_password_exception_and_return_wrong_password_message_when_login_given_right_phone_wrong_password() {
         //given
         String phone = "13427560238";
         String password = "456";
@@ -63,7 +63,7 @@ public class UserServiceTest {
 
 
     @Test
-    void should_throw_not_exist_user_exception_and_return_not_exist_user_infomation_when_login_given_not_exist_phone_and_wrong_password() {
+    void should_throw_not_exist_user_exception_and_return_not_exist_user_message_when_login_given_not_exist_phone_and_wrong_password() {
         //given
         String phone = "1342756023";
         String password = "456";
