@@ -3,6 +3,8 @@ package com.oocl.parkingreservationservice.service;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -18,17 +20,32 @@ public class ParkingLotService {
     public static final String NO_LONGITUDE = "经度缺失";
     public static final String NO_LATITUDE = "纬度缺失";
     private static final double EARTH_RADIUS = 6378137;
+    public static final String PARKING_LOTS = "parkingLots";
     private final ParkingLotRepository parkingLotRepository;
+    private RedisTemplate redisTemplate;
 
     @Autowired
     public ParkingLotService(ParkingLotRepository parkingLotRepository) {
         this.parkingLotRepository = parkingLotRepository;
     }
 
+    @Autowired
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
     public List<ParkingLot> getParkingLots(Double longitude, Double latitude) {
         Assert.notNull(longitude, NO_LONGITUDE);
         Assert.notNull(latitude, NO_LATITUDE);
-        List<ParkingLot> parkingLots = getParkingLots();
+        ValueOperations<String, List<ParkingLot>> operations = redisTemplate.opsForValue();
+        List<ParkingLot> parkingLots = null;
+        if (redisTemplate.hasKey(PARKING_LOTS)) {
+            parkingLots = operations.get(PARKING_LOTS);
+        }
+        if (parkingLots == null) {
+            parkingLots = getParkingLots();
+            operations.set(PARKING_LOTS, parkingLots);
+        }
         return parkingLots.stream()
                 .filter(parkingLot -> parkingLot.getLatitude() != null && parkingLot.getLongitude() != null)
                 .filter(parkingLot -> getDistance(
