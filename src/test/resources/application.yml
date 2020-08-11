@@ -6,6 +6,12 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb;MODE=MYSQL
     driverClassName: org.h2.Driver
+#  redis:
+#    database: 0
+#    host: 10.222.29.209
+#    port: 6379
+#    password:
+#    timeout: 5000
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: true

@@ -42,6 +42,10 @@ public class ParkingOrderController {
     public ParkingOrderResponse addParkingOrder(@RequestBody ParkingOrderRequest parkingOrderRequest) throws IllegalParameterException {
         ParkingOrder parkingOrder = ParkingOrderMapper.convertToParkingOrder(parkingOrderRequest);
         return parkingOrderService.addParkingOrder(parkingOrder, parkingOrderRequest.getPhone(), parkingOrderRequest.getEmail());
+    }
 
+    @GetMapping("/{id}")
+    public ParkingOrder getOrderById(@PathVariable Integer id) throws ParkingOrderException {
+        return parkingOrderService.getOrderById(id);
     }
 }

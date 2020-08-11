@@ -20,6 +20,7 @@ import java.util.Date;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -111,5 +112,18 @@ public class ParkingOrderIntegrationTest {
         mockMvc.perform(post(("/parkingOrders")).contentType(MediaType.APPLICATION_JSON).content(orderInfo))
                 .andExpect(status().isBadRequest());
         //then
+    }
+
+    @Test
+    void should_return_employee_when_hit_get_employee_endpoint_given_employee_id() throws Exception {
+        //given
+        ParkingOrder order = new ParkingOrder(1, 1L, "2020-08-10 12:25:30",
+                "2020-08-10 14:25:30", 1, 1, "2020-08-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
+        ParkingOrder parkingOrder = parkingOrderRepository.save(order);
+
+        //when
+        mockMvc.perform(get("/parkingOrders/" + parkingOrder.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(parkingOrder.getId()));
     }
 }
