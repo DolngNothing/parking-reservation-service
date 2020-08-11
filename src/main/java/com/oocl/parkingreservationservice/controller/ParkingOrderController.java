@@ -1,6 +1,5 @@
 package com.oocl.parkingreservationservice.controller;
 
-import com.oocl.parkingreservationservice.dto.BookOrderResponse;
 import com.oocl.parkingreservationservice.dto.ParkingOrderRequest;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
@@ -28,6 +27,7 @@ public class ParkingOrderController {
     @PatchMapping(value = "/{parkingOrderId}", params = {"type"})
     @ResponseStatus(HttpStatus.OK)
     public ParkingOrderResponse confirmParkingOrder(@PathVariable Integer parkingOrderId, String type) throws OrderNotExistException, IllegalOrderOperationException {
+
         return parkingOrderService.confirmParkingOrder(parkingOrderId);
     }
 
@@ -39,7 +39,7 @@ public class ParkingOrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookOrderResponse addParkingOrder(@RequestBody ParkingOrderRequest parkingOrderRequest) throws IllegalParameterException {
+    public ParkingOrderResponse addParkingOrder(@RequestBody ParkingOrderRequest parkingOrderRequest) throws IllegalParameterException {
         ParkingOrder parkingOrder = ParkingOrderMapper.convertToParkingOrder(parkingOrderRequest);
         return parkingOrderService.addParkingOrder(parkingOrder, parkingOrderRequest.getPhone(), parkingOrderRequest.getEmail());
 

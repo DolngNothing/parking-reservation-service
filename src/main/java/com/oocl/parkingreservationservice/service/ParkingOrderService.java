@@ -3,13 +3,13 @@ package com.oocl.parkingreservationservice.service;
 
 import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
-import com.oocl.parkingreservationservice.dto.BookOrderResponse;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
 import com.oocl.parkingreservationservice.exception.OrderNotExistException;
 import com.oocl.parkingreservationservice.exception.ParkingOrderException;
 import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
+import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.model.User;
 import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 
 import static com.oocl.parkingreservationservice.constants.StatusContants.*;
 
@@ -29,6 +30,7 @@ public class ParkingOrderService {
     private static final String OVERDUE_MESSAGE = "时间段已过期，无法取消";
     private static final String NONE_EXISTENT_MESSAGE = "订单不存在";
     private static final String ALREADY_CANCEL_MESSAGE = "订单已取消，请勿重复操作";
+    public static final double MILLISECONDSPERHOUR = 3600000.0;
     private final ParkingOrderRepository parkingOrderRepository;
     private final UserRepository userRepository;
     private final ParkingLotRepository parkingLotRepository;
@@ -54,14 +56,14 @@ public class ParkingOrderService {
         switch (order.getStatus()) {
             case WAIT_FOR_SURE:
                 order.setStatus(DELETED);
-                return ParkingOrderMapper.converToParkingOrderResponse(parkingOrderRepository.save(order));
+                return ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrderRepository.save(order));
             case ALREADY_SURE:
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date date = new Date();
                 Date date1 = format.parse(order.getParkingStartTime());
                 if (date.compareTo(date1) <= 0) {
                     order.setStatus(DELETED);
-                    return ParkingOrderMapper.converToParkingOrderResponse(parkingOrderRepository.save(order));
+                    return ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrderRepository.save(order));
                 } else {
                     throw new ParkingOrderException(OVERDUE_MESSAGE);
                 }
@@ -70,7 +72,7 @@ public class ParkingOrderService {
             default:
                 break;
         }
-        return ParkingOrderMapper.converToParkingOrderResponse(order);
+        return ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(order);
     }
 
     public ParkingOrderResponse confirmParkingOrder(Integer orderId) throws IllegalOrderOperationException, OrderNotExistException {
@@ -85,11 +87,11 @@ public class ParkingOrderService {
         }
         parkingOrder.setStatus(StatusContants.ALREADY_SURE);
         parkingOrderRepository.save(parkingOrder);
-        return ParkingOrderMapper.converToParkingOrderResponse(parkingOrder);
+        return ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder);
 
     }
 
-    public BookOrderResponse addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException {
+    public ParkingOrderResponse addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException {
         if (!RegexUtils.validateMobilePhone(phone))
             throw new IllegalParameterException("预约失败，手机格式不正确");
         if (!RegexUtils.checkPlateNumberFormat(parkingOrder.getCarNumber()))
@@ -98,28 +100,29 @@ public class ParkingOrderService {
             throw new IllegalParameterException("预约失败，邮箱格式不正确");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         double price;
-        double pricePerHour = parkingLotRepository.findPriceById(parkingOrder.getParkingLotId());
+        Optional<ParkingLot> parkingOrderOptional = parkingLotRepository.findById(parkingOrder.getParkingLotId());
+        if (!parkingOrderOptional.isPresent()) throw new IllegalParameterException("不存在该停车场");
+        double pricePerHour = parkingOrderOptional.get().getPrice();
         try {
             Date startTime = format.parse(parkingOrder.getParkingStartTime());
             Date endTime = format.parse(parkingOrder.getParkingEndTime());
             if (startTime.after(endTime)) throw new IllegalParameterException("预约失败，时间段已过期");
             if (startTime.before(new Date())) throw new IllegalParameterException("预约失败，时间段已过期");
             if (endTime.before(new Date())) throw new IllegalParameterException("预约失败，时间段已过期");
-            price = (endTime.getTime() - startTime.getTime()) / 3600 * pricePerHour;
+            price = (endTime.getTime() - startTime.getTime()) / MILLISECONDSPERHOUR * pricePerHour;
         } catch (ParseException | IllegalParameterException e) {
             throw new IllegalParameterException("预约失败，时间段已过期");
         }
-        User user = userRepository.findFirst1ByEmail(email).get(0);
+        User user = userRepository.findFirstByEmail(email);
 
         parkingOrder.setUserId(user.getId());
         parkingOrder.setPrice(price);
         parkingOrder.setStatus(WAIT_FOR_SURE);
         ParkingOrder returnParkingOrder = parkingOrderRepository.save(parkingOrder);
-        BookOrderResponse bookOrderResponse = ParkingOrderMapper.convertParkingOrderToBookOrderResponse(returnParkingOrder);
-        //TODO:加字段：停车场位置,取车码由确认订单的负责生成，创建时间要不要？
-        bookOrderResponse.setParkingLotName(parkingLotRepository.findNameById(returnParkingOrder.getParkingLotId()));
-        bookOrderResponse.setLocation(parkingLotRepository.findLocationById(returnParkingOrder.getParkingLotId()));
-        return bookOrderResponse;
+        ParkingOrderResponse parkingOrderResponse = ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(returnParkingOrder);
+        parkingOrderResponse.setParkingLotName(parkingOrderOptional.get().getName());
+        parkingOrderResponse.setLocation(parkingOrderOptional.get().getLocation());
+        return parkingOrderResponse;
     }
 
 }

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    List<User> findFirst1ByEmail(String email);
+    User findFirstByEmail(String email);
 
     @Query(value = "select * from user where phone_number = ?1;", nativeQuery = true)
     User findByPhone(String phone);
