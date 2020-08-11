@@ -1,5 +1,7 @@
 package com.oocl.parkingreservationservice.service;
 
+import com.oocl.parkingreservationservice.constants.MessageConstants;
+import com.oocl.parkingreservationservice.exception.IllegalParameterException;
 import com.oocl.parkingreservationservice.model.User;
 import com.oocl.parkingreservationservice.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,12 @@ public class UserService {
     }
 
 
-    public User login(String phone, String password) {
-        return userRepository.findByPhone(phone);
+    public User login(String phone, String password) throws IllegalParameterException {
+        User user = userRepository.findByPhone(phone);
+        if (!password.equals(user.getPassword())) {
+            throw new IllegalParameterException(MessageConstants.WRONG_PASSWORD);
+        }
+
+        return user;
     }
 }

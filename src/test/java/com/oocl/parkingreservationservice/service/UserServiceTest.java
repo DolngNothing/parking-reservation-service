@@ -1,5 +1,6 @@
 package com.oocl.parkingreservationservice.service;
 
+import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.dto.UserLoginResponse;
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
 import com.oocl.parkingreservationservice.model.User;
@@ -24,7 +25,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void should_return_useId_and_username_when_login_given_user() {
+    void should_return_useId_and_username_when_login_given_user() throws IllegalParameterException {
         //given
         String phone = "13427560238";
         String password = "123";
@@ -52,11 +53,10 @@ public class UserServiceTest {
         given(userRepository.findByPhone(phone)).willReturn(user);
 
         //when
-        User loginedUser = userService.login(phone, password);
-        Exception exception = assertThrows(IllegalParameterException.class, () -> userService.login(phone,password));
+        Exception exception = assertThrows(IllegalParameterException.class, () -> userService.login(phone, password));
 
         //then
         assertEquals(IllegalParameterException.class, exception.getClass());
-        assertEquals("密码不正确！", exception.getMessage());
+        assertEquals(MessageConstants.WRONG_PASSWORD, exception.getMessage());
     }
 }
