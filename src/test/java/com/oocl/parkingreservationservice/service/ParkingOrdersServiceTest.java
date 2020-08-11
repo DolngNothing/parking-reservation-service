@@ -8,8 +8,8 @@ import com.oocl.parkingreservationservice.exception.IllegalOrderOperationExcepti
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
 import com.oocl.parkingreservationservice.exception.OrderNotExistException;
 import com.oocl.parkingreservationservice.exception.ParkingOrderException;
-import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
+import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.model.User;
 import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
@@ -284,7 +284,7 @@ public class ParkingOrdersServiceTest {
         ParkingOrder parkingOrder = new ParkingOrder(null, 1L, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", 10.0);
 
         given(userRepository.findFirstByEmail(email)).willReturn(new User(1, null, email, "Jamea", "9999"));
-        given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null)));
+        given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null, "")));
         ParkingOrder mockedParkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, 1, 1, null, null, "浙A1063警", null);
         given(parkingOrderRepository.save(parkingOrder)).willReturn(mockedParkingOrder);
         //when

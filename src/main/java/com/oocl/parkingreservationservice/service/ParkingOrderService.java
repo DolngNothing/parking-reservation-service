@@ -120,8 +120,8 @@ public class ParkingOrderService {
         parkingOrder.setStatus(WAIT_FOR_SURE);
         ParkingOrder returnParkingOrder = parkingOrderRepository.save(parkingOrder);
         ParkingOrderResponse parkingOrderResponse = ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(returnParkingOrder);
-        parkingOrderResponse.setParkingLotName(parkingLotRepository.findNameById(returnParkingOrder.getParkingLotId()));
-        parkingOrderResponse.setLocation(parkingLotRepository.findLocationById(returnParkingOrder.getParkingLotId()));
+        parkingOrderResponse.setParkingLotName(parkingOrderOptional.get().getName());
+        parkingOrderResponse.setLocation(parkingOrderOptional.get().getLocation());
         return parkingOrderResponse;
     }
 

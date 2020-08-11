@@ -66,7 +66,7 @@ public class ParkingOrderIntegrationTest {
 
     @Test
     void should_return_parking_order_response_when_hit_add_order_endpoint_given_info() throws Exception {
-        ParkingLot parkingLot = new ParkingLot(null, "pakinglot1", "112.5", "22.3", 100, 0.5, "this is a test parkingLot", "asdasd");
+        ParkingLot parkingLot = new ParkingLot(null, "pakinglot1", "112.5", "22.3", 100, 0.5, "this is a test parkingLot", "asdasd", "");
         parkingLot = parkingLotRepository.save(parkingLot);
         User user = new User(null, "15920138471", "1214852999@qq.com", "James", "null");
         userRepository.save(user);
@@ -89,7 +89,7 @@ public class ParkingOrderIntegrationTest {
 
     @Test
     void should_return_bad_request_when_hit_add_order_endpoint_given_illegal_info() throws Exception {
-        ParkingLot parkingLot = new ParkingLot(null, "pakinglot1", "112.5", "22.3", 100, 0.5, "this is a test parkingLot", "asdasd");
+        ParkingLot parkingLot = new ParkingLot(null, "pakinglot1", "112.5", "22.3", 100, 0.5, "this is a test parkingLot", "asdasd", "");
         parkingLot = parkingLotRepository.save(parkingLot);
         User user = new User(null, "15920138471", "1214852999@qq.com", "James", "null");
         userRepository.save(user);
