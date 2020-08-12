@@ -33,7 +33,7 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.apache.commons/commons-pool2
     compile group: 'org.apache.commons', name: 'commons-pool2', version: '2.8.0'
-
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     testCompileOnly 'org.projectlombok:lombok:1.18.12'
