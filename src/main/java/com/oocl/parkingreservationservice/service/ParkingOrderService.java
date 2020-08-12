@@ -137,6 +137,7 @@ public class ParkingOrderService {
         } catch (IllegalParameterException e) {
             throw new IllegalParameterException("预约失败，时间段已过期");
         }
+        //ToDO:phone
         User user = userRepository.findFirstByEmail(email);
 ///ToDo:加空用户判断
         parkingOrder.setUserId(user.getId());
@@ -146,6 +147,7 @@ public class ParkingOrderService {
         ParkingOrderResponse parkingOrderResponse = ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(returnParkingOrder);
         parkingOrderResponse.setParkingLotName(parkingOrderOptional.get().getName());
         parkingOrderResponse.setLocation(parkingOrderOptional.get().getLocation());
+        //ToDo:
         return parkingOrderResponse;
     }
 

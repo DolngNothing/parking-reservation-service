@@ -72,7 +72,7 @@ public class ParkingOrderIntegrationTest {
         User user = new User(null, "15920138471", "1214852999@qq.com", "James", "null");
         userRepository.save(user);
         String parkingStartTime = Long.toString(new Date().getTime() + 1000);
-        String parkingEndTime = Long.toString(new Date().getTime() + 2000);
+        String parkingEndTime = Long.toString(new Date().getTime() + 200000000);
         String orderInfo = "{\n" +
                 "    \"email\":\"1214852999@qq.com\",\n" +
                 "    \"phone\":\"15920138471\",\n" +
