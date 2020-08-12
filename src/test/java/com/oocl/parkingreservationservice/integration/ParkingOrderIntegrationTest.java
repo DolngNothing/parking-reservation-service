@@ -125,7 +125,7 @@ public class ParkingOrderIntegrationTest {
     @Test
     void should_return_order_when_hit_get_order_endpoint_given_order_id() throws Exception {
         //given
-        ParkingOrder order = new ParkingOrder(1, null, "2020-08-10 12:25:30",
+        ParkingOrder order = new ParkingOrder(1, "http://www.baidu.com", "2020-08-10 12:25:30",
                 "2020-08-10 14:25:30", 1, 1, "2020-08-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrder parkingOrder = parkingOrderRepository.save(order);
 
@@ -277,18 +277,16 @@ public class ParkingOrderIntegrationTest {
                 .andExpect(jsonPath("$.message").value(MessageConstants.ODER_NOT_EXIST));
     }
 
-//    @Test
-//    void should_return_binary_when_hit_getOROrder_endpoint_given_order_id() throws Exception {
-////        given
-//        int orderId = 1;
-//        String returnBinary = parkingOrderController.getQRCodeByOrderId(orderId);
-////        when
-//        ParkingOrder parkingOrder = new ParkingOrder(1, null, "2020-8-10 12:25:30",
-//                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0);
-//        parkingOrderRepository.save(parkingOrder);
-////        then
-//        mockMvc.perform(patch("/parkingOrders/" + orderId))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.binary").value(returnBinary));
-//    }
+    @Test
+    void should_return_binary_when_hit_getOROrder_endpoint_given_order_id() throws Exception {
+//        given
+        int orderId = 1;
+//        when
+        ParkingOrder parkingOrder = new ParkingOrder(1, "http://www.baidu.com", "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0);
+        parkingOrder=parkingOrderRepository.save(parkingOrder);
+//        then
+        mockMvc.perform(get("/parkingOrders/fetchCode/" + parkingOrder.getId()))
+                .andExpect(status().isOk());
+    }
 }
