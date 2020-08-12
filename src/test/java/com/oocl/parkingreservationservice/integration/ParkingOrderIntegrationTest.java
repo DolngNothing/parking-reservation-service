@@ -276,4 +276,19 @@ public class ParkingOrderIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value(MessageConstants.ODER_NOT_EXIST));
     }
+
+//    @Test
+//    void should_return_binary_when_hit_getOROrder_endpoint_given_order_id() throws Exception {
+////        given
+//        int orderId = 1;
+//        String returnBinary = parkingOrderController.getQRCodeByOrderId(orderId);
+////        when
+//        ParkingOrder parkingOrder = new ParkingOrder(1, null, "2020-8-10 12:25:30",
+//                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0);
+//        parkingOrderRepository.save(parkingOrder);
+////        then
+//        mockMvc.perform(patch("/parkingOrders/" + orderId))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.binary").value(returnBinary));
+//    }
 }

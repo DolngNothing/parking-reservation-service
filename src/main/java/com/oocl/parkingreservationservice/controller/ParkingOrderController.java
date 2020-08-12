@@ -66,7 +66,7 @@ public class ParkingOrderController {
 
     @GetMapping("/{orderId}")
     @ResponseStatus(HttpStatus.OK)
-    public String getAllOrderByPhoneNumber(@PathVariable Integer orderId){
+    public String getQRCodeByOrderId(@PathVariable Integer orderId){
         return parkingOrderService.getQRCode(orderId);
     }
 
