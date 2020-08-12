@@ -23,7 +23,7 @@ public class UserService {
 
     public User login(String phone, String password) throws IllegalParameterException, UserNotExistException {
         User user = userRepository.findByPhone(phone);
-        if(user == null){
+        if (user == null) {
             throw new UserNotExistException(MessageConstants.USER_NOT_EXIST);
         }
         if (!password.equals(user.getPassword())) {
@@ -32,4 +32,5 @@ public class UserService {
 
         return user;
     }
+
 }

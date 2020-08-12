@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 public class RegexUtils {
     private static final Pattern PATTERN = Pattern.compile("^[1]\\d{10}$");
+
     public static boolean validateMobilePhone(String phone) {
         return PATTERN.matcher(phone).matches();
     }

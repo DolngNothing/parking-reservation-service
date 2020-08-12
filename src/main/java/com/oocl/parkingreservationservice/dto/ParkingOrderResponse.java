@@ -22,6 +22,8 @@ public class ParkingOrderResponse {
     private String parkingLotName;
     private String location;
     private Double price;
+    private String phoneNumber;
+    private String email;
 
 
     @Override

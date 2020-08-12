@@ -6,12 +6,12 @@ spring:
     username: root
     password: 83aeb88a
     driver-class-name:  com.mysql.cj.jdbc.Driver #com.mysql.jdbc.Driver
-#  redis:
-#    database: 0
-#    host: 10.222.29.209
-#    port: 6379
-#    password:
-#    timeout: 5000
+  redis:
+    database: 0
+    host: 10.222.29.209
+    port: 6379
+    password: 83aeb88a
+    timeout: 5000
   servlet:
     multipart:
       max-file-size: 500MB

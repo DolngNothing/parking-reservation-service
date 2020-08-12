@@ -4,10 +4,7 @@ import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderRequest;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
-import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
-import com.oocl.parkingreservationservice.exception.IllegalParameterException;
-import com.oocl.parkingreservationservice.exception.OrderNotExistException;
-import com.oocl.parkingreservationservice.exception.ParkingOrderException;
+import com.oocl.parkingreservationservice.exception.*;
 import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
@@ -20,8 +17,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -85,7 +85,7 @@ public class ParkingOrdersServiceTest {
     }
 
     @Test
-    void should_throw_order_not_exist_excption_when_confirm_order_given_not_exist_order_id() {
+    void should_throw_order_not_exist_exception_when_confirm_order_given_not_exist_order_id() {
 //        given
         Integer orderId = 1;
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.empty());
@@ -96,7 +96,7 @@ public class ParkingOrdersServiceTest {
     }
 
     @Test
-    void should_return_updated_order_when_cancel_order_given_uncertain_order_id() throws ParkingOrderException, ParseException, OrderNotExistException {
+    void should_return_updated_order_when_cancel_order_given_uncertain_order_id() throws ParkingOrderException, ParseException {
         //given
         int orderId = 1;
         ParkingOrder order = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
@@ -111,7 +111,7 @@ public class ParkingOrdersServiceTest {
     }
 
     @Test
-    void should_return_updated_order_when_cancel_order_given_certain_order_id() throws ParkingOrderException, ParseException, OrderNotExistException {
+    void should_return_updated_order_when_cancel_order_given_certain_order_id() throws ParkingOrderException, ParseException {
         //given
         int orderId = 1;
         ParkingOrderRequest order = new ParkingOrderRequest("2021-8-10 12:25:30",
@@ -282,7 +282,7 @@ public class ParkingOrdersServiceTest {
     }
 
     @Test
-    void should_add_new_book_order_when_book_parking_lot_given_new_book_order() throws IllegalParameterException {
+    void should_add_new_book_order_when_book_parking_lot_given_new_book_order() throws IllegalParameterException, UserNotExistException {
         //given
         String email = "1214852999@qq.com";
         String phone = "15920138477";
@@ -290,7 +290,7 @@ public class ParkingOrdersServiceTest {
         String parkingEndTime = Long.toString(new Date().getTime() + 2000);
         ParkingOrder parkingOrder = new ParkingOrder(null, 1L, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", 10.0);
 
-        given(userRepository.findFirstByEmail(email)).willReturn(new User(1, null, email, "Jamea", "9999"));
+        given(userRepository.findByPhone(phone)).willReturn(new User(1, phone, email, "Jamea", "9999"));
         given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null, "")));
         ParkingOrder mockedParkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, 1, 1, null, null, "浙A1063警", null);
         given(parkingOrderRepository.save(parkingOrder)).willReturn(mockedParkingOrder);
@@ -315,7 +315,119 @@ public class ParkingOrdersServiceTest {
         ParkingOrderResponse parkingOrderResponse = parkingOrderService.getOrderById(orderId);
 
         //then
-        assertEquals(ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder),parkingOrderResponse);
+        assertEquals(ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder), parkingOrderResponse);
+    }
+
+    @Test
+
+    void should_return_all_orders_when_get_all_orders_given_right_email() throws InquiryOrderException {
+
+        //given
+        String email = "545759585@qq.com";
+
+
+        User user = new User(1, "15626155019", email, "karen", "123");
+
+        List<ParkingOrder> parkingOrders = Arrays.asList(
+                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
+        );
+        given(userRepository.findByEmail(email)).willReturn(user);
+        given(parkingOrderRepository.findAllByUserId(1)).willReturn(parkingOrders);
+
+        //when
+        List<ParkingOrderResponse> parkingOrderByEmail = parkingOrderService.getAllOrdersByEmail(email);
+
+        //then
+        assertEquals(parkingOrders.stream().map(ParkingOrderMapper::convertParkingOrderToParkingOrderResponse).collect(Collectors.toList()), parkingOrderByEmail);
+    }
+
+    @Test
+    void should_throw_inquiryOrderException_exception_when_inquiry_order_given_not_exist_email() {
+        //given
+        String email = "545759585@qq.com";
+        String unExistEmail = "695759689@qq.com";
+        User user = new User(1,"15626155019",email,"karen","123");
+        List<ParkingOrder> parkingOrders = Arrays.asList(
+                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
+        );
+        given(userRepository.findByEmail(email)).willReturn(user);
+        given(parkingOrderRepository.findAllByUserId(1)).willReturn(parkingOrders);
+
+        //when
+        Exception exception = assertThrows(InquiryOrderException.class, () -> parkingOrderService.getAllOrdersByEmail(unExistEmail));
+
+        //then
+        assertEquals("指定email不存在，请输入正确的email", exception.getMessage());
+    }
+
+    @Test
+    void should_return_all_orders_when_get_all_orders_given_right_phoneNumber() throws InquiryOrderException {
+        //given
+        String phoneNumber = "15626155019";
+        User user = new User(1,"15626155019",null,"karen","123");
+        List<ParkingOrder> parkingOrders = Arrays.asList(
+                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
+        );
+        given(userRepository.findByPhoneNumber(phoneNumber)).willReturn(user);
+        given(parkingOrderRepository.findAllByUserId(1)).willReturn(parkingOrders);
+
+        //when
+        List<ParkingOrderResponse> parkingOrderByPhone = parkingOrderService.getAllOrdersByPhoneNumber(phoneNumber);
+
+        //then
+        assertEquals(parkingOrders.stream().map(ParkingOrderMapper::convertParkingOrderToParkingOrderResponse).collect(Collectors.toList()), parkingOrderByPhone);
+    }
+
+    @Test
+    void should_throw_inquiryOrderException_exception_when_inquiry_order_given_not_exist_phoneNumber() {
+        //given
+        String phoneNumber = "15626155019";
+        String unExistphoneNumber = "13676242112";
+        User user = new User(1,phoneNumber,null,"karen","123");
+        List<ParkingOrder> parkingOrders = Arrays.asList(
+                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
+        );
+        given(userRepository.findByPhoneNumber(phoneNumber)).willReturn(user);
+        given(parkingOrderRepository.findAllByUserId(1)).willReturn(parkingOrders);
+
+        //when
+        Exception exception = assertThrows(InquiryOrderException.class, () -> parkingOrderService.getAllOrdersByPhoneNumber(unExistphoneNumber));
+
+        //then
+        assertEquals("指定phoneNumber不存在，请输入正确的phoneNumber", exception.getMessage());
+    }
+
+    @Test
+    void should_throw_inquiryOrderException_exception_when_inquiry_order_given_not_exist_userId() {
+        //given
+        Integer userId = 1;
+        Integer unExistUserId = 826;
+        User user = new User(userId,null,null,"karen","123");
+        List<ParkingOrder> parkingOrders = Arrays.asList(
+                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
+        );
+        given(parkingOrderRepository.findAllByUserId(userId)).willReturn(parkingOrders);
+
+        //when
+        Exception exception = assertThrows(InquiryOrderException.class, () -> parkingOrderService.getAllOrdersByUserId(unExistUserId));
+
+        //then
+        assertEquals("指定userID不存在，请输入正确的userID", exception.getMessage());
     }
 
 }

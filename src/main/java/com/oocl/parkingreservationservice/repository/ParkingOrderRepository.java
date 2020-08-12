@@ -4,10 +4,11 @@ import com.oocl.parkingreservationservice.model.ParkingOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ParkingOrderRepository extends JpaRepository<ParkingOrder, Integer> {
-//    @Modifying
-//    @Transactional
-//    @Query(value = "update parking_order set status = ?1 where id = ?2",nativeQuery = true)
-//    void updateStatus(String status, int orderId);
+
+    List<ParkingOrder> findAllByUserId(Integer id);
+
 }

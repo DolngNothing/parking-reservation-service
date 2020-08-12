@@ -4,10 +4,7 @@ package com.oocl.parkingreservationservice.service;
 import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
-import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
-import com.oocl.parkingreservationservice.exception.IllegalParameterException;
-import com.oocl.parkingreservationservice.exception.OrderNotExistException;
-import com.oocl.parkingreservationservice.exception.ParkingOrderException;
+import com.oocl.parkingreservationservice.exception.*;
 import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
@@ -16,24 +13,31 @@ import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 import com.oocl.parkingreservationservice.repository.UserRepository;
 import com.oocl.parkingreservationservice.utils.RegexUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.oocl.parkingreservationservice.constants.StatusContants.*;
 
 @Service
 public class ParkingOrderService {
+    public static final double MILLISECONDSPERHOUR = 3600000.0;
     private static final String OVERDUE_MESSAGE = "时间段已过期，无法取消";
     private static final String NONE_EXISTENT_MESSAGE = "订单不存在";
     private static final String ALREADY_CANCEL_MESSAGE = "订单已取消，请勿重复操作";
-    public static final double MILLISECONDSPERHOUR = 3600000.0;
     private final ParkingOrderRepository parkingOrderRepository;
     private final UserRepository userRepository;
     private final ParkingLotRepository parkingLotRepository;
+
+    @Autowired
+    private UserService userService;
+
 
     public ParkingOrderService(ParkingOrderRepository parkingOrderRepository, UserRepository userRepository,
                                ParkingLotRepository parkingLotRepository) {
@@ -52,7 +56,7 @@ public class ParkingOrderService {
         return parkingOrderResponse;
     }
 
-    public ParkingOrderResponse cancelOrder(Integer orderId) throws ParkingOrderException, ParseException, OrderNotExistException {
+    public ParkingOrderResponse cancelOrder(Integer orderId) throws ParkingOrderException, ParseException {
         ParkingOrder order = parkingOrderRepository.findById(orderId).orElse(null);
         if (order == null) {
             throw new ParkingOrderException(NONE_EXISTENT_MESSAGE);
@@ -94,7 +98,7 @@ public class ParkingOrderService {
         return ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder);
     }
 
-    public ParkingOrderResponse addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException {
+    public ParkingOrderResponse addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException, UserNotExistException {
         if (!RegexUtils.validateMobilePhone(phone)) {
             throw new IllegalParameterException("预约失败，手机格式不正确");
         }
@@ -130,8 +134,12 @@ public class ParkingOrderService {
         } catch (IllegalParameterException e) {
             throw new IllegalParameterException("预约失败，时间段已过期");
         }
-        User user = userRepository.findFirstByEmail(email);
+        //ToDO:phone
+        User user = userRepository.findByPhone(phone);
+//        User user = userRepository.findFirstByEmail(email);
 ///ToDo:加空用户判断
+        if(user == null)
+            throw new UserNotExistException(MessageConstants.USER_NOT_EXIST);
         parkingOrder.setUserId(user.getId());
         parkingOrder.setPrice(price);
         parkingOrder.setStatus(WAIT_FOR_SURE);
@@ -139,7 +147,38 @@ public class ParkingOrderService {
         ParkingOrderResponse parkingOrderResponse = ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(returnParkingOrder);
         parkingOrderResponse.setParkingLotName(parkingOrderOptional.get().getName());
         parkingOrderResponse.setLocation(parkingOrderOptional.get().getLocation());
+        parkingOrderResponse.setPhoneNumber(phone);
+        parkingOrderResponse.setEmail(email);
+        //ToDo:
         return parkingOrderResponse;
     }
 
+
+    public List<ParkingOrderResponse> getAllOrdersByEmail(String email) throws InquiryOrderException {
+        User userByEmail = userRepository.findByEmail(email);
+        if(userByEmail == null){
+            throw new InquiryOrderException("指定email不存在，请输入正确的email");
+        }
+        List<ParkingOrder> parkingOrders = parkingOrderRepository.findAllByUserId(userByEmail.getId());
+        return parkingOrders.stream().map(ParkingOrderMapper::convertParkingOrderToParkingOrderResponse).collect(Collectors.toList());
+    }
+
+    public List<ParkingOrderResponse> getAllOrdersByPhoneNumber(String phoneNumber) throws InquiryOrderException {
+        User userByPhoneNumber = userRepository.findByPhoneNumber(phoneNumber);
+        if(userByPhoneNumber == null){
+            throw new InquiryOrderException("指定phoneNumber不存在，请输入正确的phoneNumber");
+        }
+        List<ParkingOrder> parkingOrders = parkingOrderRepository.findAllByUserId(userByPhoneNumber.getId());
+        return parkingOrders.stream().map(ParkingOrderMapper::convertParkingOrderToParkingOrderResponse).collect(Collectors.toList());
+    }
+
+    public List<ParkingOrderResponse> getAllOrdersByUserId(Integer id) throws InquiryOrderException {
+        User userByUserId = userRepository.findById(id).orElse(null);
+        if(userByUserId == null){
+            throw new InquiryOrderException("指定userID不存在，请输入正确的userID");
+        }
+        List<ParkingOrder> parkingOrders = parkingOrderRepository.findAllByUserId(id);
+        return parkingOrders.stream().map(ParkingOrderMapper::convertParkingOrderToParkingOrderResponse).collect(Collectors.toList());
+    }
 }
+

@@ -2,10 +2,7 @@ package com.oocl.parkingreservationservice.handler;
 
 
 import com.oocl.parkingreservationservice.dto.ExceptionBean;
-import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
-import com.oocl.parkingreservationservice.exception.IllegalParameterException;
-import com.oocl.parkingreservationservice.exception.OrderNotExistException;
-import com.oocl.parkingreservationservice.exception.ParkingOrderException;
+import com.oocl.parkingreservationservice.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,6 +40,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBean IllegalParameterException(IllegalParameterException e) {
+        return new ExceptionBean(e.getMessage());
+    }
+
+    @ExceptionHandler(InquiryOrderException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBean InquiryOrderException(UserNotExistException e) {
         return new ExceptionBean(e.getMessage());
     }
 }

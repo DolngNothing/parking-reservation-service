@@ -22,7 +22,7 @@ public class UserController {
 
     @PostMapping("/login")
     public UserLoginResponse login(@RequestBody UserLoginRequest userLoginRequest) throws IllegalParameterException, UserNotExistException {
-        User user = userService.login(userLoginRequest.getPhoneNumber(),userLoginRequest.getPassword());
+        User user = userService.login(userLoginRequest.getPhoneNumber(), userLoginRequest.getPassword());
         return UserMapper.convertToUserLoginResponse(user);
     }
 }
