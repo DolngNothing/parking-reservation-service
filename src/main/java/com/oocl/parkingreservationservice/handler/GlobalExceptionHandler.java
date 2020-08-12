@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InquiryOrderException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionBean inquiryOrderException(UserNotExistException e) {
+    public ExceptionBean inquiryOrderException(InquiryOrderException e) {
         return new ExceptionBean(e.getMessage());
     }
 
