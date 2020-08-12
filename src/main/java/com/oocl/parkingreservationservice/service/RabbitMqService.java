@@ -25,13 +25,12 @@ public class RabbitMqService {
         Map<String, String> message = new HashMap<>();
         User user = userRepository.findById(parkingOrder.getUserId()).orElse(null);
         ParkingLot parkingLot = parkingLotRepository.findById(parkingOrder.getParkingLotId()).orElse(null);
-
-        assert user != null;
-        assert parkingLot != null;
-        message.put("phoneNumber", user.getPhoneNumber());
-        message.put("username", user.getUsername());
-        message.put("parkingName", parkingLot.getName());
-        message.put("parkingOrderId", String.valueOf(parkingOrder.getId()));
-        rabbitTemplate.convertAndSend("TestDirectExchange", "TestDirectRouting", message);
+        if(user != null && parkingLot != null){
+            message.put("phoneNumber", user.getPhoneNumber());
+            message.put("username", user.getUsername());
+            message.put("parkingName", parkingLot.getName());
+            message.put("parkingOrderId", String.valueOf(parkingOrder.getId()));
+            rabbitTemplate.convertAndSend("TestDirectExchange", "TestDirectRouting", message);
+        }
     }
 }
