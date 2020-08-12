@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ public class ParkingLotService {
     public static final String NO_LATITUDE = "纬度缺失";
     public static final String PARKING_LOTS = "parkingLots";
     private static final double EARTH_RADIUS = 6378137;
+    public static final int NEARBY_DISTANCE = 2000;
     private final ParkingLotRepository parkingLotRepository;
     private StringRedisTemplate redisTemplate;
 
@@ -38,26 +40,35 @@ public class ParkingLotService {
     public List<ParkingLot> getParkingLots(Double longitude, Double latitude) {
         Assert.notNull(longitude, NO_LONGITUDE);
         Assert.notNull(latitude, NO_LATITUDE);
+        return filterParkingLots(longitude, latitude);
+    }
+
+    public List<ParkingLot> filterParkingLots(Double longitude, Double latitude) {
+        return getParkingLots().stream()
+                .filter(parkingLot -> parkingLot.getLatitude() != null && parkingLot.getLongitude() != null)
+                .filter(parkingLot -> getDistance(
+                        Double.parseDouble(parkingLot.getLongitude()), Double.parseDouble(parkingLot.getLatitude()),
+                        longitude, latitude) <= NEARBY_DISTANCE).limit(5)
+                .sorted(Comparator.comparing(parkingLot -> getDistance(
+                        Double.parseDouble(parkingLot.getLongitude()), Double.parseDouble(parkingLot.getLatitude()),
+                        longitude, latitude) <= NEARBY_DISTANCE))
+                .collect(Collectors.toList());
+    }
+
+
+    public List<ParkingLot> getParkingLots() {
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
         List<ParkingLot> parkingLots = null;
         if (redisTemplate.getKeySerializer() != null && redisTemplate.hasKey(PARKING_LOTS)) {
             parkingLots = JSON.parseArray(operations.get(PARKING_LOTS), ParkingLot.class);
         }
         if (parkingLots == null || parkingLots.isEmpty()) {
-            parkingLots = getParkingLots();
+            parkingLots = parkingLotRepository.findAll();
             if (operations != null) {
                 operations.set(PARKING_LOTS, JSON.toJSONString(parkingLots));
             }
         }
-        return parkingLots.stream()
-                .filter(parkingLot -> parkingLot.getLatitude() != null && parkingLot.getLongitude() != null)
-                .filter(parkingLot -> getDistance(
-                        Double.parseDouble(parkingLot.getLongitude()), Double.parseDouble(parkingLot.getLatitude()),
-                        longitude, latitude) <= 2000).collect(Collectors.toList());
-    }
-
-    public List<ParkingLot> getParkingLots() {
-        return parkingLotRepository.findAll();
+        return parkingLots;
     }
 
     private double calculateRadian(double angle) {
