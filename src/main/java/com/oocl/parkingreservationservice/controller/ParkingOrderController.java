@@ -64,4 +64,10 @@ public class ParkingOrderController {
         return parkingOrderService.getAllOrdersByPhoneNumber(phoneNumber);
     }
 
+    @GetMapping("/{orderId}")
+    @ResponseStatus(HttpStatus.OK)
+    public String getQRCodeByOrderId(@PathVariable Integer orderId){
+        return parkingOrderService.getQRCode(orderId);
+    }
+
 }

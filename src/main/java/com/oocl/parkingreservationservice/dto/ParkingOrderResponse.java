@@ -15,7 +15,7 @@ public class ParkingOrderResponse {
     private Integer parkingLotId;
     private String parkingStartTime;
     private String parkingEndTime;
-    private Integer fetchNumber;
+    private String fetchNumber;
     private String status;
     private String carNumber;
     private String createTime;
