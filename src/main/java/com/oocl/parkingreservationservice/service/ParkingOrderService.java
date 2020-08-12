@@ -125,23 +125,22 @@ public class ParkingOrderService {
             Date endTime = new Date(Long.parseLong(parkingOrder.getParkingEndTime()));
             parkingOrder.setParkingStartTime(format.format(startTime));
             parkingOrder.setParkingEndTime(format.format(endTime));
-            if (startTime.after(endTime)) {
-                throw new IllegalParameterException("预约失败，时间段已过期");
-            }
+
             if (startTime.before(new Date())) {
                 throw new IllegalParameterException("预约失败，时间段已过期");
             }
             if (endTime.before(new Date())) {
                 throw new IllegalParameterException("预约失败，时间段已过期");
             }
+            if (startTime.after(endTime)) {
+                throw new IllegalParameterException("预约失败，时间段已过期");
+            }
             price = (endTime.getTime() - startTime.getTime()) / MILLISECONDSPERHOUR * pricePerHour;
         } catch (IllegalParameterException e) {
             throw new IllegalParameterException("预约失败，时间段已过期");
         }
-        //ToDO:phone
+
         User user = userRepository.findByPhone(phone);
-//        User user = userRepository.findFirstByEmail(email);
-///ToDo:加空用户判断
         if(user == null)
             throw new UserNotExistException(MessageConstants.USER_NOT_EXIST);
         parkingOrder.setUserId(user.getId());
@@ -153,7 +152,6 @@ public class ParkingOrderService {
         parkingOrderResponse.setLocation(parkingOrderOptional.get().getLocation());
         parkingOrderResponse.setPhoneNumber(phone);
         parkingOrderResponse.setEmail(email);
-        //ToDo:
         return parkingOrderResponse;
     }
 
