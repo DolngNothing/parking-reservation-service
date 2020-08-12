@@ -24,11 +24,11 @@ public class CommentService {
     }
 
     public CommentResponse addComment(Comment comment) throws OrderNotExistException, NoAuthorityException {
-        Optional<ParkingOrder> parkingOrderOptional = parkingOrderRepository.findById(comment.getId());
-        if (parkingOrderOptional.get().equals(null)) {
+        ParkingOrder parkingOrder = parkingOrderRepository.findById(comment.getId()).orElse(null);
+        if (parkingOrder == null) {
             throw new OrderNotExistException();
         }
-        if (parkingOrderOptional.get().getId().equals(comment.getOrderId())) {
+        if (!parkingOrder.getId().equals(comment.getOrderId())) {
             throw new NoAuthorityException();
         }
         Comment returnComment = commentRepository.save(comment);

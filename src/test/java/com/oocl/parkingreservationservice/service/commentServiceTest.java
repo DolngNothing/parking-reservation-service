@@ -14,6 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
@@ -40,6 +42,10 @@ public class commentServiceTest {
         String content = "停车场非常干净";
         Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content);
         given(commentRepository.save(mockComment)).willReturn(mockComment);
+        given(parkingOrderRepository.findById(orderId)).willReturn(
+                Optional.of(new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30",
+                        StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0)));
         //when
         CommentResponse returnCommentResponse = commentService.addComment(mockComment);
         //then
@@ -57,13 +63,32 @@ public class commentServiceTest {
         Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content);
         given(commentRepository.save(mockComment)).willReturn(mockComment);
         given(parkingOrderRepository.findById(orderId)).willReturn(
-                java.util.Optional.of(new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", 2, 1, "2020-8-10 14:25:30",
+                java.util.Optional.of(new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30",
                         StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0)));
         //when
         Exception exception = assertThrows(NoAuthorityException.class, () -> commentService.addComment(mockComment));
 
         //then
         assertEquals("没有权限", exception.getMessage());
+    }
+
+    @Test
+    void should_throw_orderNotExistException_when_add_comment_given_comment_userId_not_exist() {
+        //given
+        Integer orderId = 1;
+        Integer parkingLotId = 1;
+        Integer userId = 1;
+        Double score = 3.5;
+        String content = "停车场非常干净";
+        Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content);
+        given(commentRepository.save(mockComment)).willReturn(mockComment);
+        given(parkingOrderRepository.findById(orderId)).willReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(OrderNotExistException.class, () -> commentService.addComment(mockComment));
+
+        //then
+        assertEquals("订单不存在，无法确认", exception.getMessage());
     }
 }
