@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InquiryOrderException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionBean inquiryOrderException(UserNotExistException e) {
+    public ExceptionBean inquiryOrderException(InquiryOrderException e) {
         return new ExceptionBean(e.getMessage());
     }
 
@@ -65,7 +65,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionBean unknownException() {
+    public ExceptionBean unknownException(Exception e) {
+        e.printStackTrace();
         return new ExceptionBean(UNKNOWN_EXCEPTION);
     }
 }

@@ -1,6 +1,5 @@
 package com.oocl.parkingreservationservice.service;
 
-
 import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
@@ -37,7 +36,8 @@ public class ParkingOrderService {
 
     @Autowired
     private UserService userService;
-
+    @Autowired
+    RabbitMqService rabbitMqService;
 
     public ParkingOrderService(ParkingOrderRepository parkingOrderRepository, UserRepository userRepository,
                                ParkingLotRepository parkingLotRepository) {
@@ -95,6 +95,9 @@ public class ParkingOrderService {
         }
         parkingOrder.setStatus(StatusContants.ALREADY_SURE);
         parkingOrderRepository.save(parkingOrder);
+        if (rabbitMqService!=null){
+            rabbitMqService.sendMessageToRabbitMq(parkingOrder);
+        }
         return ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder);
     }
 

@@ -1,5 +1,6 @@
-package com.oocl.parkingreservationservice.controller;
+package com.oocl.parkingreservationservice.integration;
 
+import com.oocl.parkingreservationservice.controller.ParkingLotController;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
 import org.junit.jupiter.api.AfterEach;
