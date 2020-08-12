@@ -65,7 +65,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionBean unknownException() {
+    public ExceptionBean unknownException(Exception e) {
+        e.printStackTrace();
         return new ExceptionBean(UNKNOWN_EXCEPTION);
     }
 }
