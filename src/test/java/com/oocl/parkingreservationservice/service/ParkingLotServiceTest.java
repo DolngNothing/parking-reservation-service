@@ -1,5 +1,6 @@
 package com.oocl.parkingreservationservice.service;
 
+import com.oocl.parkingreservationservice.dto.ParkingLotResponse;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ public class ParkingLotServiceTest {
         ParkingLotService parkingLotService = new ParkingLotService(parkingLotRepository);
         parkingLotService.setRedisTemplate(stringRedisTemplate);
         //when
-        List<ParkingLot> parkingLotsSaved = parkingLotService.getParkingLots(longitude, latitude);
+        List<ParkingLotResponse> parkingLotsSaved = parkingLotService.getParkingLots(longitude, latitude);
         //then
         assertEquals(0, parkingLotsSaved.size());
     }

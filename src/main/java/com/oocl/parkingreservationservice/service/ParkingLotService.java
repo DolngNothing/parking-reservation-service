@@ -1,6 +1,8 @@
 package com.oocl.parkingreservationservice.service;
 
 import com.alibaba.fastjson.JSON;
+import com.oocl.parkingreservationservice.dto.ParkingLotResponse;
+import com.oocl.parkingreservationservice.mapper.ParkingLotMapper;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,10 +40,18 @@ public class ParkingLotService {
         this.redisTemplate = redisTemplate;
     }
 
-    public List<ParkingLot> getParkingLots(Double longitude, Double latitude) {
+    public List<ParkingLotResponse> getParkingLots(Double longitude, Double latitude) {
         Assert.notNull(longitude, NO_LONGITUDE);
         Assert.notNull(latitude, NO_LATITUDE);
-        return filterParkingLots(longitude, latitude);
+        List<ParkingLot> parkingLots = filterParkingLots(longitude, latitude);
+        List<ParkingLotResponse> parkingLotResponses = new ArrayList<>();
+        for (ParkingLot parkingLot : parkingLots) {
+            ParkingLotResponse parkingLotResponse = ParkingLotMapper.map(parkingLot);
+            parkingLotResponse.setDistance(getDistance(longitude, latitude,
+                    Double.parseDouble(parkingLot.getLongitude()), Double.parseDouble(parkingLot.getLatitude())));
+            parkingLotResponses.add(parkingLotResponse);
+        }
+        return parkingLotResponses;
     }
 
     public List<ParkingLot> filterParkingLots(Double longitude, Double latitude) {
