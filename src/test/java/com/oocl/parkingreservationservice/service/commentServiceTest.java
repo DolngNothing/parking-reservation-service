@@ -4,6 +4,7 @@ import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.CommentRequest;
 import com.oocl.parkingreservationservice.dto.CommentResponse;
 import com.oocl.parkingreservationservice.exception.NoAuthorityException;
+import com.oocl.parkingreservationservice.exception.OrderNotExistException;
 import com.oocl.parkingreservationservice.mapper.CommentMapper;
 import com.oocl.parkingreservationservice.model.Comment;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
@@ -25,12 +26,12 @@ public class commentServiceTest {
     @BeforeEach
     public void init() {
         commentRepository = Mockito.mock(CommentRepository.class);
-        commentService = new CommentService(commentRepository);
         parkingOrderRepository = Mockito.mock(ParkingOrderRepository.class);
+        commentService = new CommentService(commentRepository,parkingOrderRepository);
     }
 
     @Test
-    void should_return_comment_when_add_comment_given_comment() {
+    void should_return_comment_when_add_comment_given_comment() throws OrderNotExistException, NoAuthorityException {
         //given
         Integer orderId = 1;
         Integer parkingLotId = 1;
