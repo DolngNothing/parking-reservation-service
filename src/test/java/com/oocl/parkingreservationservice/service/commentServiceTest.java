@@ -1,6 +1,8 @@
 package com.oocl.parkingreservationservice.service;
 
+import com.oocl.parkingreservationservice.dto.CommentRequest;
 import com.oocl.parkingreservationservice.dto.CommentResponse;
+import com.oocl.parkingreservationservice.mapper.CommentMapper;
 import com.oocl.parkingreservationservice.model.Comment;
 import com.oocl.parkingreservationservice.repository.CommentRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +33,7 @@ public class commentServiceTest {
         Comment mockComment = new Comment(1,orderId,parkingLotId,userId,score,content);
         given(commentRepository.save(mockComment)).willReturn(mockComment);
         //when
-        CommentResponse returnCommentResponse = commentService.addComment(orderId,parkingLotId,userId,score,content);
+        CommentResponse returnCommentResponse = commentService.addComment(mockComment);
         //then
         assertEquals(1, returnCommentResponse.getUserId());
     }
