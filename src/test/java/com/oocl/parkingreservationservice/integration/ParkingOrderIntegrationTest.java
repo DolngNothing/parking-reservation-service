@@ -16,10 +16,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,7 +44,6 @@ public class ParkingOrderIntegrationTest {
         ParkingOrder firstOrder = new ParkingOrder(1, 1L, "2020-08-10 12:25:30",
                 "2020-08-10 14:25:30", 1, 1, "2020-08-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrder Order = parkingOrderRepository.save(firstOrder);
-
         OrderId = Order.getId();
         parkLotId = Order.getParkingLotId();
     }
@@ -54,7 +53,6 @@ public class ParkingOrderIntegrationTest {
         parkingOrderRepository.deleteAll();
         parkingLotRepository.deleteAll();
         userRepository.deleteAll();
-
     }
 
     @Test
@@ -115,7 +113,7 @@ public class ParkingOrderIntegrationTest {
     }
 
     @Test
-    void should_return_employee_when_hit_get_employee_endpoint_given_employee_id() throws Exception {
+    void should_return_order_when_hit_get_order_endpoint_given_order_id() throws Exception {
         //given
         ParkingOrder order = new ParkingOrder(1, 1L, "2020-08-10 12:25:30",
                 "2020-08-10 14:25:30", 1, 1, "2020-08-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
@@ -126,4 +124,90 @@ public class ParkingOrderIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(parkingOrder.getId()));
     }
+
+    @Test
+    void should_get_order_list_when_hit_get_order_endpoint_given_userId() throws Exception {
+        //given
+        User user = new User(1, "15626155019", null, "karen", "123");
+        User user2 = new User(2, "15626155019", null, "karen", "123");
+        user = userRepository.save(user);
+        user2 = userRepository.save(user2);
+        List<ParkingOrder> parkingOrders = Arrays.asList(
+                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0),
+                new ParkingOrder(3, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", user2.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤C369警", 60.0)
+        );
+        parkingOrderRepository.save(parkingOrders.get(0));
+        parkingOrderRepository.save(parkingOrders.get(1));
+        parkingOrderRepository.save(parkingOrders.get(2));
+
+        //when
+        mockMvc.perform(get("/parkingOrders").param("userId", String.valueOf(user.getId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].carNumber").value("浙A1063警"))
+                .andExpect(jsonPath("$[1].carNumber").value("粤B258警"));
+    }
+
+    @Test
+    void should_get_order_list_when_hit_get_order_endpoint_given_email() throws Exception {
+        //given
+        String email = "545759585@qq.com";
+        User user = new User(1, "15626155019", email, "karen", "123");
+        User user2 = new User(2, "15626155019", "496349192@qq.com", "emon", "123");
+        user = userRepository.save(user);
+        user2 = userRepository.save(user2);
+        List<ParkingOrder> parkingOrders = Arrays.asList(
+                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0),
+                new ParkingOrder(3, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", user2.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤C369警", 60.0)
+        );
+
+        parkingOrderRepository.save(parkingOrders.get(0));
+        parkingOrderRepository.save(parkingOrders.get(1));
+        parkingOrderRepository.save(parkingOrders.get(2));
+
+        //when
+        mockMvc.perform(get("/parkingOrders").param("email", email))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].carNumber").value("浙A1063警"))
+                .andExpect(jsonPath("$[1].carNumber").value("粤B258警"));
+    }
+
+    @Test
+    void should_get_order_list_when_hit_get_order_endpoint_given_phoneNumber() throws Exception {
+        //given
+        String phoneNumber = "15626155019";
+        User user = new User(1, phoneNumber, null, "karen", "123");
+        User user2 = new User(2, "13626155017", null, "emon", "123");
+        user = userRepository.save(user);
+        user2 = userRepository.save(user2);
+        List<ParkingOrder> parkingOrders = Arrays.asList(
+                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0),
+                new ParkingOrder(3, 1L, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", 2, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤C369警", 60.0)
+        );
+        parkingOrderRepository.save(parkingOrders.get(0));
+        parkingOrderRepository.save(parkingOrders.get(1));
+        parkingOrderRepository.save(parkingOrders.get(2));
+
+        //when
+        mockMvc.perform(get("/parkingOrders").param("phoneNumber", phoneNumber))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].carNumber").value("浙A1063警"))
+                .andExpect(jsonPath("$[1].carNumber").value("粤B258警"));
+    }
+
+
 }

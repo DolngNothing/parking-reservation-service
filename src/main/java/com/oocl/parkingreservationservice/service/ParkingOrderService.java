@@ -4,10 +4,7 @@ package com.oocl.parkingreservationservice.service;
 import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
-import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
-import com.oocl.parkingreservationservice.exception.IllegalParameterException;
-import com.oocl.parkingreservationservice.exception.OrderNotExistException;
-import com.oocl.parkingreservationservice.exception.ParkingOrderException;
+import com.oocl.parkingreservationservice.exception.*;
 import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
@@ -151,16 +148,30 @@ public class ParkingOrderService {
         return parkingOrderResponse;
     }
 
-    public List<ParkingOrderResponse> getAllOrdersByEmail(String email) throws IllegalParameterException, OrderNotExistException{
+    public List<ParkingOrderResponse> getAllOrdersByEmail(String email) throws InquiryOrderException {
         User userByEmail = userRepository.findByEmail(email);
-        if (!RegexUtils.validateEmail(email)) {
-            throw new IllegalParameterException("指定email不存在，请输入正确的email");
+        if(userByEmail == null){
+            throw new InquiryOrderException("指定email不存在，请输入正确的email");
         }
         List<ParkingOrder> parkingOrders = parkingOrderRepository.findAllByUserId(userByEmail.getId());
-        if (parkingOrders == null) {
-            throw new OrderNotExistException();
-        }
         return parkingOrders.stream().map(ParkingOrderMapper::convertParkingOrderToParkingOrderResponse).collect(Collectors.toList());
     }
 
+    public List<ParkingOrderResponse> getAllOrdersByPhoneNumber(String phoneNumber) throws InquiryOrderException {
+        User userByPhoneNumber = userRepository.findByPhoneNumber(phoneNumber);
+        if(userByPhoneNumber == null){
+            throw new InquiryOrderException("指定phoneNumber不存在，请输入正确的phoneNumber");
+        }
+        List<ParkingOrder> parkingOrders = parkingOrderRepository.findAllByUserId(userByPhoneNumber.getId());
+        return parkingOrders.stream().map(ParkingOrderMapper::convertParkingOrderToParkingOrderResponse).collect(Collectors.toList());
+    }
+
+    public List<ParkingOrderResponse> getAllOrdersByUserId(Integer id) throws InquiryOrderException {
+        User userByUserId = userRepository.findById(id).orElse(null);
+        if(userByUserId == null){
+            throw new InquiryOrderException("指定userID不存在，请输入正确的userID");
+        }
+        List<ParkingOrder> parkingOrders = parkingOrderRepository.findAllByUserId(id);
+        return parkingOrders.stream().map(ParkingOrderMapper::convertParkingOrderToParkingOrderResponse).collect(Collectors.toList());
+    }
 }

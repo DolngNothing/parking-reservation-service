@@ -43,9 +43,9 @@ public class GlobalExceptionHandler {
         return new ExceptionBean(e.getMessage());
     }
 
-    @ExceptionHandler(UserNotExistException.class)
+    @ExceptionHandler(InquiryOrderException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBean UserNotException(UserNotExistException e) {
+    public ExceptionBean InquiryOrderException(UserNotExistException e) {
         return new ExceptionBean(e.getMessage());
     }
 }
