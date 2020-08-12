@@ -246,7 +246,7 @@ public class ParkingOrderIntegrationTest {
         mockMvc.perform(patch("/parkingOrders/" + savedParkingOrder.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("type", "comfirm"))
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(MessageConstants.ODER_CONFIRMED));
     }
 
@@ -261,7 +261,7 @@ public class ParkingOrderIntegrationTest {
         mockMvc.perform(patch("/parkingOrders/" + savedParkingOrder.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("type", "comfirm"))
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(MessageConstants.ODER_CANCELED));
     }
 
@@ -273,7 +273,7 @@ public class ParkingOrderIntegrationTest {
         mockMvc.perform(patch("/parkingOrders/" + orderId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("type", "comfirm"))
-                .andExpect(status().isOk())
+                .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(MessageConstants.ODER_NOT_EXIST));
     }
 
