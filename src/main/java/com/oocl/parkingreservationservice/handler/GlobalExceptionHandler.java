@@ -19,11 +19,13 @@ import static com.oocl.parkingreservationservice.constants.MessageConstants.*;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBean illegalArgumentException(IllegalArgumentException illegalArgumentException) {
         return new ExceptionBean(illegalArgumentException.getMessage());
     }
 
     @ExceptionHandler(IllegalOrderOperationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBean illegalOrderOperationException(IllegalOrderOperationException illegalOrderOperationException) {
         return new ExceptionBean(illegalOrderOperationException.getMessage());
     }
