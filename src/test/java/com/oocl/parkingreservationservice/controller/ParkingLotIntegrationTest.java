@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -22,15 +23,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class ParkingLotIntegrationTest {
     public static final String PARKING_LOTS = "parkingLots";
-    @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ParkingLotRepository parkingLotRepository;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private ParkingLotController parkingLotController;
 
     @BeforeEach
     public void before() {
+        mockMvc = MockMvcBuilders.standaloneSetup(parkingLotController).build();
         ParkingLot parkingLot = new ParkingLot();
         parkingLot.setName("ali");
         parkingLot.setLatitude("1.0");

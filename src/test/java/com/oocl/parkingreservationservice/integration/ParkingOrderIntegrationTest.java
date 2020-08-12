@@ -1,6 +1,8 @@
 package com.oocl.parkingreservationservice.integration;
 
 import com.oocl.parkingreservationservice.constants.StatusContants;
+import com.oocl.parkingreservationservice.controller.ParkingOrderController;
+import com.oocl.parkingreservationservice.handler.GlobalExceptionHandler;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.model.User;
@@ -15,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -35,12 +38,16 @@ public class ParkingOrderIntegrationTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
+    private ParkingOrderController parkingOrderController;
+    @Autowired
+    private GlobalExceptionHandler globalExceptionHandler;
     MockMvc mockMvc;
     private int OrderId;
     private int parkLotId;
 
     @BeforeEach
     void init() {
+        mockMvc = MockMvcBuilders.standaloneSetup(parkingOrderController, globalExceptionHandler).build();
         ParkingOrder firstOrder = new ParkingOrder(1, 1L, "2020-08-10 12:25:30",
                 "2020-08-10 14:25:30", 1, 1, "2020-08-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrder Order = parkingOrderRepository.save(firstOrder);

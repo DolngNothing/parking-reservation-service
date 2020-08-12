@@ -6,5 +6,6 @@ public class MessageConstants {
     public final static String ODER_NOT_EXIST = "订单不存在，无法确认";
     public final static String WRONG_PASSWORD = "密码不正确";
     public final static String USER_NOT_EXIST = "用户不存在";
-
+    public final static String UNKNOWN_EXCEPTION = "未知错误";
+    public final static String UN_LOGIN = "未登录";
 }
