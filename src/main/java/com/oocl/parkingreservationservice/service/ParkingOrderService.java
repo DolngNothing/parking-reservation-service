@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -28,17 +27,16 @@ import static com.oocl.parkingreservationservice.constants.StatusContants.*;
 
 @Service
 public class ParkingOrderService {
+    public static final double MILLISECONDSPERHOUR = 3600000.0;
     private static final String OVERDUE_MESSAGE = "时间段已过期，无法取消";
     private static final String NONE_EXISTENT_MESSAGE = "订单不存在";
     private static final String ALREADY_CANCEL_MESSAGE = "订单已取消，请勿重复操作";
-    public static final double MILLISECONDSPERHOUR = 3600000.0;
     private final ParkingOrderRepository parkingOrderRepository;
     private final UserRepository userRepository;
     private final ParkingLotRepository parkingLotRepository;
 
     @Autowired
     private UserService userService;
-
 
 
     public ParkingOrderService(ParkingOrderRepository parkingOrderRepository, UserRepository userRepository,
@@ -58,7 +56,7 @@ public class ParkingOrderService {
         return parkingOrderResponse;
     }
 
-    public ParkingOrderResponse cancelOrder(Integer orderId) throws ParkingOrderException, ParseException, OrderNotExistException {
+    public ParkingOrderResponse cancelOrder(Integer orderId) throws ParkingOrderException, ParseException {
         ParkingOrder order = parkingOrderRepository.findById(orderId).orElse(null);
         if (order == null) {
             throw new ParkingOrderException(NONE_EXISTENT_MESSAGE);
@@ -100,7 +98,7 @@ public class ParkingOrderService {
         return ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder);
     }
 
-    public ParkingOrderResponse addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException {
+    public ParkingOrderResponse addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException, UserNotExistException {
         if (!RegexUtils.validateMobilePhone(phone)) {
             throw new IllegalParameterException("预约失败，手机格式不正确");
         }
@@ -136,8 +134,12 @@ public class ParkingOrderService {
         } catch (IllegalParameterException e) {
             throw new IllegalParameterException("预约失败，时间段已过期");
         }
-        User user = userRepository.findFirstByEmail(email);
+        //ToDO:phone
+        User user = userRepository.findByPhone(phone);
+//        User user = userRepository.findFirstByEmail(email);
 ///ToDo:加空用户判断
+        if(user == null)
+            throw new UserNotExistException(MessageConstants.USER_NOT_EXIST);
         parkingOrder.setUserId(user.getId());
         parkingOrder.setPrice(price);
         parkingOrder.setStatus(WAIT_FOR_SURE);
@@ -145,8 +147,12 @@ public class ParkingOrderService {
         ParkingOrderResponse parkingOrderResponse = ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(returnParkingOrder);
         parkingOrderResponse.setParkingLotName(parkingOrderOptional.get().getName());
         parkingOrderResponse.setLocation(parkingOrderOptional.get().getLocation());
+        parkingOrderResponse.setPhoneNumber(phone);
+        parkingOrderResponse.setEmail(email);
+        //ToDo:
         return parkingOrderResponse;
     }
+
 
     public List<ParkingOrderResponse> getAllOrdersByEmail(String email) throws InquiryOrderException {
         User userByEmail = userRepository.findByEmail(email);
@@ -175,3 +181,4 @@ public class ParkingOrderService {
         return parkingOrders.stream().map(ParkingOrderMapper::convertParkingOrderToParkingOrderResponse).collect(Collectors.toList());
     }
 }
+

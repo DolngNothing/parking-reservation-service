@@ -20,8 +20,8 @@ public class ParkingLotService {
 
     public static final String NO_LONGITUDE = "经度缺失";
     public static final String NO_LATITUDE = "纬度缺失";
-    private static final double EARTH_RADIUS = 6378137;
     public static final String PARKING_LOTS = "parkingLots";
+    private static final double EARTH_RADIUS = 6378137;
     private final ParkingLotRepository parkingLotRepository;
     private StringRedisTemplate redisTemplate;
 

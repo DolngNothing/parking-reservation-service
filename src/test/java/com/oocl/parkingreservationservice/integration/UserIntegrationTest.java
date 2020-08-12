@@ -31,9 +31,9 @@ public class UserIntegrationTest {
     @BeforeEach
     void setUp() {
         userList = new ArrayList<>();
-        userList.add(userRepository.save(new User(null,"13427560238","1610692147@qq.com","spike","123")));
-        userList.add(userRepository.save(new User(null,"13427560237","1610692147@qq.com","spike","123")));
-        userList.add(userRepository.save(new User(null,"13427560239","1610692147@qq.com","spike","123")));
+        userList.add(userRepository.save(new User(null, "13427560238", "1610692147@qq.com", "spike", "123")));
+        userList.add(userRepository.save(new User(null, "13427560237", "1610692147@qq.com", "spike", "123")));
+        userList.add(userRepository.save(new User(null, "13427560239", "1610692147@qq.com", "spike", "123")));
 
     }
 

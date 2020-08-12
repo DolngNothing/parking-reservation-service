@@ -30,13 +30,13 @@ public class ParkingOrderController {
 
     @PatchMapping("/{parkingOrderId}")
     @ResponseStatus(HttpStatus.OK)
-    public ParkingOrderResponse updateParkingOrder(@PathVariable Integer parkingOrderId) throws ParkingOrderException, ParseException, OrderNotExistException {
+    public ParkingOrderResponse updateParkingOrder(@PathVariable Integer parkingOrderId) throws ParkingOrderException, ParseException {
         return parkingOrderService.cancelOrder(parkingOrderId);
     }
-
+//TODO 返回邮箱手机，修改代码
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ParkingOrderResponse addParkingOrder(@RequestBody ParkingOrderRequest parkingOrderRequest) throws IllegalParameterException {
+    public ParkingOrderResponse addParkingOrder(@RequestBody ParkingOrderRequest parkingOrderRequest) throws IllegalParameterException, UserNotExistException {
         ParkingOrder parkingOrder = ParkingOrderMapper.convertToParkingOrder(parkingOrderRequest);
         return parkingOrderService.addParkingOrder(parkingOrder, parkingOrderRequest.getPhone(), parkingOrderRequest.getEmail());
     }
