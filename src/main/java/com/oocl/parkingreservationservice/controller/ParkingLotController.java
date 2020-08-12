@@ -1,6 +1,7 @@
 package com.oocl.parkingreservationservice.controller;
 
 
+import com.oocl.parkingreservationservice.dto.ParkingLotResponse;
 import com.oocl.parkingreservationservice.exception.NotLoginException;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.service.ParkingLotService;
@@ -27,7 +28,7 @@ public class ParkingLotController {
     }
 
     @GetMapping(params = {"lng", "lat"})
-    public List<ParkingLot> getParkingLots(Double lng, Double lat, HttpServletRequest httpServletRequest) throws NotLoginException {
+    public List<ParkingLotResponse> getParkingLots(Double lng, Double lat, HttpServletRequest httpServletRequest) throws NotLoginException {
         return this.parkingLotService.getParkingLots(lng, lat);
     }
 
