@@ -187,8 +187,8 @@ public class ParkingOrderService {
 
     public String getQRCode(Integer orderId){
         ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
-        String binary = QRCodeUtil.creatRrCode(parkingOrder.getFetchNumber(), 200,200);
-        return binary;
+        assert parkingOrder != null;
+        return QRCodeUtil.creatRrCode(parkingOrder.getFetchNumber(), 200,200);
     }
 
 }
