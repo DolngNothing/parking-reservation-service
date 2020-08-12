@@ -105,7 +105,7 @@ public class ParkingOrderIntegrationTest {
                 "    \"parkingEndTime\":" + parkingEndTime + ",\n" +
                 "    \"parkingLotId\":" + parkingLot.getId() + ",\n" +
                 "    \"carNumber\":\"浙A1063\"\n" +
-                "}";
+                '}';
         //when
         mockMvc.perform(post(("/parkingOrders")).contentType(MediaType.APPLICATION_JSON).content(orderInfo))
                 .andExpect(status().isBadRequest());

@@ -4,10 +4,7 @@ import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderRequest;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
-import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
-import com.oocl.parkingreservationservice.exception.IllegalParameterException;
-import com.oocl.parkingreservationservice.exception.OrderNotExistException;
-import com.oocl.parkingreservationservice.exception.ParkingOrderException;
+import com.oocl.parkingreservationservice.exception.*;
 import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
@@ -99,7 +96,7 @@ public class ParkingOrdersServiceTest {
     }
 
     @Test
-    void should_return_updated_order_when_cancel_order_given_uncertain_order_id() throws ParkingOrderException, ParseException, OrderNotExistException {
+    void should_return_updated_order_when_cancel_order_given_uncertain_order_id() throws ParkingOrderException, ParseException {
         //given
         int orderId = 1;
         ParkingOrder order = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
@@ -114,7 +111,7 @@ public class ParkingOrdersServiceTest {
     }
 
     @Test
-    void should_return_updated_order_when_cancel_order_given_certain_order_id() throws ParkingOrderException, ParseException, OrderNotExistException {
+    void should_return_updated_order_when_cancel_order_given_certain_order_id() throws ParkingOrderException, ParseException {
         //given
         int orderId = 1;
         ParkingOrderRequest order = new ParkingOrderRequest("2021-8-10 12:25:30",
@@ -285,7 +282,7 @@ public class ParkingOrdersServiceTest {
     }
 
     @Test
-    void should_add_new_book_order_when_book_parking_lot_given_new_book_order() throws IllegalParameterException {
+    void should_add_new_book_order_when_book_parking_lot_given_new_book_order() throws IllegalParameterException, UserNotExistException {
         //given
         String email = "1214852999@qq.com";
         String phone = "15920138477";
@@ -293,7 +290,7 @@ public class ParkingOrdersServiceTest {
         String parkingEndTime = Long.toString(new Date().getTime() + 2000);
         ParkingOrder parkingOrder = new ParkingOrder(null, 1L, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", 10.0);
 
-        given(userRepository.findFirstByEmail(email)).willReturn(new User(1, null, email, "Jamea", "9999"));
+        given(userRepository.findByPhone(phone)).willReturn(new User(1, phone, email, "Jamea", "9999"));
         given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null, "")));
         ParkingOrder mockedParkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, 1, 1, null, null, "浙A1063警", null);
         given(parkingOrderRepository.save(parkingOrder)).willReturn(mockedParkingOrder);

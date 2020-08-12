@@ -4,10 +4,7 @@ package com.oocl.parkingreservationservice.service;
 import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
-import com.oocl.parkingreservationservice.exception.IllegalOrderOperationException;
-import com.oocl.parkingreservationservice.exception.IllegalParameterException;
-import com.oocl.parkingreservationservice.exception.OrderNotExistException;
-import com.oocl.parkingreservationservice.exception.ParkingOrderException;
+import com.oocl.parkingreservationservice.exception.*;
 import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
@@ -101,7 +98,7 @@ public class ParkingOrderService {
         return ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder);
     }
 
-    public ParkingOrderResponse addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException {
+    public ParkingOrderResponse addParkingOrder(ParkingOrder parkingOrder, String phone, String email) throws IllegalParameterException, UserNotExistException {
         if (!RegexUtils.validateMobilePhone(phone)) {
             throw new IllegalParameterException("预约失败，手机格式不正确");
         }
@@ -138,8 +135,11 @@ public class ParkingOrderService {
             throw new IllegalParameterException("预约失败，时间段已过期");
         }
         //ToDO:phone
-        User user = userRepository.findFirstByEmail(email);
+        User user = userRepository.findByPhone(phone);
+//        User user = userRepository.findFirstByEmail(email);
 ///ToDo:加空用户判断
+        if(user == null)
+            throw new UserNotExistException(MessageConstants.USER_NOT_EXIST);
         parkingOrder.setUserId(user.getId());
         parkingOrder.setPrice(price);
         parkingOrder.setStatus(WAIT_FOR_SURE);
@@ -147,6 +147,8 @@ public class ParkingOrderService {
         ParkingOrderResponse parkingOrderResponse = ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(returnParkingOrder);
         parkingOrderResponse.setParkingLotName(parkingOrderOptional.get().getName());
         parkingOrderResponse.setLocation(parkingOrderOptional.get().getLocation());
+        parkingOrderResponse.setPhoneNumber(phone);
+        parkingOrderResponse.setEmail(email);
         //ToDo:
         return parkingOrderResponse;
     }
