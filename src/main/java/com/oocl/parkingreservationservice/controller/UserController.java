@@ -1,10 +1,8 @@
 package com.oocl.parkingreservationservice.controller;
 
 import com.oocl.parkingreservationservice.dto.UserLoginRequest;
-import com.oocl.parkingreservationservice.dto.UserLoginResponse;
 import com.oocl.parkingreservationservice.exception.IllegalParameterException;
 import com.oocl.parkingreservationservice.exception.UserNotExistException;
-import com.oocl.parkingreservationservice.mapper.UserMapper;
 import com.oocl.parkingreservationservice.model.User;
 import com.oocl.parkingreservationservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -30,12 +30,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public UserLoginResponse login(@RequestBody UserLoginRequest userLoginRequest
+    public Map<String, String> login(@RequestBody UserLoginRequest userLoginRequest
             , HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IllegalParameterException, UserNotExistException {
         User user = userService.login(userLoginRequest.getPhoneNumber(), userLoginRequest.getPassword());
         httpServletRequest.getSession().setAttribute(USER_NAME, user.getUsername());
         httpServletRequest.getSession().setAttribute(USER_PHONE, user.getPhoneNumber());
-        httpServletResponse.addHeader("Access-Control-Expose-Headers", "Set-Cookie");
-        return UserMapper.convertToUserLoginResponse(user);
+
+        Map<String, String> userMap = new HashMap<>(4);
+        userMap.put("id", String.valueOf(user.getId()));
+        userMap.put("username", user.getUsername());
+        userMap.put("session", httpServletRequest.getSession().getId());
+        return userMap;
     }
 }
