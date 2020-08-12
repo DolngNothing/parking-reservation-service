@@ -51,7 +51,7 @@ public class CommentIntegrationTest {
                 "}";
         //when
         mockMvc.perform(post(("/comments")).contentType(MediaType.APPLICATION_JSON).content(commentInfo))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.orderId").isNumber())
                 .andExpect(jsonPath("$.userId").isNumber())
