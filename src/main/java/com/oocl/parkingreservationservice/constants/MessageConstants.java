@@ -8,4 +8,5 @@ public class MessageConstants {
     public final static String USER_NOT_EXIST = "用户不存在";
     public final static String UNKNOWN_EXCEPTION = "未知错误";
     public final static String UN_LOGIN = "未登录";
+    public final static String NO_AUTHORITY = "没有权限";
 }
