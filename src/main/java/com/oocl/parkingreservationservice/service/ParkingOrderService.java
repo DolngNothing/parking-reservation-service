@@ -95,7 +95,9 @@ public class ParkingOrderService {
         }
         parkingOrder.setStatus(StatusContants.ALREADY_SURE);
         parkingOrderRepository.save(parkingOrder);
-        rabbitMqService.sendMessageToRabbitMq(parkingOrder);
+        if (rabbitMqService!=null){
+            rabbitMqService.sendMessageToRabbitMq(parkingOrder);
+        }
         return ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder);
     }
 
