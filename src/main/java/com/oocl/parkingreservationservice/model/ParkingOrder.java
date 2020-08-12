@@ -28,6 +28,9 @@ public class ParkingOrder{
     private String carNumber;
     private Double price;
 
+    public Boolean isSure(){
+        return status.equals("ALREADY_SURE");
+    }
 }
 
 

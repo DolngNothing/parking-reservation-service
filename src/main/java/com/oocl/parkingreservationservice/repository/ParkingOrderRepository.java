@@ -10,5 +10,5 @@ import java.util.List;
 public interface ParkingOrderRepository extends JpaRepository<ParkingOrder, Integer> {
 
     List<ParkingOrder> findAllByUserId(Integer id);
-
+    List<ParkingOrder> findAllByParkingLotId(Integer id);
 }
