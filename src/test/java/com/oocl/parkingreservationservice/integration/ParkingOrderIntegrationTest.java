@@ -49,7 +49,7 @@ public class ParkingOrderIntegrationTest {
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders.standaloneSetup(parkingOrderController, globalExceptionHandler).build();
-        ParkingOrder firstOrder = new ParkingOrder(1, null, "2020-08-10 12:25:30",
+        ParkingOrder firstOrder = new ParkingOrder(null, null, "2020-08-10 12:25:30",
                 "2020-08-10 14:25:30", -1, 1, "2020-08-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrder Order = parkingOrderRepository.save(firstOrder);
         OrderId = Order.getId();
@@ -200,17 +200,16 @@ public class ParkingOrderIntegrationTest {
         user = userRepository.save(user);
         user2 = userRepository.save(user2);
         List<ParkingOrder> parkingOrders = Arrays.asList(
-                new ParkingOrder(1, null, "2020-8-10 12:25:30",
+                new ParkingOrder(null, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
-                new ParkingOrder(2, null, "2020-8-10 12:25:30",
+                new ParkingOrder(null, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0),
-                new ParkingOrder(3, null, "2020-8-10 12:25:30",
+                new ParkingOrder(null, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", user2.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤C369警", 60.0)
         );
         parkingOrderRepository.save(parkingOrders.get(0));
         parkingOrderRepository.save(parkingOrders.get(1));
         parkingOrderRepository.save(parkingOrders.get(2));
-
         //when
         mockMvc.perform(get("/parkingOrders").param("phoneNumber", phoneNumber))
                 .andExpect(status().isOk())
