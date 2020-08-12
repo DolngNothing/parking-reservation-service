@@ -1,6 +1,5 @@
 package com.oocl.parkingreservationservice.service;
 
-import com.oocl.parkingreservationservice.dto.CommentRequest;
 import com.oocl.parkingreservationservice.dto.CommentResponse;
 import com.oocl.parkingreservationservice.exception.NoAuthorityException;
 import com.oocl.parkingreservationservice.exception.OrderNotExistException;
@@ -10,8 +9,6 @@ import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.CommentRepository;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class CommentService {
@@ -24,7 +21,8 @@ public class CommentService {
     }
 
     public CommentResponse addComment(Comment comment) throws OrderNotExistException, NoAuthorityException {
-        ParkingOrder parkingOrder = parkingOrderRepository.findById(comment.getId()).orElse(null);
+
+        ParkingOrder parkingOrder = parkingOrderRepository.findById(comment.getOrderId()).orElse(null);
         if (parkingOrder == null) {
             throw new OrderNotExistException();
         }

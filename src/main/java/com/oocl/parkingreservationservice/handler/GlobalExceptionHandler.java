@@ -29,6 +29,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(OrderNotExistException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionBean orderNotExistException(OrderNotExistException orderNotExistException) {
         return new ExceptionBean(orderNotExistException.getMessage());
     }
