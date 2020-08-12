@@ -43,7 +43,7 @@ public class commentServiceTest {
         Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content);
         given(commentRepository.save(mockComment)).willReturn(mockComment);
         given(parkingOrderRepository.findById(orderId)).willReturn(
-                Optional.of(new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                Optional.of(new ParkingOrder(1, "", "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30",
                         StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0)));
         //when
@@ -63,7 +63,7 @@ public class commentServiceTest {
         Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content);
         given(commentRepository.save(mockComment)).willReturn(mockComment);
         given(parkingOrderRepository.findById(orderId)).willReturn(
-                java.util.Optional.of(new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                java.util.Optional.of(new ParkingOrder(1, "", "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 2, 1, "2020-8-10 14:25:30",
                         StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0)));
         //when
@@ -103,7 +103,7 @@ public class commentServiceTest {
         Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content);
         given(commentRepository.save(mockComment)).willReturn(mockComment);
         given(parkingOrderRepository.findById(orderId)).willReturn(
-                java.util.Optional.of(new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                java.util.Optional.of(new ParkingOrder(1, "", "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 2, "2020-8-10 14:25:30",
                         StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0)));
         //when

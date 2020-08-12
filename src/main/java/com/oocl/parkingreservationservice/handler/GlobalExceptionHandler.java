@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
         return new ExceptionBean(UNKNOWN_EXCEPTION);
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(NoAuthorityException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionBean NoAuthorityException() {
         return new ExceptionBean(NO_AUTHORITY);

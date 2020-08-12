@@ -2,9 +2,7 @@ package com.oocl.parkingreservationservice.integration;
 
 import com.oocl.parkingreservationservice.controller.CommentController;
 import com.oocl.parkingreservationservice.handler.GlobalExceptionHandler;
-import com.oocl.parkingreservationservice.model.Comment;
 import com.oocl.parkingreservationservice.repository.CommentRepository;
-import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
