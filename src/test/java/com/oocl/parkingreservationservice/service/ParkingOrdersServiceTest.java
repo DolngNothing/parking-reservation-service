@@ -12,6 +12,7 @@ import com.oocl.parkingreservationservice.model.User;
 import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 import com.oocl.parkingreservationservice.repository.UserRepository;
+import com.oocl.parkingreservationservice.utils.QRCodeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -48,7 +49,7 @@ public class ParkingOrdersServiceTest {
     void should_return_confirm_parking_order_when_confirm_order_given_order_id() throws IllegalOrderOperationException, OrderNotExistException {
         //given
         Integer orderId = 1;
-        ParkingOrder parkingOrder = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
+        ParkingOrder parkingOrder = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrderResponse parkingOrderResponse;
         given(parkingOrderRepository.findById(orderId)).willReturn(java.util.Optional.of(parkingOrder));
@@ -62,7 +63,7 @@ public class ParkingOrdersServiceTest {
     void should_throw_wrong_message_when_confirm_order_given_order_id() {
 //        given
         Integer orderId = 1;
-        ParkingOrder parkingOrder = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
+        ParkingOrder parkingOrder = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.DELETED, "1234", 10.0);
         given(parkingOrderRepository.findById(orderId)).willReturn(java.util.Optional.of(parkingOrder));
 //        when
@@ -75,7 +76,7 @@ public class ParkingOrdersServiceTest {
     void should_throw_order_canceled_excption_when_confirm_order_given_confirmed_order_id() {
 //        given
         Integer orderId = 1;
-        ParkingOrder parkingOrder = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
+        ParkingOrder parkingOrder = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.ALREADY_SURE, "1234", 10.0);
         given(parkingOrderRepository.findById(orderId)).willReturn(java.util.Optional.of(parkingOrder));
 //        when
@@ -99,7 +100,7 @@ public class ParkingOrdersServiceTest {
     void should_return_updated_order_when_cancel_order_given_uncertain_order_id() throws ParkingOrderException, ParseException {
         //given
         int orderId = 1;
-        ParkingOrder order = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
+        ParkingOrder order = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
 
         //when
@@ -140,7 +141,7 @@ public class ParkingOrdersServiceTest {
     void should_throw_already_cancel_exception_when_cancel_order_given_already_cancel_order_id() {
         //given
         int orderId = 1;
-        ParkingOrder order = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
+        ParkingOrder order = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.DELETED, "1234", 10.0);
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
@@ -155,7 +156,7 @@ public class ParkingOrdersServiceTest {
     void should_throw_outdate_exception_when_cancel_order_given_outdate_order_id() {
         //given
         int orderId = 1;
-        ParkingOrder order = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
+        ParkingOrder order = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.ALREADY_SURE, "1234", 10.0);
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
@@ -288,7 +289,7 @@ public class ParkingOrdersServiceTest {
         String phone = "15920138477";
         String parkingStartTime = Long.toString(new Date().getTime() + 1000);
         String parkingEndTime = Long.toString(new Date().getTime() + 2000);
-        ParkingOrder parkingOrder = new ParkingOrder(null, 1L, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", 10.0);
+        ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", 10.0);
 
         given(userRepository.findByPhone(phone)).willReturn(new User(1, phone, email, "Jamea", "9999"));
         given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null, "")));
@@ -307,7 +308,7 @@ public class ParkingOrdersServiceTest {
     void should_return_certain_order_when_get_certain_order_given_order_id() throws ParkingOrderException {
         //given
         Integer orderId = 1;
-        ParkingOrder parkingOrder = new ParkingOrder(orderId, 1L, "2020-8-10 12:25:30",
+        ParkingOrder parkingOrder = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
 
         //when
@@ -329,9 +330,9 @@ public class ParkingOrdersServiceTest {
         User user = new User(1, "15626155019", email, "karen", "123");
 
         List<ParkingOrder> parkingOrders = Arrays.asList(
-                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                new ParkingOrder(1, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
-                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                new ParkingOrder(2, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
         );
         given(userRepository.findByEmail(email)).willReturn(user);
@@ -351,9 +352,9 @@ public class ParkingOrdersServiceTest {
         String unExistEmail = "695759689@qq.com";
         User user = new User(1,"15626155019",email,"karen","123");
         List<ParkingOrder> parkingOrders = Arrays.asList(
-                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                new ParkingOrder(1, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
-                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                new ParkingOrder(2, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
         );
         given(userRepository.findByEmail(email)).willReturn(user);
@@ -372,9 +373,9 @@ public class ParkingOrdersServiceTest {
         String phoneNumber = "15626155019";
         User user = new User(1,"15626155019",null,"karen","123");
         List<ParkingOrder> parkingOrders = Arrays.asList(
-                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                new ParkingOrder(1, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
-                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                new ParkingOrder(2, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
         );
         given(userRepository.findByPhoneNumber(phoneNumber)).willReturn(user);
@@ -394,9 +395,9 @@ public class ParkingOrdersServiceTest {
         String unExistphoneNumber = "13676242112";
         User user = new User(1,phoneNumber,null,"karen","123");
         List<ParkingOrder> parkingOrders = Arrays.asList(
-                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                new ParkingOrder(1, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
-                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                new ParkingOrder(2, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
         );
         given(userRepository.findByPhoneNumber(phoneNumber)).willReturn(user);
@@ -416,9 +417,9 @@ public class ParkingOrdersServiceTest {
         Integer unExistUserId = 826;
         User user = new User(userId,null,null,"karen","123");
         List<ParkingOrder> parkingOrders = Arrays.asList(
-                new ParkingOrder(1, 1L, "2020-8-10 12:25:30",
+                new ParkingOrder(1, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
-                new ParkingOrder(2, 1L, "2020-8-10 12:25:30",
+                new ParkingOrder(2, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
         );
         given(parkingOrderRepository.findAllByUserId(userId)).willReturn(parkingOrders);
@@ -428,6 +429,22 @@ public class ParkingOrdersServiceTest {
 
         //then
         assertEquals("指定userID不存在，请输入正确的userID", exception.getMessage());
+    }
+
+    @Test
+    void should_return_binary_when_get_ORCode_given_orderId() {
+        //given
+        Integer orderId = 1;
+        ParkingOrder parkingOrder = new ParkingOrder(1, "http://www.baidu.com", "2020-8-10 12:25:30",
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0);
+        given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(parkingOrder));
+
+        //when
+        String binary1 = QRCodeUtil.creatRrCode(parkingOrder.getFetchNumber(), 200,200);
+        String binary2 = parkingOrderService.getQRCode(orderId);
+
+        //then
+        assertEquals(binary1,binary2);
     }
 
 }

@@ -11,6 +11,7 @@ import com.oocl.parkingreservationservice.model.User;
 import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 import com.oocl.parkingreservationservice.repository.UserRepository;
+import com.oocl.parkingreservationservice.utils.QRCodeUtil;
 import com.oocl.parkingreservationservice.utils.RegexUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -183,5 +184,12 @@ public class ParkingOrderService {
         List<ParkingOrder> parkingOrders = parkingOrderRepository.findAllByUserId(id);
         return parkingOrders.stream().map(ParkingOrderMapper::convertParkingOrderToParkingOrderResponse).collect(Collectors.toList());
     }
+
+    public String getQRCode(Integer orderId){
+        ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
+        String binary = QRCodeUtil.creatRrCode(parkingOrder.getFetchNumber(), 200,200);
+        return binary;
+    }
+
 }
 
