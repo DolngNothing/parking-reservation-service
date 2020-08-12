@@ -1,9 +1,11 @@
 package com.oocl.parkingreservationservice.controller;
 
 
+import com.google.zxing.WriterException;
 import com.oocl.parkingreservationservice.exception.NotLoginException;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.service.ParkingLotService;
+import com.oocl.parkingreservationservice.utils.QRCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +32,5 @@ public class ParkingLotController {
     public List<ParkingLot> getParkingLots(Double lng, Double lat, HttpServletRequest httpServletRequest) throws NotLoginException {
         return this.parkingLotService.getParkingLots(lng, lat);
     }
-
 
 }

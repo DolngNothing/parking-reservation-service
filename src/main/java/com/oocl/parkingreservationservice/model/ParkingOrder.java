@@ -18,7 +18,7 @@ public class ParkingOrder{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Long fetchNumber;
+    private String fetchNumber;
     private String parkingStartTime;
     private String parkingEndTime;
     private Integer userId;
