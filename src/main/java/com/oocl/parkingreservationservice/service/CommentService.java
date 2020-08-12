@@ -28,7 +28,7 @@ public class CommentService {
         if (parkingOrder == null) {
             throw new OrderNotExistException();
         }
-        if (!parkingOrder.getId().equals(comment.getOrderId())) {
+        if (!parkingOrder.getUserId().equals(comment.getUserId())) {
             throw new NoAuthorityException();
         }
         Comment returnComment = commentRepository.save(comment);
