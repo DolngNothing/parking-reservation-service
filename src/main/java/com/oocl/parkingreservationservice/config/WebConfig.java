@@ -1,19 +1,19 @@
-package com.oocl.parkingreservationservice.config;
-
-import com.oocl.parkingreservationservice.utils.interceptor.LoginInterceptor;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-/**
- * @author XUAL7
- */
-@Configuration
-public class WebConfig implements WebMvcConfigurer {
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/user/login", "**/test/**");
-    }
-}
+//package com.oocl.parkingreservationservice.config;
+//
+//import com.oocl.parkingreservationservice.utils.interceptor.LoginInterceptor;
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+//import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+//
+///**
+// * @author XUAL7
+// */
+//@Configuration
+//public class WebConfig implements WebMvcConfigurer {
+//
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**")
+//                .excludePathPatterns("/user/login", "**/test/**");
+//    }
+//}

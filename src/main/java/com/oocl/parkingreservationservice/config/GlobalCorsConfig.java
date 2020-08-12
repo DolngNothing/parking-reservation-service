@@ -19,7 +19,8 @@ public class GlobalCorsConfig {
                 //添加映射路径
                 registry.addMapping("/**")
                         //放行哪些原始域
-                        .allowedOrigins("http://10.222.29.209:8800")
+                        //.allowedOrigins("http://10.222.29.209:8800")
+                        .allowedOrigins("*")
                         //是否发送Cookie信息
                         .allowCredentials(true)
                         //放行哪些原始域(请求方式)
