@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import static com.oocl.parkingreservationservice.constants.MessageConstants.*;
+
 /**
  * @author XUAL7
  */
@@ -33,19 +35,37 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ParkingOrderException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String ParkingOrderException(ParkingOrderException e) {
+    public String parkingOrderException(ParkingOrderException e) {
         return e.getMessage();
     }
 
     @ExceptionHandler(IllegalParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBean IllegalParameterException(IllegalParameterException e) {
+    public ExceptionBean illegalParameterException(IllegalParameterException e) {
         return new ExceptionBean(e.getMessage());
     }
 
     @ExceptionHandler(InquiryOrderException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBean InquiryOrderException(UserNotExistException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionBean inquiryOrderException(UserNotExistException e) {
         return new ExceptionBean(e.getMessage());
+    }
+
+    @ExceptionHandler(UserNotExistException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionBean userNotExist() {
+        return new ExceptionBean(USER_NOT_EXIST);
+    }
+
+    @ExceptionHandler(NotLoginException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ExceptionBean notLogin() {
+        return new ExceptionBean(UN_LOGIN);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionBean unknownException() {
+        return new ExceptionBean(UNKNOWN_EXCEPTION);
     }
 }

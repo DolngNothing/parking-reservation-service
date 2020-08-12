@@ -2,6 +2,7 @@ package com.oocl.parkingreservationservice.controller;
 
 import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusContants;
+import com.oocl.parkingreservationservice.handler.GlobalExceptionHandler;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -20,14 +22,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ParkingOrderIntegrationTest {
-    @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ParkingOrderRepository parkingOrderRepository;
+    @Autowired
+    private ParkingOrderController parkingOrderController;
+    @Autowired
+    private GlobalExceptionHandler globalExceptionHandler;
 
     @BeforeEach
     public void before() {
-
+        mockMvc = MockMvcBuilders.standaloneSetup(parkingOrderController, globalExceptionHandler).build();
     }
 
     @AfterEach

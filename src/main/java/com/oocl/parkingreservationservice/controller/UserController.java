@@ -13,16 +13,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
+    public static final String USER_NAME = "userName";
+    public static final String USER_PHONE = "userPhone";
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/login")
-    public UserLoginResponse login(@RequestBody UserLoginRequest userLoginRequest) throws IllegalParameterException, UserNotExistException {
+    public UserLoginResponse login(@RequestBody UserLoginRequest userLoginRequest
+            , HttpServletRequest httpServletRequest) throws IllegalParameterException, UserNotExistException {
         User user = userService.login(userLoginRequest.getPhoneNumber(), userLoginRequest.getPassword());
+        httpServletRequest.getSession().setAttribute(USER_NAME, user.getUsername());
+        httpServletRequest.getSession().setAttribute(USER_PHONE, user.getPhoneNumber());
         return UserMapper.convertToUserLoginResponse(user);
     }
 }
