@@ -38,14 +38,19 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalParameterException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBean IllegalParameterException(IllegalParameterException e) {
         return new ExceptionBean(e.getMessage());
     }
 
     @ExceptionHandler(InquiryOrderException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBean InquiryOrderException(UserNotExistException e) {
+    public ExceptionBean InquiryOrderException(InquiryOrderException e) {
+        return new ExceptionBean(e.getMessage());
+    }
+
+    @ExceptionHandler(UserNotExistException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionBean userNotExistException(UserNotExistException e){
         return new ExceptionBean(e.getMessage());
     }
 }

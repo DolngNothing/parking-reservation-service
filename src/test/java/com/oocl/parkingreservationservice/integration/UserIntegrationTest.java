@@ -86,7 +86,7 @@ public class UserIntegrationTest {
 
         //when
         mockMvc.perform(post("/user/login").contentType(MediaType.APPLICATION_JSON).content(userLoginInfo))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.message").value(MessageConstants.USER_NOT_EXIST));
     }
 }
