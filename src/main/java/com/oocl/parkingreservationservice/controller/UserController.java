@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/user")
@@ -30,10 +31,11 @@ public class UserController {
 
     @PostMapping("/login")
     public UserLoginResponse login(@RequestBody UserLoginRequest userLoginRequest
-            , HttpServletRequest httpServletRequest) throws IllegalParameterException, UserNotExistException {
+            , HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IllegalParameterException, UserNotExistException {
         User user = userService.login(userLoginRequest.getPhoneNumber(), userLoginRequest.getPassword());
         httpServletRequest.getSession().setAttribute(USER_NAME, user.getUsername());
         httpServletRequest.getSession().setAttribute(USER_PHONE, user.getPhoneNumber());
+        httpServletResponse.addHeader("Access-Control-Expose-Headers", "Set-Cookie");
         return UserMapper.convertToUserLoginResponse(user);
     }
 }
