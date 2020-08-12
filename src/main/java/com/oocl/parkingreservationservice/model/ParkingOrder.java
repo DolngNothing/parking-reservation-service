@@ -8,16 +8,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ParkingOrder {
+public class ParkingOrder{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Long fetchNumber;
+    private String fetchNumber;
     private String parkingStartTime;
     private String parkingEndTime;
     private Integer userId;
@@ -27,6 +28,9 @@ public class ParkingOrder {
     private String carNumber;
     private Double price;
 
+    public Boolean isSure(){
+        return status.equals("ALREADY_SURE");
+    }
 }
 
 
