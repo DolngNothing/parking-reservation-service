@@ -22,7 +22,7 @@ public class WebsocketController {
         websocketService.sendToAllConnet(msg);
     }
 
-    @MessageMapping(value = "/rege") //@注解2
+    @MessageMapping(value = "/register") //@注解2
     public void sendYourself(String msg) throws ParseException {
         System.out.println(msg);
         websocketService.sentBack(msg);
