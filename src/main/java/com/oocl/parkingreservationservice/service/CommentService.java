@@ -8,15 +8,17 @@ import com.oocl.parkingreservationservice.model.Comment;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.CommentRepository;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class CommentService {
-    private CommentRepository commentRepository;
-    private ParkingOrderRepository parkingOrderRepository;
+    private final CommentRepository commentRepository;
+    private final ParkingOrderRepository parkingOrderRepository;
 
+    @Autowired
     public CommentService(CommentRepository commentRepository, ParkingOrderRepository parkingOrderRepository) {
         this.commentRepository = commentRepository;
         this.parkingOrderRepository = parkingOrderRepository;

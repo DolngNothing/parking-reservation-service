@@ -16,18 +16,18 @@ public class DirectRabbitConfig {
     public static final String LONELY_DIRECT_EXCHANGE = "lonelyDirectExchange";
 
     @Bean
-    public Queue TestDirectQueue() {
+    public Queue testDirectQueue() {
         return new Queue(QUEUE_NAME, true);
     }
 
     @Bean
-    DirectExchange TestDirectExchange() {
+    DirectExchange testDirectExchange() {
         return new DirectExchange(EXCHANGE_NAME, true, false);
     }
 
     @Bean
     Binding bindingDirect() {
-        return BindingBuilder.bind(TestDirectQueue()).to(TestDirectExchange()).with(ROUTING_KEY);
+        return BindingBuilder.bind(testDirectQueue()).to(testDirectExchange()).with(ROUTING_KEY);
     }
 
     @Bean

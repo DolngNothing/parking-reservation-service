@@ -32,8 +32,12 @@ public class UserLoginResponse {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         UserLoginResponse that = (UserLoginResponse) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(username, that.username);

@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.io.Serializable;
 
 @Entity
 @Data
@@ -29,7 +28,7 @@ public class ParkingOrder{
     private Double price;
 
     public Boolean isSure(){
-        return status.equals("ALREADY_SURE");
+        return "ALREADY_SURE".equals(status);
     }
 }
 

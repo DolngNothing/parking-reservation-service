@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +30,7 @@ public class UserController {
 
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody UserLoginRequest userLoginRequest
-            , HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IllegalParameterException, UserNotExistException {
+            , HttpServletRequest httpServletRequest) throws IllegalParameterException, UserNotExistException {
         User user = userService.login(userLoginRequest.getPhoneNumber(), userLoginRequest.getPassword());
         httpServletRequest.getSession().setAttribute(USER_NAME, user.getUsername());
         httpServletRequest.getSession().setAttribute(USER_PHONE, user.getPhoneNumber());
