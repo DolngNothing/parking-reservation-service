@@ -153,6 +153,7 @@ public class ParkingOrderService {
         parkingOrderResponse.setLocation(parkingOrderOptional.get().getLocation());
         parkingOrderResponse.setPhoneNumber(phone);
         parkingOrderResponse.setEmail(email);
+        parkingOrderResponse.setFetchNumber("success");
         return parkingOrderResponse;
     }
 
