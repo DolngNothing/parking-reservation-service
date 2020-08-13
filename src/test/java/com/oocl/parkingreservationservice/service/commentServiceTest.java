@@ -140,7 +140,7 @@ public class commentServiceTest {
         Comment comment = new Comment(1, orderId, 1, 1, 5.0, "111",null,null);
 
         commentRepository.save(comment);
-        given(commentRepository.findById(orderId)).willReturn(Optional.of(comment));
+        given(commentRepository.findByOrderId(orderId)).willReturn(comment);
         //when
         CommentResponse commentResponse = commentService.getComment(orderId);
 

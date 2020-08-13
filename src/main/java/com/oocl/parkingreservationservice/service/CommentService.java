@@ -52,7 +52,7 @@ public class CommentService {
     }
 
     public CommentResponse getComment(Integer orderId){
-        Comment comment = commentRepository.findById(orderId).orElse(null);
+        Comment comment = commentRepository.findByOrderId(orderId);
         if (comment == null) {
             throw new IllegalArgumentException("该订单没有评论");
         }
