@@ -196,8 +196,8 @@ public class ParkingOrderIntegrationTest {
     void should_get_order_list_when_hit_get_order_endpoint_given_phoneNumber() throws Exception {
         //given
         String phoneNumber = "15626155019";
-        User user = new User(1, phoneNumber, null, "karen", "123");
-        User user2 = new User(2, "13626155017", null, "emon", "123");
+        User user = new User(null, phoneNumber, null, "karen", "123");
+        User user2 = new User(null, "13626155017", null, "emon", "123");
         user = userRepository.save(user);
         user2 = userRepository.save(user2);
         List<ParkingOrder> parkingOrders = Arrays.asList(

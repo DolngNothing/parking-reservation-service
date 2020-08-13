@@ -37,11 +37,7 @@ public class QRCodeUtil {
             // 2、将字节数组转为二进制
             BASE64Encoder encoder = new BASE64Encoder();
             binary = encoder.encodeBuffer(bytes).trim();
-        } catch (WriterException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
+        } catch (WriterException | IOException e) {
             e.printStackTrace();
         }
         return binary;
