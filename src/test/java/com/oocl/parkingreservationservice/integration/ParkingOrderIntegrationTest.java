@@ -125,7 +125,7 @@ public class ParkingOrderIntegrationTest {
     @Test
     void should_return_order_when_hit_get_order_endpoint_given_order_id() throws Exception {
         //given
-        ParkingOrder order = new ParkingOrder(1, "http://www.baidu.com", "2020-08-10 12:25:30",
+        ParkingOrder order = new ParkingOrder(null, "http://www.baidu.com", "2020-08-10 12:25:30",
                 "2020-08-10 14:25:30", 1, 1, "2020-08-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrder parkingOrder = parkingOrderRepository.save(order);
 
@@ -138,8 +138,8 @@ public class ParkingOrderIntegrationTest {
     @Test
     void should_get_order_list_when_hit_get_order_endpoint_given_userId() throws Exception {
         //given
-        User user = new User(1, "15626155019", null, "karen", "123");
-        User user2 = new User(2, "15626155019", null, "karen", "123");
+        User user = new User(null, "15626155019", null, "karen", "123");
+        User user2 = new User(null, "15626155019", null, "karen", "123");
         ParkingLot parkingLot = parkingLotRepository.save(new ParkingLot(null, "南方软件园停车场", "22", "113", 100, 10.0, "南方软件园停车场", null, "广东省珠海市香洲区软件园路", ""));
         user = userRepository.save(user);
         user2 = userRepository.save(user2);
@@ -167,16 +167,16 @@ public class ParkingOrderIntegrationTest {
     void should_get_order_list_when_hit_get_order_endpoint_given_email() throws Exception {
         //given
         String email = "545759585@qq.com";
-        User user = new User(1, "15626155019", email, "karen", "123");
-        User user2 = new User(2, "15626155019", "496349192@qq.com", "emon", "123");
+        User user = new User(null, "15626155019", email, "karen", "123");
+        User user2 = new User(null, "15626155019", "496349192@qq.com", "emon", "123");
         user = userRepository.save(user);
         user2 = userRepository.save(user2);
         List<ParkingOrder> parkingOrders = Arrays.asList(
-                new ParkingOrder(1, null, "2020-8-10 12:25:30",
+                new ParkingOrder(null, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0),
-                new ParkingOrder(2, null, "2020-8-10 12:25:30",
+                new ParkingOrder(null, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "粤B258警", 30.0),
-                new ParkingOrder(3, null, "2020-8-10 12:25:30",
+                new ParkingOrder(null, null, "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", user2.getId(), 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "粤C369警", 60.0)
         );
 
@@ -223,8 +223,7 @@ public class ParkingOrderIntegrationTest {
     @Test
     void should_return_order_already_confirm_message_when_confirm_a_order_given_order_id() throws Exception {
 //        given
-        Integer orderId = 1;
-        ParkingOrder parkingOrder = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
+        ParkingOrder parkingOrder = new ParkingOrder(null, null, "2020-8-10 12:25:30",
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrder savedParkingOrder = parkingOrderRepository.save(parkingOrder);
 //        when then
@@ -238,8 +237,7 @@ public class ParkingOrderIntegrationTest {
     @Test
     void should_return_illegal_message_when_confirm_a_confirmed_order_given_order_id() throws Exception {
 //        given
-        Integer orderId = 1;
-        ParkingOrder parkingOrder = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
+        ParkingOrder parkingOrder = new ParkingOrder(null, null, "2020-8-10 12:25:30",
                 "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.ALREADY_SURE, "1234", 10.0);
         ParkingOrder savedParkingOrder = parkingOrderRepository.save(parkingOrder);
 //        when then
@@ -279,11 +277,9 @@ public class ParkingOrderIntegrationTest {
 
     @Test
     void should_return_binary_when_hit_getOROrder_endpoint_given_order_id() throws Exception {
-//        given
-        int orderId = 1;
 //        when
-        ParkingOrder parkingOrder = new ParkingOrder(1, "http://www.baidu.com", "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0);
+        ParkingOrder parkingOrder = new ParkingOrder(null, "http://www.baidu.com", "2020-8-10 12:25:30",
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0);
         parkingOrder=parkingOrderRepository.save(parkingOrder);
 //        then
         mockMvc.perform(get("/parkingOrders/fetchCode/" + parkingOrder.getId()))
