@@ -64,7 +64,8 @@ public class ParkingLotService {
                 getDistance(Double.parseDouble(parkingLotResponse.getLongitude()),
                         Double.parseDouble(parkingLotResponse.getLatitude()),
                         longitude, latitude),
-                parkingLotResponse.getAvgScore(), parkingLotResponse.getPrice() == null ? 0 : parkingLotResponse.getPrice()))).collect(Collectors.toList());
+                parkingLotResponse.getAvgScore(),
+                parkingLotResponse.getPrice() == null ? 0 : parkingLotResponse.getPrice()))).collect(Collectors.toList());
     }
 
     public Double sortParkingLot(double distance, double score, double price) {
