@@ -1,11 +1,9 @@
 package com.oocl.parkingreservationservice.service;
 
 import com.oocl.parkingreservationservice.constants.StatusContants;
-import com.oocl.parkingreservationservice.dto.CommentRequest;
 import com.oocl.parkingreservationservice.dto.CommentResponse;
 import com.oocl.parkingreservationservice.exception.NoAuthorityException;
 import com.oocl.parkingreservationservice.exception.OrderNotExistException;
-import com.oocl.parkingreservationservice.mapper.CommentMapper;
 import com.oocl.parkingreservationservice.model.Comment;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.CommentRepository;
@@ -14,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -111,5 +111,24 @@ public class commentServiceTest {
 
         //then
         assertEquals("没有权限", exception.getMessage());
+    }
+
+    @Test
+    void should_return_all_comments_when_get_comments_given_parking_lot_id() {
+        //given
+        Integer parkingLotId = 1;
+        List<Comment> commentList = Arrays.asList(
+                new Comment(1, 1, parkingLotId, 1, 5.0, "111"),
+                new Comment(2, 2, parkingLotId, 1, 4.0, "222")
+        );
+
+        commentRepository.saveAll(commentList);
+        given(commentRepository.findAllByParkingLotId(parkingLotId)).willReturn(commentList);
+        //when
+        CommentResponse returnCommentResponse = commentService.getAllComment(parkingLotId);
+
+        //then
+        assertEquals(4.5,returnCommentResponse.getAvgScore());
+        assertEquals(commentList,returnCommentResponse.getComments());
     }
 }

@@ -1,5 +1,6 @@
 package com.oocl.parkingreservationservice.service;
 
+import com.oocl.parkingreservationservice.dto.CommentResponse;
 import com.oocl.parkingreservationservice.dto.ParkingLotResponse;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.repository.ParkingLotRepository;
@@ -11,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -24,6 +26,8 @@ public class ParkingLotServiceTest {
         ParkingLotRepository parkingLotRepository = mock(ParkingLotRepository.class);
         List<ParkingLot> parkingLots = new ArrayList<>(Arrays.asList(new ParkingLot(), new ParkingLot()));
         StringRedisTemplate stringRedisTemplate = mock(StringRedisTemplate.class);
+        CommentService commentService = mock(CommentService.class);
+        given(commentService.getAllComment(anyInt())).willReturn(new CommentResponse());
         given(stringRedisTemplate.hasKey(anyString())).willReturn(false);
         given(stringRedisTemplate.opsForValue()).willReturn(null);
         given(parkingLotRepository.findAll()).willReturn(parkingLots);

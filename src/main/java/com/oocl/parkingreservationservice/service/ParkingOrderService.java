@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +55,7 @@ public class ParkingOrderService {
         if (parkingOrder == null) {
             throw new ParkingOrderException(NONE_EXISTENT_MESSAGE);
         }
+
         return parkingOrderResponse;
     }
 
@@ -141,8 +143,9 @@ public class ParkingOrderService {
         }
 
         User user = userRepository.findByPhone(phone);
-        if(user == null)
+        if(user == null) {
             throw new UserNotExistException(MessageConstants.USER_NOT_EXIST);
+        }
         parkingOrder.setUserId(user.getId());
         parkingOrder.setPrice(price);
         parkingOrder.setStatus(WAIT_FOR_SURE);
@@ -180,13 +183,24 @@ public class ParkingOrderService {
             throw new InquiryOrderException("指定userID不存在，请输入正确的userID");
         }
         List<ParkingOrder> parkingOrders = parkingOrderRepository.findAllByUserId(id);
-        return parkingOrders.stream().map(ParkingOrderMapper::convertParkingOrderToParkingOrderResponse).collect(Collectors.toList());
+        List<ParkingOrderResponse> parkingOrderResponses = new ArrayList<>();
+        for(ParkingOrder parkingOrder : parkingOrders){
+            ParkingOrderResponse parkingOrderResponse;
+            parkingOrderResponse = ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder);
+            parkingOrderResponse.setPhoneNumber(userByUserId.getPhoneNumber());
+            parkingOrderResponse.setEmail(userByUserId.getEmail());
+            parkingOrderResponses.add(parkingOrderResponse);
+        }
+        return parkingOrderResponses;
     }
 
-    public String getQRCode(Integer orderId){
+    public String getQRCode(Integer orderId) throws IllegalParameterException {
         ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
         assert parkingOrder != null;
-        return QRCodeUtil.creatRrCode(parkingOrder.getFetchNumber(), 200,200);
+        if (parkingOrder.getFetchNumber() == null) {
+            throw new IllegalParameterException("获取二维码失败");
+        }
+        return QRCodeUtil.creatRrCode(parkingOrder.getFetchNumber(), 200, 200);
     }
 
 }

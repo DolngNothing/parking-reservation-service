@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author XUAL7
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,4 +21,5 @@ public class ParkingLotResponse {
     private String imageUrl;
     private String location;
     private Double distance;
+    private Double avgScore;
 }

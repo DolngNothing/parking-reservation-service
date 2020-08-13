@@ -66,16 +66,16 @@ public class GlobalExceptionHandler {
         return new ExceptionBean(UN_LOGIN);
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionBean unknownException(Exception e) {
-        e.printStackTrace();
-        return new ExceptionBean(UNKNOWN_EXCEPTION);
-    }
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ExceptionBean unknownException(Exception e) {
+//        e.printStackTrace();
+//        return new ExceptionBean(UNKNOWN_EXCEPTION);
+//    }
 
     @ExceptionHandler(NoAuthorityException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionBean NoAuthorityException() {
+    public ExceptionBean noAuthorityException() {
         return new ExceptionBean(NO_AUTHORITY);
     }
 }

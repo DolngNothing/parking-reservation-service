@@ -65,7 +65,7 @@ public class ParkingOrderController {
 
     @GetMapping("/fetchCode/{orderId}")
     @ResponseStatus(HttpStatus.OK)
-    public String getQRCodeByOrderId(@PathVariable Integer orderId){
+    public String getQRCodeByOrderId(@PathVariable Integer orderId) throws IllegalParameterException {
         return parkingOrderService.getQRCode(orderId);
     }
 
