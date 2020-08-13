@@ -2,6 +2,7 @@ package com.oocl.parkingreservationservice.service;
 
 import com.oocl.parkingreservationservice.constants.MessageConstants;
 import com.oocl.parkingreservationservice.constants.StatusConstants;
+import com.oocl.parkingreservationservice.dto.ExceptionBean;
 import com.oocl.parkingreservationservice.dto.ParkingOrderRequest;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.*;
@@ -195,22 +196,6 @@ public class ParkingOrdersServiceTest {
 
         //when
         Exception exception = assertThrows(IllegalParameterException.class, () -> parkingOrderService.addParkingOrder(parkingOrder, phone, email));
-
-        //then
-        assertEquals(IllegalParameterException.class, exception.getClass());
-    }
-
-    @Test
-    void should_throw_illegal_parameter_exception_when_book_parking_lot_given_illegal_email_123() {
-        //given
-        String illegalEmail = "123";
-        String phone = "15920138477";
-        String parkingStartTime = Long.toString(new Date().getTime() + 1000);
-        String parkingEndTime = Long.toString(new Date().getTime() + 2000);
-        ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
-
-        //when
-        Exception exception = assertThrows(IllegalParameterException.class, () -> parkingOrderService.addParkingOrder(parkingOrder, phone, illegalEmail));
 
         //then
         assertEquals(IllegalParameterException.class, exception.getClass());
@@ -454,6 +439,21 @@ public class ParkingOrdersServiceTest {
 
         //then
         assertEquals(binary1,binary2);
+    }
+
+    @Test
+    void should_throw_illegal_parameter_exception_when_get_ORCode_given_orderId_and_null_fetch_number() {
+        //given
+        Integer orderId = 1;
+        ParkingOrder parkingOrder = new ParkingOrder(1, null, "2020-8-10 12:25:30",
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0);
+        given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(parkingOrder));
+
+        //when
+        Exception exception = assertThrows(IllegalParameterException.class,() -> parkingOrderService.getQRCode(orderId));
+
+        //then
+        assertEquals("获取二维码失败",exception.getMessage());
     }
 
 }

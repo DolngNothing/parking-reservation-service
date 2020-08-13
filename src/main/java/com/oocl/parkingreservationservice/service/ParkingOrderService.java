@@ -111,9 +111,7 @@ public class ParkingOrderService {
         if (!RegexUtils.checkPlateNumberFormat(parkingOrder.getCarNumber())) {
             throw new IllegalParameterException("预约失败，车牌格式不正确");
         }
-        if (!RegexUtils.validateEmail(email)) {
-            throw new IllegalParameterException("预约失败，邮箱格式不正确");
-        }
+
 
         double price;
         Optional<ParkingLot> parkingOrderOptional = parkingLotRepository.findById(parkingOrder.getParkingLotId());
