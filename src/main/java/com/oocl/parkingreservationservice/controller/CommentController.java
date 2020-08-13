@@ -26,9 +26,9 @@ public class CommentController {
         Comment comment = CommentMapper.convertToComment(commentRequest);
         return commentService.addComment(comment);
     }
-
-    public static void main(String args[]){
-        String binary = QRCodeUtil.creatRrCode("http://www.baidu.com",200,200);
-        System.out.println(binary);
-    }
+//
+//    public static void main(String args[]){
+//        String binary = QRCodeUtil.creatRrCode("http://www.baidu.com",200,200);
+//        System.out.println(binary);
+//    }
 }

@@ -33,6 +33,7 @@ public class CommentIntegrationTest {
     private ParkingOrderRepository parkingOrderRepository;
     private ParkingOrder parkingOrder;
     MockMvc mockMvc;
+    private int ParkingLotId;
 
     @BeforeEach
     void init() {
@@ -68,4 +69,5 @@ public class CommentIntegrationTest {
                 .andExpect(jsonPath("$.score").value(3.5))
                 .andExpect(jsonPath("$.content").value("好看"));
     }
+
 }

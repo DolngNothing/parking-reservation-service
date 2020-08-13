@@ -46,4 +46,5 @@ public class CommentService {
         commentResponse.setAvgScore(avgScore);
         return commentResponse;
     }
+
 }
