@@ -22,4 +22,6 @@ public class Comment {
     private Integer userId;
     private Double score;
     private String content;
+    private String userName;
+    private String createTime;
 }

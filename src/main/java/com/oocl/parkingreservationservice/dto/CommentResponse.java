@@ -17,6 +17,8 @@ public class CommentResponse {
     private Integer userId;
     private Double score;
     private String content;
+    private String userName;
+    private String createTime;
     private List<Comment> comments;
     private Double avgScore;
 }

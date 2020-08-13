@@ -40,7 +40,7 @@ public class commentServiceTest {
         Integer userId = 1;
         Double score = 3.5;
         String content = "停车场非常干净";
-        Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content);
+        Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content,null,null);
         given(commentRepository.save(mockComment)).willReturn(mockComment);
         given(parkingOrderRepository.findById(orderId)).willReturn(
                 Optional.of(new ParkingOrder(1, "", "2020-8-10 12:25:30",
@@ -60,7 +60,7 @@ public class commentServiceTest {
         Integer userId = 1;
         Double score = 3.5;
         String content = "停车场非常干净";
-        Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content);
+        Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content,null,null);
         given(commentRepository.save(mockComment)).willReturn(mockComment);
         given(parkingOrderRepository.findById(orderId)).willReturn(
                 java.util.Optional.of(new ParkingOrder(1, "", "2020-8-10 12:25:30",
@@ -81,7 +81,7 @@ public class commentServiceTest {
         Integer userId = 1;
         Double score = 3.5;
         String content = "停车场非常干净";
-        Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content);
+        Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content,null,null);
         given(commentRepository.save(mockComment)).willReturn(mockComment);
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.empty());
 
@@ -100,7 +100,7 @@ public class commentServiceTest {
         Integer userId = 1;
         Double score = 3.5;
         String content = "停车场非常干净";
-        Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content);
+        Comment mockComment = new Comment(1, orderId, parkingLotId, userId, score, content,null,null);
         given(commentRepository.save(mockComment)).willReturn(mockComment);
         given(parkingOrderRepository.findById(orderId)).willReturn(
                 java.util.Optional.of(new ParkingOrder(1, "", "2020-8-10 12:25:30",
@@ -118,8 +118,8 @@ public class commentServiceTest {
         //given
         Integer parkingLotId = 1;
         List<Comment> commentList = Arrays.asList(
-                new Comment(1, 1, parkingLotId, 1, 5.0, "111"),
-                new Comment(2, 2, parkingLotId, 1, 4.0, "222")
+                new Comment(1, 1, parkingLotId, 1, 5.0, "111",null,null),
+                new Comment(2, 2, parkingLotId, 1, 4.0, "222",null,null)
         );
 
         commentRepository.saveAll(commentList);

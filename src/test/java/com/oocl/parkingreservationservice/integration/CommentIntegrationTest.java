@@ -81,8 +81,8 @@ public class CommentIntegrationTest {
         //given
         parkingLotId = 100;
         List<Comment> commentList = Arrays.asList(
-                new Comment(null, 1, parkingLotId, 1, 5.0, "111"),
-                new Comment(null, 2, parkingLotId, 1, 4.0, "222")
+                new Comment(null, 1, parkingLotId, 1, 5.0, "111",null,null),
+                new Comment(null, 2, parkingLotId, 1, 4.0, "222",null,null)
         );
         commentRepository.saveAll(commentList);
 
