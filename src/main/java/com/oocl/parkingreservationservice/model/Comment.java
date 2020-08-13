@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.util.Date;
 
 @Entity
 @Data
@@ -21,5 +23,5 @@ public class Comment {
     private String content;
     @Column(name = "username")
     private String userName;
-    private String createTime;
+    private String createTime = DateFormat.getDateTimeInstance().format(new Date());
 }
