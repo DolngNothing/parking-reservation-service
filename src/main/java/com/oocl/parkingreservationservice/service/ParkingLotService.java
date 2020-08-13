@@ -1,6 +1,7 @@
 package com.oocl.parkingreservationservice.service;
 
 import com.alibaba.fastjson.JSON;
+import com.oocl.parkingreservationservice.dto.CommentResponse;
 import com.oocl.parkingreservationservice.dto.ParkingLotResponse;
 import com.oocl.parkingreservationservice.mapper.ParkingLotMapper;
 import com.oocl.parkingreservationservice.model.ParkingLot;
@@ -29,10 +30,16 @@ public class ParkingLotService {
     public static final int NEARBY_DISTANCE = 2000;
     private final ParkingLotRepository parkingLotRepository;
     private StringRedisTemplate redisTemplate;
+    private CommentService commentService;
 
     @Autowired
     public ParkingLotService(ParkingLotRepository parkingLotRepository) {
         this.parkingLotRepository = parkingLotRepository;
+    }
+
+    @Autowired
+    public void setCommentService(CommentService commentService) {
+        this.commentService = commentService;
     }
 
     @Autowired
@@ -49,9 +56,19 @@ public class ParkingLotService {
             ParkingLotResponse parkingLotResponse = ParkingLotMapper.map(parkingLot);
             parkingLotResponse.setDistance(getDistance(longitude, latitude,
                     Double.parseDouble(parkingLot.getLongitude()), Double.parseDouble(parkingLot.getLatitude())));
+            CommentResponse commentResponse = commentService.getAllComment(parkingLot.getId());
+            parkingLotResponse.setAvgScore(commentResponse.getAvgScore());
             parkingLotResponses.add(parkingLotResponse);
         }
-        return parkingLotResponses;
+        return parkingLotResponses.stream().sorted(Comparator.comparing(parkingLotResponse -> sortParkingLot(
+                getDistance(Double.parseDouble(parkingLotResponse.getLongitude()),
+                        Double.parseDouble(parkingLotResponse.getLatitude()),
+                        longitude, latitude),
+                parkingLotResponse.getAvgScore(), parkingLotResponse.getPrice()))).collect(Collectors.toList());
+    }
+
+    public Double sortParkingLot(double distance, double score, double price) {
+        return 0.5 * (1 - distance / 2000.0) + 0.25 * (score / 5.0) + 0.25 * (1 - price / 100.0);
     }
 
     public List<ParkingLot> filterParkingLots(Double longitude, Double latitude) {
@@ -60,9 +77,6 @@ public class ParkingLotService {
                 .filter(parkingLot -> getDistance(
                         Double.parseDouble(parkingLot.getLongitude()), Double.parseDouble(parkingLot.getLatitude()),
                         longitude, latitude) <= NEARBY_DISTANCE).limit(5)
-                .sorted(Comparator.comparing(parkingLot -> getDistance(
-                        Double.parseDouble(parkingLot.getLongitude()), Double.parseDouble(parkingLot.getLatitude()),
-                        longitude, latitude) <= NEARBY_DISTANCE))
                 .collect(Collectors.toList());
     }
 

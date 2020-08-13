@@ -143,8 +143,9 @@ public class ParkingOrderService {
         }
 
         User user = userRepository.findByPhone(phone);
-        if(user == null)
+        if(user == null) {
             throw new UserNotExistException(MessageConstants.USER_NOT_EXIST);
+        }
         parkingOrder.setUserId(user.getId());
         parkingOrder.setPrice(price);
         parkingOrder.setStatus(WAIT_FOR_SURE);
@@ -193,10 +194,13 @@ public class ParkingOrderService {
         return parkingOrderResponses;
     }
 
-    public String getQRCode(Integer orderId){
+    public String getQRCode(Integer orderId) throws IllegalParameterException {
         ParkingOrder parkingOrder = parkingOrderRepository.findById(orderId).orElse(null);
         assert parkingOrder != null;
-        return QRCodeUtil.creatRrCode(parkingOrder.getFetchNumber(), 200,200);
+        if (parkingOrder.getFetchNumber() == null) {
+            throw new IllegalParameterException("获取二维码失败");
+        }
+        return QRCodeUtil.creatRrCode(parkingOrder.getFetchNumber(), 200, 200);
     }
 
 }

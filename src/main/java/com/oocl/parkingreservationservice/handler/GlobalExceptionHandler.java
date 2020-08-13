@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoAuthorityException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionBean NoAuthorityException() {
+    public ExceptionBean noAuthorityException() {
         return new ExceptionBean(NO_AUTHORITY);
     }
 }

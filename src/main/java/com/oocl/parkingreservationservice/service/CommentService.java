@@ -37,10 +37,12 @@ public class CommentService {
     public CommentResponse getAllComment(Integer parkingLotId){
         List<Comment> commentList = commentRepository.findAllByParkingLotId(parkingLotId);
         Double avgScore = 0.0;
-        for (Comment comment:commentList){
+        for (Comment comment : commentList) {
             avgScore += comment.getScore();
         }
-        avgScore /= commentList.size();
+        if (!commentList.isEmpty()) {
+            avgScore /= commentList.size();
+        }
         CommentResponse commentResponse = new CommentResponse();
         commentResponse.setComments(commentList);
         commentResponse.setAvgScore(avgScore);
