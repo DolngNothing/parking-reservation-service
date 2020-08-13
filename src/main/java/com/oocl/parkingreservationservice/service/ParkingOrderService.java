@@ -178,16 +178,21 @@ public class ParkingOrderService {
 
     public List<ParkingOrderResponse> getAllOrdersByUserId(Integer id) throws InquiryOrderException {
         User userByUserId = userRepository.findById(id).orElse(null);
+
         if(userByUserId == null){
             throw new InquiryOrderException("指定userID不存在，请输入正确的userID");
         }
         List<ParkingOrder> parkingOrders = parkingOrderRepository.findAllByUserId(id);
         List<ParkingOrderResponse> parkingOrderResponses = new ArrayList<>();
         for(ParkingOrder parkingOrder : parkingOrders){
+            ParkingLot parkingLot = parkingLotRepository.findById(parkingOrder.getParkingLotId()).orElse(null);
+
             ParkingOrderResponse parkingOrderResponse;
             parkingOrderResponse = ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder);
             parkingOrderResponse.setPhoneNumber(userByUserId.getPhoneNumber());
             parkingOrderResponse.setEmail(userByUserId.getEmail());
+            parkingOrderResponse.setParkingLotName(parkingLot.getName());
+            parkingOrderResponse.setLocation(parkingLot.getLocation());
             parkingOrderResponses.add(parkingOrderResponse);
         }
         return parkingOrderResponses;

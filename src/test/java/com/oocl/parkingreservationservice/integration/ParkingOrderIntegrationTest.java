@@ -140,6 +140,7 @@ public class ParkingOrderIntegrationTest {
         //given
         User user = new User(1, "15626155019", null, "karen", "123");
         User user2 = new User(2, "15626155019", null, "karen", "123");
+        ParkingLot parkingLot = parkingLotRepository.save(new ParkingLot(null,"南方软件园停车场","22","113",100,10.0,"南方软件园停车场",null,"广东省珠海市香洲区软件园路"));
         user = userRepository.save(user);
         user2 = userRepository.save(user2);
         List<ParkingOrder> parkingOrders = Arrays.asList(
