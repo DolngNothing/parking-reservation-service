@@ -1,5 +1,6 @@
 package com.oocl.parkingreservationservice.service;
 
+import com.oocl.parkingreservationservice.config.DirectRabbitConfig;
 import com.oocl.parkingreservationservice.model.ParkingLot;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.model.User;
@@ -30,7 +31,7 @@ public class RabbitMqService {
             message.put("username", user.getUsername());
             message.put("parkingName", parkingLot.getName());
             message.put("parkingOrderId", String.valueOf(parkingOrder.getId()));
-            rabbitTemplate.convertAndSend("TestDirectExchange", "TestDirectRouting", message);
+            rabbitTemplate.convertAndSend(DirectRabbitConfig.EXCHANGE_NAME,  DirectRabbitConfig.ROUTING_KEY, message);
         }
     }
 }

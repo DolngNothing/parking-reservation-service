@@ -14,7 +14,6 @@ public class DirectRabbitConfig {
     public static final String EXCHANGE_NAME = "SmsDirectExchange";
     public static final String ROUTING_KEY = "SmsDirectRouting";
     public static final String LONELY_DIRECT_EXCHANGE = "lonelyDirectExchange";
-
     @Bean
     public Queue testDirectQueue() {
         return new Queue(QUEUE_NAME, true);
