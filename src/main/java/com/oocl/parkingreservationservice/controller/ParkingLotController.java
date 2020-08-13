@@ -6,6 +6,7 @@ import com.oocl.parkingreservationservice.service.ParkingLotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,8 +26,9 @@ public class ParkingLotController {
     }
 
     @GetMapping(params = {"lng", "lat"})
-    public List<ParkingLotResponse> getParkingLots(Double lng, Double lat) {
-        return this.parkingLotService.getParkingLots(lng, lat);
+    public List<ParkingLotResponse> getParkingLots(Double lng, Double lat,
+                                                   @RequestParam(name = "type", required = false) String type) {
+        return this.parkingLotService.getParkingLots(lng, lat, type);
     }
 
 

@@ -1,0 +1,1 @@
+alter table parking_lot add type varchar(255) default "";

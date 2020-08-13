@@ -14,7 +14,7 @@ public class GlobalExceptionHandlerTest {
         ParkingLotRepository parkingLotRepository = mock(ParkingLotRepository.class);
         ParkingLotService parkingLotService = new ParkingLotService(parkingLotRepository);
         //when
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> parkingLotService.getParkingLots(null, null));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> parkingLotService.getParkingLots(null, null, null));
         //then
         assertEquals(IllegalArgumentException.class, exception.getClass());
     }

@@ -47,10 +47,10 @@ public class ParkingLotService {
         this.redisTemplate = redisTemplate;
     }
 
-    public List<ParkingLotResponse> getParkingLots(Double longitude, Double latitude) {
+    public List<ParkingLotResponse> getParkingLots(Double longitude, Double latitude, String type) {
         Assert.notNull(longitude, NO_LONGITUDE);
         Assert.notNull(latitude, NO_LATITUDE);
-        List<ParkingLot> parkingLots = filterParkingLots(longitude, latitude);
+        List<ParkingLot> parkingLots = filterParkingLots(longitude, latitude, type);
         List<ParkingLotResponse> parkingLotResponses = new ArrayList<>();
         for (ParkingLot parkingLot : parkingLots) {
             ParkingLotResponse parkingLotResponse = ParkingLotMapper.map(parkingLot);
@@ -72,12 +72,13 @@ public class ParkingLotService {
         return 0.5 * (1 - distance / 2000.0) + 0.25 * (score / 5.0) + 0.25 * (1 - price / 100.0);
     }
 
-    public List<ParkingLot> filterParkingLots(Double longitude, Double latitude) {
+    public List<ParkingLot> filterParkingLots(Double longitude, Double latitude, String type) {
         return getParkingLots().stream()
                 .filter(parkingLot -> parkingLot.getLatitude() != null && parkingLot.getLongitude() != null)
                 .filter(parkingLot -> getDistance(
                         Double.parseDouble(parkingLot.getLongitude()), Double.parseDouble(parkingLot.getLatitude()),
-                        longitude, latitude) <= NEARBY_DISTANCE).limit(5)
+                        longitude, latitude) <= NEARBY_DISTANCE)
+                .filter(parkingLot -> type == null || parkingLot.getType().equals(type)).limit(5)
                 .collect(Collectors.toList());
     }
 

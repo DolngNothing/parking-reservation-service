@@ -29,4 +29,5 @@ public class ParkingLot implements Serializable {
     private String description;
     private String imageUrl;
     private String location;
+    private String type;
 }

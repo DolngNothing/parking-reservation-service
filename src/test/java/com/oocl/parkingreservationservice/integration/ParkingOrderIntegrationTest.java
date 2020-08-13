@@ -77,7 +77,7 @@ public class ParkingOrderIntegrationTest {
 
     @Test
     void should_return_parking_order_response_when_hit_add_order_endpoint_given_info() throws Exception {
-        ParkingLot parkingLot = new ParkingLot(null, "pakinglot1", "112.5", "22.3", 100, 0.5, "this is a test parkingLot", "asdasd", "");
+        ParkingLot parkingLot = new ParkingLot(null, "pakinglot1", "112.5", "22.3", 100, 0.5, "this is a test parkingLot", "asdasd", "", "");
         parkingLot = parkingLotRepository.save(parkingLot);
         User user = new User(null, "15920138471", "1214852999@qq.com", "James", "null");
         userRepository.save(user);
@@ -102,7 +102,7 @@ public class ParkingOrderIntegrationTest {
 
     @Test
     void should_return_bad_request_when_hit_add_order_endpoint_given_illegal_info() throws Exception {
-        ParkingLot parkingLot = new ParkingLot(null, "pakinglot1", "112.5", "22.3", 100, 0.5, "this is a test parkingLot", "asdasd", "");
+        ParkingLot parkingLot = new ParkingLot(null, "pakinglot1", "112.5", "22.3", 100, 0.5, "this is a test parkingLot", "asdasd", "", "");
         parkingLot = parkingLotRepository.save(parkingLot);
         User user = new User(null, "15920138471", "1214852999@qq.com", "James", "null");
         userRepository.save(user);
@@ -140,7 +140,7 @@ public class ParkingOrderIntegrationTest {
         //given
         User user = new User(1, "15626155019", null, "karen", "123");
         User user2 = new User(2, "15626155019", null, "karen", "123");
-        ParkingLot parkingLot = parkingLotRepository.save(new ParkingLot(null,"南方软件园停车场","22","113",100,10.0,"南方软件园停车场",null,"广东省珠海市香洲区软件园路"));
+        ParkingLot parkingLot = parkingLotRepository.save(new ParkingLot(null, "南方软件园停车场", "22", "113", 100, 10.0, "南方软件园停车场", null, "广东省珠海市香洲区软件园路", ""));
         user = userRepository.save(user);
         user2 = userRepository.save(user2);
         List<ParkingOrder> parkingOrders = Arrays.asList(

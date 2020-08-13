@@ -22,4 +22,5 @@ public class ParkingLotResponse {
     private String location;
     private Double distance;
     private Double avgScore;
+    private String type;
 }

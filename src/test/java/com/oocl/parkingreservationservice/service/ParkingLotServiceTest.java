@@ -34,7 +34,7 @@ public class ParkingLotServiceTest {
         ParkingLotService parkingLotService = new ParkingLotService(parkingLotRepository);
         parkingLotService.setRedisTemplate(stringRedisTemplate);
         //when
-        List<ParkingLotResponse> parkingLotsSaved = parkingLotService.getParkingLots(longitude, latitude);
+        List<ParkingLotResponse> parkingLotsSaved = parkingLotService.getParkingLots(longitude, latitude, null);
         //then
         assertEquals(0, parkingLotsSaved.size());
     }

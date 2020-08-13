@@ -192,8 +192,8 @@ public class ParkingOrderService {
             parkingOrderResponse = ParkingOrderMapper.convertParkingOrderToParkingOrderResponse(parkingOrder);
             parkingOrderResponse.setPhoneNumber(userByUserId.getPhoneNumber());
             parkingOrderResponse.setEmail(userByUserId.getEmail());
-            parkingOrderResponse.setParkingLotName(parkingLot.getName());
-            parkingOrderResponse.setLocation(parkingLot.getLocation());
+            parkingOrderResponse.setParkingLotName(parkingLot == null ? null : parkingLot.getName());
+            parkingOrderResponse.setLocation(parkingLot == null ? null : parkingLot.getLocation());
             parkingOrderResponses.add(parkingOrderResponse);
         }
         return parkingOrderResponses;

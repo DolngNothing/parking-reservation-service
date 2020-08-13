@@ -225,7 +225,7 @@ public class ParkingOrdersServiceTest {
         String parkingEndTime = Long.toString(new Date().getTime() + 500);
         ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
         given(userRepository.findByPhone(phone)).willReturn(new User(1, phone, email, "Jamea", "9999"));
-        given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null, "")));
+        given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null, "", "")));
         ParkingOrder mockedParkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, 1, 1, null, null, "浙A1063警", null);
         given(parkingOrderRepository.save(parkingOrder)).willReturn(mockedParkingOrder);
         //when
@@ -245,7 +245,7 @@ public class ParkingOrdersServiceTest {
         String parkingEndTime = Long.toString(new Date().getTime() + 2000);
         ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
         given(userRepository.findByPhone(phone)).willReturn(new User(1, phone, email, "Jamea", "9999"));
-        given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null, "")));
+        given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null, "", "")));
         ParkingOrder mockedParkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, 1, 1, null, null, "浙A1063警", null);
         given(parkingOrderRepository.save(parkingOrder)).willReturn(mockedParkingOrder);
         //when
@@ -265,7 +265,7 @@ public class ParkingOrdersServiceTest {
         String parkingEndTime = Long.toString(new Date().getTime() - 2000);
         ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", null);
         given(userRepository.findByPhone(phone)).willReturn(new User(1, phone, email, "Jamea", "9999"));
-        given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null, "")));
+        given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null, "", "")));
         ParkingOrder mockedParkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, 1, 1, null, null, "浙A1063警", null);
         given(parkingOrderRepository.save(parkingOrder)).willReturn(mockedParkingOrder);
         //when
@@ -301,7 +301,7 @@ public class ParkingOrdersServiceTest {
         ParkingOrder parkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, null, 1, null, null, "浙A1063警", 10.0);
 
         given(userRepository.findByPhone(phone)).willReturn(new User(1, phone, email, "Jamea", "9999"));
-        given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null, "")));
+        given(parkingLotRepository.findById(1)).willReturn(Optional.of(new ParkingLot(1, "test_parking_lot", "113.22", "22.3", 100, 1.5, null, null, "", "")));
         ParkingOrder mockedParkingOrder = new ParkingOrder(null, null, parkingStartTime, parkingEndTime, 1, 1, null, null, "浙A1063警", null);
         given(parkingOrderRepository.save(parkingOrder)).willReturn(mockedParkingOrder);
         //when
