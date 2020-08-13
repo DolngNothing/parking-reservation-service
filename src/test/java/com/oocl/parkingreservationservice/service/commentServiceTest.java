@@ -4,6 +4,7 @@ import com.oocl.parkingreservationservice.constants.StatusConstants;
 import com.oocl.parkingreservationservice.dto.CommentResponse;
 import com.oocl.parkingreservationservice.exception.NoAuthorityException;
 import com.oocl.parkingreservationservice.exception.OrderNotExistException;
+import com.oocl.parkingreservationservice.mapper.CommentMapper;
 import com.oocl.parkingreservationservice.model.Comment;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.CommentRepository;
@@ -130,5 +131,31 @@ public class commentServiceTest {
         //then
         assertEquals(4.5,returnCommentResponse.getAvgScore());
         assertEquals(commentList,returnCommentResponse.getComments());
+    }
+
+    @Test
+    void should_return_comment_when_get_comment_given_order__id() {
+        //given
+        Integer orderId = 1;
+        Comment comment = new Comment(1, orderId, 1, 1, 5.0, "111",null,null);
+
+        commentRepository.save(comment);
+        given(commentRepository.findById(orderId)).willReturn(Optional.of(comment));
+        //when
+        CommentResponse commentResponse = commentService.getComment(orderId);
+
+        //then
+        assertEquals(CommentMapper.convertToCommentResponse(comment),commentResponse);
+    }
+
+    @Test
+    void should_throw_no_comment_exception_when_get_comment_given_order_id_with_no_comment() {
+        //given
+        Integer orderId = 1;
+        //when
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> commentService.getComment(orderId));
+
+        //then
+        assertEquals("该订单没有评论", exception.getMessage());
     }
 }

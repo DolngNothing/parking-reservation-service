@@ -92,4 +92,16 @@ public class CommentIntegrationTest {
                 .andExpect(jsonPath("$.comments", hasSize(2)))
                 .andExpect(jsonPath("$.avgScore").value(4.5));
     }
+
+    @Test
+    void should_return_comment_when_hit_get_comment_endpoint_given_order_id() throws Exception {
+        //given
+        Comment comment = new Comment(null, parkingOrder.getId(), 1, 1, 5.0, "111",null,null);
+        Comment comment2 = commentRepository.save(comment);
+        //whengit
+        mockMvc.perform(get("/comments").param("orderId", String.valueOf(comment2.getOrderId())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").value("111"));
+    }
+
 }

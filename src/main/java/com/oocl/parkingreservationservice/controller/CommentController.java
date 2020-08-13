@@ -32,4 +32,10 @@ public class CommentController {
     public CommentResponse getComments(@RequestParam(name = "parkingLotId") Integer parkingLotId){
         return commentService.getAllComment(parkingLotId);
     }
+
+    @GetMapping(params = {"orderId"})
+    @ResponseStatus(HttpStatus.OK)
+    public CommentResponse getComment(@RequestParam(name = "orderId") Integer orderId){
+        return commentService.getComment(orderId);
+    }
 }

@@ -51,4 +51,12 @@ public class CommentService {
         return commentResponse;
     }
 
+    public CommentResponse getComment(Integer orderId){
+        Comment comment = commentRepository.findById(orderId).orElse(null);
+        if (comment == null) {
+            throw new IllegalArgumentException("该订单没有评论");
+        }
+        return CommentMapper.convertToCommentResponse(comment);
+    }
+
 }
