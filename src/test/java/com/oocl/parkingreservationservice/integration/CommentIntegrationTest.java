@@ -3,6 +3,7 @@ package com.oocl.parkingreservationservice.integration;
 import com.oocl.parkingreservationservice.constants.StatusContants;
 import com.oocl.parkingreservationservice.controller.CommentController;
 import com.oocl.parkingreservationservice.handler.GlobalExceptionHandler;
+import com.oocl.parkingreservationservice.model.Comment;
 import com.oocl.parkingreservationservice.model.ParkingOrder;
 import com.oocl.parkingreservationservice.repository.CommentRepository;
 import com.oocl.parkingreservationservice.repository.ParkingOrderRepository;
@@ -16,6 +17,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,7 +39,7 @@ public class CommentIntegrationTest {
     private ParkingOrderRepository parkingOrderRepository;
     private ParkingOrder parkingOrder;
     MockMvc mockMvc;
-    private int ParkingLotId;
+    private int parkingLotId;
 
     @BeforeEach
     void init() {
@@ -49,13 +55,13 @@ public class CommentIntegrationTest {
     }
 
     @Test
-    void should_return_comment_response_when_hit_add_comment_endpoint_given_info() throws Exception{
+    void should_return_comment_response_when_hit_add_comment_endpoint_given_info() throws Exception {
         //given
         String commentInfo = "{\n" +
                 "    \"id\": 1,\n" +
-                "    \"orderId\":"+parkingOrder.getId()+",\n" +
-                "    \"userId\": "+parkingOrder.getUserId()+",\n" +
-                "    \"parkingLotId\": "+parkingOrder.getParkingLotId()+",\n" +
+                "    \"orderId\":" + parkingOrder.getId() + ",\n" +
+                "    \"userId\": " + parkingOrder.getUserId() + ",\n" +
+                "    \"parkingLotId\": " + parkingOrder.getParkingLotId() + ",\n" +
                 "    \"score\":3.5,\n" +
                 "    \"content\":\"好看\"\n" +
                 "}";
@@ -70,4 +76,20 @@ public class CommentIntegrationTest {
                 .andExpect(jsonPath("$.content").value("好看"));
     }
 
+    @Test
+    void should_return_avg_score_and_comments_when_hit_get_comments_endpoint_given_parkinglot_id() throws Exception {
+        //given
+        parkingLotId = 100;
+        List<Comment> commentList = Arrays.asList(
+                new Comment(null, 1, parkingLotId, 1, 5.0, "111"),
+                new Comment(null, 2, parkingLotId, 1, 4.0, "222")
+        );
+        commentRepository.saveAll(commentList);
+
+        //when
+        mockMvc.perform(get("/comments").param("parkingLotId", String.valueOf(parkingLotId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.comments", hasSize(2)))
+                .andExpect(jsonPath("$.avgScore").value(4.5));
+    }
 }

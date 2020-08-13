@@ -31,4 +31,10 @@ public class CommentController {
 //        String binary = QRCodeUtil.creatRrCode("http://www.baidu.com",200,200);
 //        System.out.println(binary);
 //    }
+
+    @GetMapping(params = {"parkingLotId"})
+    @ResponseStatus(HttpStatus.OK)
+    public CommentResponse getComments(@RequestParam(name = "parkingLotId") Integer parkingLotId){
+        return commentService.getAllComment(parkingLotId);
+    }
 }
