@@ -39,21 +39,31 @@ public class WebsocketService {
     }
 
     public void sendToAllConnet(String msg) throws ParseException {
+
         String[] arr = msg.split("/");
-        WebsocketRequest request = new WebsocketRequest(Long.parseLong(arr[1]), Long.parseLong(arr[2]), Integer.parseInt(arr[3]));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long orderStartTime = sdf.parse(arr[1]).getTime();
+        long orderEndTime = sdf.parse(arr[2]).getTime();
+        msg="/"+orderStartTime+"/"+orderEndTime+"/"+arr[3];
+        String[] arr1 = msg.split("/");
+
+        WebsocketRequest request = new WebsocketRequest(Long.parseLong(arr1[1]), Long.parseLong(arr1[2]), Integer.parseInt(arr1[3]));
         //注销
         hashMap.remove(request);
 
         List<ParkingOrder> allByParkingLotId = parkingOrderRepository.findAllByParkingLotId(request.getParkingLotId());
         List<ParkingOrder> parkingOrders = allByParkingLotId.stream().filter(ParkingOrder::isSure).collect(Collectors.toList());
 
+        System.out.println("预约成功时看看对应订单数量："+parkingOrders.size());
         ParkingLot parkingLot = parkingLotRepository.findById(request.getParkingLotId()).orElse(null);
         //遍历寻找广播:
         Set<Map.Entry<WebsocketRequest, String>> set = hashMap.entrySet();
         for (Map.Entry<WebsocketRequest, String> e : set) {
             if (isTimeSame(e, request)) {
                 assert parkingLot != null;
-                messagingTemplate.convertAndSend("/topic" + e.getValue(), count(e.getKey(), parkingOrders, parkingLot.getCapacity()));
+                Integer count = count(e.getKey(), parkingOrders, parkingLot.getCapacity());
+                System.out.println("save send: "+ e.getValue()+"count: "+count);
+                messagingTemplate.convertAndSend("/topic" + e.getValue(), count);
             }
         }
     }
@@ -69,8 +79,11 @@ public class WebsocketService {
         List<ParkingOrder> allByParkingLotId = parkingOrderRepository.findAllByParkingLotId(request.getParkingLotId());
         List<ParkingOrder> parkingOrders = allByParkingLotId.stream().filter(ParkingOrder::isSure).collect(Collectors.toList());
         ParkingLot parkingLot = parkingLotRepository.findById(request.getParkingLotId()).orElse(null);
+        System.out.println("订阅成功时看看对应订单数量："+parkingOrders.size());
         assert parkingLot != null;
-        messagingTemplate.convertAndSend("/topic" + msg, count(request, parkingOrders, parkingLot.getCapacity()));
+        Integer count = count(request, parkingOrders, parkingLot.getCapacity());
+        System.out.println("register send: "+ msg+"count: "+count);
+        messagingTemplate.convertAndSend("/topic" + msg,count);
     }
 
     public Boolean isTimeSame(Map.Entry<WebsocketRequest, String> e, WebsocketRequest request) {
