@@ -69,7 +69,7 @@ public class ParkingLotService {
     }
 
     public Double sortParkingLot(double distance, double score, double price) {
-        return 0.5 * (1 - distance / 2000.0) + 0.25 * (score / 5.0) + 0.25 * (1 - price / 100.0);
+        return -(0.5 * (1 - distance / 2000.0) + 0.25 * (score / 5.0) + 0.25 * (1 - price / 100.0));
     }
 
     public List<ParkingLot> filterParkingLots(Double longitude, Double latitude, String type) {
