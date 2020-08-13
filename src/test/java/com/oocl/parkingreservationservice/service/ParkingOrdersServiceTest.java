@@ -441,7 +441,7 @@ public class ParkingOrdersServiceTest {
     }
 
     @Test
-    void should_return_binary_when_get_ORCode_given_orderId() {
+    void should_return_binary_when_get_ORCode_given_orderId() throws IllegalParameterException {
         //given
         Integer orderId = 1;
         ParkingOrder parkingOrder = new ParkingOrder(1, "http://www.baidu.com", "2020-8-10 12:25:30",
