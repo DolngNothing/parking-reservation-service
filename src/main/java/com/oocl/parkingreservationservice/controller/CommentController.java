@@ -23,6 +23,7 @@ public class CommentController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CommentResponse addComment(@RequestBody CommentRequest commentRequest) throws OrderNotExistException, NoAuthorityException {
+        commentRequest.setId(null);
         Comment comment = CommentMapper.convertToComment(commentRequest);
         return commentService.addComment(comment);
     }
