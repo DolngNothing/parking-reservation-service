@@ -1,7 +1,7 @@
 package com.oocl.parkingreservationservice.service;
 
 import com.oocl.parkingreservationservice.constants.MessageConstants;
-import com.oocl.parkingreservationservice.constants.StatusContants;
+import com.oocl.parkingreservationservice.constants.StatusConstants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.*;
 import com.oocl.parkingreservationservice.mapper.ParkingOrderMapper;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.oocl.parkingreservationservice.constants.StatusContants.*;
+import static com.oocl.parkingreservationservice.constants.StatusConstants.*;
 
 @Service
 public class ParkingOrderService {
@@ -91,12 +91,12 @@ public class ParkingOrderService {
         if (parkingOrder == null) {
             throw new OrderNotExistException();
         }
-        if (parkingOrder.getStatus().equals(StatusContants.ALREADY_SURE)) {
+        if (parkingOrder.getStatus().equals(StatusConstants.ALREADY_SURE)) {
             throw new IllegalOrderOperationException(MessageConstants.ODER_CONFIRMED);
-        } else if (parkingOrder.getStatus().equals(StatusContants.DELETED)) {
+        } else if (parkingOrder.getStatus().equals(StatusConstants.DELETED)) {
             throw new IllegalOrderOperationException(MessageConstants.ODER_CANCELED);
         }
-        parkingOrder.setStatus(StatusContants.ALREADY_SURE);
+        parkingOrder.setStatus(StatusConstants.ALREADY_SURE);
         parkingOrderRepository.save(parkingOrder);
         if (rabbitMqService!=null){
             rabbitMqService.sendMessageToRabbitMq(parkingOrder);

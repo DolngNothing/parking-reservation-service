@@ -17,7 +17,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/endpoint").setAllowedOrigins("*").withSockJS(); //@注解2
+        //@注解2
+        registry.addEndpoint("/endpoint").setAllowedOrigins("*").withSockJS();
     }
 
     /***
@@ -31,8 +32,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         //注册广播消息代理和点对点代理
-        registry.enableSimpleBroker("/","/*","/topic", "/queue"); //@注解3
+        //@注解3
+        registry.enableSimpleBroker("/","/*","/topic", "/queue");
         //设置点对点代理订阅前缀
-        registry.setUserDestinationPrefix("/queue"); //@注解4
+        //@注解4
+        registry.setUserDestinationPrefix("/queue");
     }
 }

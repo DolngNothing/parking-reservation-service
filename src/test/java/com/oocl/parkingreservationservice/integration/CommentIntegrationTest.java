@@ -1,6 +1,6 @@
 package com.oocl.parkingreservationservice.integration;
 
-import com.oocl.parkingreservationservice.constants.StatusContants;
+import com.oocl.parkingreservationservice.constants.StatusConstants;
 import com.oocl.parkingreservationservice.controller.CommentController;
 import com.oocl.parkingreservationservice.handler.GlobalExceptionHandler;
 import com.oocl.parkingreservationservice.model.Comment;
@@ -44,7 +44,7 @@ public class CommentIntegrationTest {
     @BeforeEach
     void init() {
         parkingOrder = parkingOrderRepository.save(new ParkingOrder(1, null, "2020-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0));
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "1234", 10.0));
         mockMvc = MockMvcBuilders.standaloneSetup(commentController, globalExceptionHandler).build();
     }
 

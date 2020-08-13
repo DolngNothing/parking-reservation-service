@@ -1,6 +1,6 @@
 package com.oocl.parkingreservationservice.service;
 
-import com.oocl.parkingreservationservice.constants.StatusContants;
+import com.oocl.parkingreservationservice.constants.StatusConstants;
 import com.oocl.parkingreservationservice.dto.CommentResponse;
 import com.oocl.parkingreservationservice.exception.NoAuthorityException;
 import com.oocl.parkingreservationservice.exception.OrderNotExistException;
@@ -45,7 +45,7 @@ public class commentServiceTest {
         given(parkingOrderRepository.findById(orderId)).willReturn(
                 Optional.of(new ParkingOrder(1, "", "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30",
-                        StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0)));
+                        StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0)));
         //when
         CommentResponse returnCommentResponse = commentService.addComment(mockComment);
         //then
@@ -65,7 +65,7 @@ public class commentServiceTest {
         given(parkingOrderRepository.findById(orderId)).willReturn(
                 java.util.Optional.of(new ParkingOrder(1, "", "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 2, 1, "2020-8-10 14:25:30",
-                        StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0)));
+                        StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0)));
         //when
         Exception exception = assertThrows(NoAuthorityException.class, () -> commentService.addComment(mockComment));
 
@@ -105,7 +105,7 @@ public class commentServiceTest {
         given(parkingOrderRepository.findById(orderId)).willReturn(
                 java.util.Optional.of(new ParkingOrder(1, "", "2020-8-10 12:25:30",
                         "2020-8-10 14:25:30", 1, 2, "2020-8-10 14:25:30",
-                        StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0)));
+                        StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0)));
         //when
         Exception exception = assertThrows(NoAuthorityException.class, () -> commentService.addComment(mockComment));
 

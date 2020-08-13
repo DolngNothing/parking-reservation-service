@@ -1,7 +1,7 @@
 package com.oocl.parkingreservationservice.integration;
 
 import com.oocl.parkingreservationservice.constants.MessageConstants;
-import com.oocl.parkingreservationservice.constants.StatusContants;
+import com.oocl.parkingreservationservice.constants.StatusConstants;
 import com.oocl.parkingreservationservice.controller.ParkingOrderController;
 import com.oocl.parkingreservationservice.handler.GlobalExceptionHandler;
 import com.oocl.parkingreservationservice.model.ParkingLot;
@@ -50,7 +50,7 @@ public class ParkingOrderIntegrationTest {
     void init() {
         mockMvc = MockMvcBuilders.standaloneSetup(parkingOrderController, globalExceptionHandler).build();
         ParkingOrder firstOrder = new ParkingOrder(null, null, "2020-08-10 12:25:30",
-                "2020-08-10 14:25:30", -1, 1, "2020-08-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
+                "2020-08-10 14:25:30", -1, 1, "2020-08-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrder Order = parkingOrderRepository.save(firstOrder);
         OrderId = Order.getId();
         parkLotId = Order.getParkingLotId();
@@ -72,7 +72,7 @@ public class ParkingOrderIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.parkingLotId").value(parkLotId))
                 .andExpect(jsonPath("$.parkingStartTime").value("2020-08-10 12:25:30"))
-                .andExpect(jsonPath("$.status").value(StatusContants.DELETED));
+                .andExpect(jsonPath("$.status").value(StatusConstants.DELETED));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class ParkingOrderIntegrationTest {
     void should_return_order_when_hit_get_order_endpoint_given_order_id() throws Exception {
         //given
         ParkingOrder order = new ParkingOrder(1, "http://www.baidu.com", "2020-08-10 12:25:30",
-                "2020-08-10 14:25:30", 1, 1, "2020-08-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
+                "2020-08-10 14:25:30", 1, 1, "2020-08-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrder parkingOrder = parkingOrderRepository.save(order);
 
         //when
@@ -144,12 +144,12 @@ public class ParkingOrderIntegrationTest {
         user = userRepository.save(user);
         user2 = userRepository.save(user2);
         List<ParkingOrder> parkingOrders = Arrays.asList(
-                new ParkingOrder(1, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
-                new ParkingOrder(2, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0),
-                new ParkingOrder(3, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", user2.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤C369警", 60.0)
+                new ParkingOrder(null, null, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                new ParkingOrder(null, null, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "粤B258警", 30.0),
+                new ParkingOrder(null, null, "2020-8-10 12:25:30",
+                        "2020-8-10 14:25:30", user2.getId(), 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "粤C369警", 60.0)
         );
         parkingOrderRepository.save(parkingOrders.get(0));
         parkingOrderRepository.save(parkingOrders.get(1));
@@ -173,11 +173,11 @@ public class ParkingOrderIntegrationTest {
         user2 = userRepository.save(user2);
         List<ParkingOrder> parkingOrders = Arrays.asList(
                 new ParkingOrder(1, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0),
                 new ParkingOrder(2, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0),
+                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "粤B258警", 30.0),
                 new ParkingOrder(3, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", user2.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤C369警", 60.0)
+                        "2020-8-10 14:25:30", user2.getId(), 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "粤C369警", 60.0)
         );
 
         parkingOrderRepository.save(parkingOrders.get(0));
@@ -202,11 +202,11 @@ public class ParkingOrderIntegrationTest {
         user2 = userRepository.save(user2);
         List<ParkingOrder> parkingOrders = Arrays.asList(
                 new ParkingOrder(null, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0),
                 new ParkingOrder(null, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0),
+                        "2020-8-10 14:25:30", user.getId(), 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "粤B258警", 30.0),
                 new ParkingOrder(null, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", user2.getId(), 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤C369警", 60.0)
+                        "2020-8-10 14:25:30", user2.getId(), 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "粤C369警", 60.0)
         );
         parkingOrderRepository.save(parkingOrders.get(0));
         parkingOrderRepository.save(parkingOrders.get(1));
@@ -225,14 +225,14 @@ public class ParkingOrderIntegrationTest {
 //        given
         Integer orderId = 1;
         ParkingOrder parkingOrder = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrder savedParkingOrder = parkingOrderRepository.save(parkingOrder);
 //        when then
         mockMvc.perform(patch("/parkingOrders/" + savedParkingOrder.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("type", "comfirm"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(StatusContants.ALREADY_SURE));
+                .andExpect(jsonPath("$.status").value(StatusConstants.ALREADY_SURE));
     }
 
     @Test
@@ -240,7 +240,7 @@ public class ParkingOrderIntegrationTest {
 //        given
         Integer orderId = 1;
         ParkingOrder parkingOrder = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.ALREADY_SURE, "1234", 10.0);
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.ALREADY_SURE, "1234", 10.0);
         ParkingOrder savedParkingOrder = parkingOrderRepository.save(parkingOrder);
 //        when then
         mockMvc.perform(patch("/parkingOrders/" + savedParkingOrder.getId())
@@ -255,7 +255,7 @@ public class ParkingOrderIntegrationTest {
 //        given
         Integer orderId = 1;
         ParkingOrder parkingOrder = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.DELETED, "1234", 10.0);
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.DELETED, "1234", 10.0);
         ParkingOrder savedParkingOrder = parkingOrderRepository.save(parkingOrder);
 //        when then
         mockMvc.perform(patch("/parkingOrders/" + savedParkingOrder.getId())
@@ -283,7 +283,7 @@ public class ParkingOrderIntegrationTest {
         int orderId = 1;
 //        when
         ParkingOrder parkingOrder = new ParkingOrder(1, "http://www.baidu.com", "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0);
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0);
         parkingOrder=parkingOrderRepository.save(parkingOrder);
 //        then
         mockMvc.perform(get("/parkingOrders/fetchCode/" + parkingOrder.getId()))

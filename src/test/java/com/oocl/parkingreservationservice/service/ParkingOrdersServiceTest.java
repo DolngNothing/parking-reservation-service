@@ -1,7 +1,7 @@
 package com.oocl.parkingreservationservice.service;
 
 import com.oocl.parkingreservationservice.constants.MessageConstants;
-import com.oocl.parkingreservationservice.constants.StatusContants;
+import com.oocl.parkingreservationservice.constants.StatusConstants;
 import com.oocl.parkingreservationservice.dto.ParkingOrderRequest;
 import com.oocl.parkingreservationservice.dto.ParkingOrderResponse;
 import com.oocl.parkingreservationservice.exception.*;
@@ -50,13 +50,13 @@ public class ParkingOrdersServiceTest {
         //given
         Integer orderId = 1;
         ParkingOrder parkingOrder = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "1234", 10.0);
         ParkingOrderResponse parkingOrderResponse;
         given(parkingOrderRepository.findById(orderId)).willReturn(java.util.Optional.of(parkingOrder));
 //        when
         parkingOrderResponse = parkingOrderService.confirmParkingOrder(orderId);
 //        then
-        assertEquals(StatusContants.ALREADY_SURE, parkingOrderResponse.getStatus());
+        assertEquals(StatusConstants.ALREADY_SURE, parkingOrderResponse.getStatus());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class ParkingOrdersServiceTest {
 //        given
         Integer orderId = 1;
         ParkingOrder parkingOrder = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.DELETED, "1234", 10.0);
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.DELETED, "1234", 10.0);
         given(parkingOrderRepository.findById(orderId)).willReturn(java.util.Optional.of(parkingOrder));
 //        when
         Exception exception = assertThrows(IllegalOrderOperationException.class, () -> parkingOrderService.confirmParkingOrder(orderId));
@@ -77,7 +77,7 @@ public class ParkingOrdersServiceTest {
 //        given
         Integer orderId = 1;
         ParkingOrder parkingOrder = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.ALREADY_SURE, "1234", 10.0);
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.ALREADY_SURE, "1234", 10.0);
         given(parkingOrderRepository.findById(orderId)).willReturn(java.util.Optional.of(parkingOrder));
 //        when
         Exception exception = assertThrows(IllegalOrderOperationException.class, () -> parkingOrderService.confirmParkingOrder(orderId));
@@ -101,14 +101,14 @@ public class ParkingOrdersServiceTest {
         //given
         int orderId = 1;
         ParkingOrder order = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "1234", 10.0);
 
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
         given(parkingOrderRepository.save(order)).willReturn(order);
         ParkingOrderResponse updateOrder = parkingOrderService.cancelOrder(orderId);
         //then
-        assertEquals(StatusContants.DELETED, updateOrder.getStatus());
+        assertEquals(StatusConstants.DELETED, updateOrder.getStatus());
     }
 
     @Test
@@ -116,14 +116,14 @@ public class ParkingOrdersServiceTest {
         //given
         int orderId = 1;
         ParkingOrderRequest order = new ParkingOrderRequest("2021-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, "A123", null, null, StatusContants.ALREADY_SURE);
+                "2020-8-10 14:25:30", 1, "A123", null, null, StatusConstants.ALREADY_SURE);
         //when
         ParkingOrder parkingOrder = ParkingOrderMapper.convertToParkingOrder(order);
         given(parkingOrderRepository.findById(anyInt())).willReturn(Optional.of(parkingOrder));
         given(parkingOrderRepository.save(any(ParkingOrder.class))).willReturn(parkingOrder);
         ParkingOrderResponse updateOrder = parkingOrderService.cancelOrder(orderId);
         //then
-        assertEquals(StatusContants.DELETED, updateOrder.getStatus());
+        assertEquals(StatusConstants.DELETED, updateOrder.getStatus());
 
     }
 
@@ -142,7 +142,7 @@ public class ParkingOrdersServiceTest {
         //given
         int orderId = 1;
         ParkingOrder order = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.DELETED, "1234", 10.0);
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.DELETED, "1234", 10.0);
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
         given(parkingOrderRepository.save(order)).willReturn(order);
@@ -157,7 +157,7 @@ public class ParkingOrdersServiceTest {
         //given
         int orderId = 1;
         ParkingOrder order = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.ALREADY_SURE, "1234", 10.0);
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.ALREADY_SURE, "1234", 10.0);
         //when
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(order));
         given(parkingOrderRepository.save(order)).willReturn(order);
@@ -318,7 +318,7 @@ public class ParkingOrdersServiceTest {
         //given
         Integer orderId = 1;
         ParkingOrder parkingOrder = new ParkingOrder(orderId, null, "2020-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "1234", 10.0);
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "1234", 10.0);
 
         //when
         when(parkingOrderRepository.findById(1)).thenReturn(Optional.of(parkingOrder));
@@ -340,9 +340,9 @@ public class ParkingOrdersServiceTest {
 
         List<ParkingOrder> parkingOrders = Arrays.asList(
                 new ParkingOrder(1, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0),
                 new ParkingOrder(2, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "粤B258警", 30.0)
         );
         given(userRepository.findByEmail(email)).willReturn(user);
         given(parkingOrderRepository.findAllByUserId(1)).willReturn(parkingOrders);
@@ -362,9 +362,9 @@ public class ParkingOrdersServiceTest {
         User user = new User(1,"15626155019",email,"karen","123");
         List<ParkingOrder> parkingOrders = Arrays.asList(
                 new ParkingOrder(1, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0),
                 new ParkingOrder(2, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "粤B258警", 30.0)
         );
         given(userRepository.findByEmail(email)).willReturn(user);
         given(parkingOrderRepository.findAllByUserId(1)).willReturn(parkingOrders);
@@ -383,9 +383,9 @@ public class ParkingOrdersServiceTest {
         User user = new User(1,"15626155019",null,"karen","123");
         List<ParkingOrder> parkingOrders = Arrays.asList(
                 new ParkingOrder(1, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0),
                 new ParkingOrder(2, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "粤B258警", 30.0)
         );
         given(userRepository.findByPhoneNumber(phoneNumber)).willReturn(user);
         given(parkingOrderRepository.findAllByUserId(1)).willReturn(parkingOrders);
@@ -405,9 +405,9 @@ public class ParkingOrdersServiceTest {
         User user = new User(1,phoneNumber,null,"karen","123");
         List<ParkingOrder> parkingOrders = Arrays.asList(
                 new ParkingOrder(1, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0),
                 new ParkingOrder(2, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "粤B258警", 30.0)
         );
         given(userRepository.findByPhoneNumber(phoneNumber)).willReturn(user);
         given(parkingOrderRepository.findAllByUserId(1)).willReturn(parkingOrders);
@@ -427,9 +427,9 @@ public class ParkingOrdersServiceTest {
         User user = new User(userId,null,null,"karen","123");
         List<ParkingOrder> parkingOrders = Arrays.asList(
                 new ParkingOrder(1, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0),
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0),
                 new ParkingOrder(2, null, "2020-8-10 12:25:30",
-                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "粤B258警", 30.0)
+                        "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "粤B258警", 30.0)
         );
         given(parkingOrderRepository.findAllByUserId(userId)).willReturn(parkingOrders);
 
@@ -445,7 +445,7 @@ public class ParkingOrdersServiceTest {
         //given
         Integer orderId = 1;
         ParkingOrder parkingOrder = new ParkingOrder(1, "http://www.baidu.com", "2020-8-10 12:25:30",
-                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusContants.WAIT_FOR_SURE, "浙A1063警", 10.0);
+                "2020-8-10 14:25:30", 1, 1, "2020-8-10 14:25:30", StatusConstants.WAIT_FOR_SURE, "浙A1063警", 10.0);
         given(parkingOrderRepository.findById(orderId)).willReturn(Optional.of(parkingOrder));
 
         //when
