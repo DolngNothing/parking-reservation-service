@@ -97,6 +97,7 @@ public class ParkingOrderService {
             throw new IllegalOrderOperationException(MessageConstants.ODER_CANCELED);
         }
         parkingOrder.setStatus(StatusConstants.ALREADY_SURE);
+        parkingOrder.setFetchNumber("Success!");
         parkingOrderRepository.save(parkingOrder);
         if (rabbitMqService!=null){
             rabbitMqService.sendMessageToRabbitMq(parkingOrder);
